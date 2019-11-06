@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoskildeTasks.Umbraco", "RoskildeTasks.Umbraco\RoskildeTasks.Umbraco.csproj", "{93111C04-5D45-43F4-9AD5-C8D7A13FC1D1}"
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "RoskildeTasks.App", "RoskildeTasks.App\RoskildeTasks.App.njsproj", "{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{93111C04-5D45-43F4-9AD5-C8D7A13FC1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93111C04-5D45-43F4-9AD5-C8D7A13FC1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93111C04-5D45-43F4-9AD5-C8D7A13FC1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
