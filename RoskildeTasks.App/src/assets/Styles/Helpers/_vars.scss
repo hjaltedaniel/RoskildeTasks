@@ -1,0 +1,25 @@
+﻿//------- colors -------//
+// default
+$color-black: #000;
+$color-white: #fff;
+
+// red
+$color-red-monza: #dc0915;
+$color-red-thunderbird: #cd1822;
+
+// blue
+$color-blue-cornflower: #6195ed;
+$color-blue-science: #0958dc;
+
+//------- Transistions and animation -------//
+$transition--cubic: cubic-bezier(.645,.045,.355,1);
+$transition: .3s $transition--cubic;
+$transition--slow: .7s $transition--cubic;
+
+//------- Media queries -------//
+$viewport-extra-small:350px; 
+$viewport-small: 576px;
+$viewport-medium: 992px;
+$viewport-large: 1025px;
+$viewport-extra-large: 1200px;
+$viewport-max: 1920px;
