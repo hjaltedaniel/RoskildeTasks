@@ -1,0 +1,52 @@
+﻿/// <reference path="../Helpers/_vars" />
+/// <reference path="../Helpers/_mixins" />
+/// <reference path="../Helpers/_fonts" />
+
+//------- Titles  ------- //
+h1,
+h2,
+h3,
+h4 {
+	@include font-4000--bold;
+}
+
+h1 {
+	font-size: 4rem;
+}
+
+h2 {
+	font-size: 3rem;
+}
+
+h3 {
+	font-size: 2rem;
+}
+
+h4 {
+	font-size: 1rem;
+}
+
+p,
+span {
+	@include font-4000;
+	font-size: 1.4rem;
+
+	a {}
+
+	ul {
+		li {
+			font-size: 1.4rem;
+		}
+	}
+}
+
+b,
+strong {}
+
+a {}
+
+ul {
+	li {
+		font-size: 1.4rem;
+	}
+}

@@ -1,0 +1,69 @@
+﻿//------- All fonts ---------//
+@font-face {
+	font-family: '4000--heavy';
+	src: url('../src/assets/Fonts/4000/4000-Heavy.woff2') format('woff2'),
+		url('../src/assets/Fonts/4000/4000-Heavy.woff') format('woff');
+}
+
+@font-face {
+	font-family: '4000';
+	src: url('../src/assets/Fonts/4000/a000.woff2') format('woff2'),
+		url('../src/assets/Fonts/4000/a000.woff') format('woff');
+}
+
+@font-face {
+	font-family: '4000--italic';
+	src: url('../src/assets/Fonts/4000/4000-Italic.woff2') format('woff2'),
+		url('../src/assets/Fonts/4000/4000-Italic.woff') format('woff');
+}
+
+@font-face {
+	font-family: '4000--bold';
+	src: url('../src/assets/Fonts/4000/-Bold.woff2') format('woff2'),
+		url('../src/assets/Fonts/4000/-Bold.woff') format('woff');
+}
+
+
+//------- Font mixin -------//
+
+@mixin typography-properties($font-family, $font-weight, $font-style) {
+	font-family: $font-family, sans-serif;
+	font-weight: $font-weight;
+	font-style: $font-style;
+}
+
+$typography-weight--light: 300;
+$typography-weight--regular: 400;
+$typography-weight--medium: 500;
+$typography-weight--bold: 700;
+$typography-style--normal: normal;
+$typography-style--italic: italic;
+
+//-- regular --//
+@mixin font-4000 {
+	@include typography-properties('4000', $typography-weight--regular, $typography-style--normal);
+}
+
+@mixin font-4000--italic {
+	@include typography-properties('4000--italic', $typography-weight--regular, $typography-style--italic);
+}
+
+//-- bold --//
+@mixin font-4000--bold {
+	@include typography-properties('4000--bold', $typography-weight--bold, $typography-style--normal);
+}
+
+//-- heavy --//
+@mixin font-4000--heavy {
+	@include typography-properties('4000--heavy', $typography-weight--bold, $typography-style--normal);
+}
+
+//-- heavy right --//
+@mixin font-4000--heavy-right {
+	@include typography-properties('4000--HeavyRight', $typography-weight--bold, $typography-style--normal);
+}
+
+//-- heavy left --//
+@mixin font-4000--heavy-left {
+	@include typography-properties('4000--HeavyLeft', $typography-weight--bold, $typography-style--normal);
+}
