@@ -1,17 +1,15 @@
 <template>
-    <div class="home">
-        <h1 class="title">{{ msg }}</h1>
-        <p>Welcome to your new single-page application, built with <a href="https://vuejs.org" target="_blank">Vue.js</a>.</p>
-    </div>
+  <MainMenu />
 </template>
 
 <script>
-    export default {
-        name: 'Home',
-        props: {
-            msg: String
-        }
-    };
+import MainMenu from "@/components/MainMenu.vue";
+export default {
+  name: "Home",
+  components: {
+    MainMenu
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
