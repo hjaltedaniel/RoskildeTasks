@@ -1,16 +1,19 @@
 <template>
-  <div id="app">
-    <Home msg="Hello world!" />
+  <div class="columns">
+    <MainMenu />
+    <ContentArea></ContentArea>
   </div>
 </template>
 
 <script>
-import Home from "./components/Home.vue";
+import MainMenu from "@/components/MainMenu.vue";
+import ContentArea from "@/components/ContentArea.vue";
 
 export default {
   name: "app",
   components: {
-    Home
+    MainMenu,
+    ContentArea
   }
 };
 </script>

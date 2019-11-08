@@ -15,8 +15,11 @@
 // Layout
 @import "Layout/_footer.scss";
 @import "Layout/_header.scss";
-@import "Layout/_main-grid.scss";
+@import "Layout/_main-content.scss";
 
 // Modules
 @import "Modules/_hero.scss";
 @import "Modules/_list-view.scss";
+
+//Overwrites
+@import "Overwrites/_bulma.scss";
