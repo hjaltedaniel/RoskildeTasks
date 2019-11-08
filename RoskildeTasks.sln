@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoskildeTasks.Umbraco", "Ro
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "RoskildeTasks.App", "RoskildeTasks.App\RoskildeTasks.App.njsproj", "{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoskildeTasks.Api", "RoskildeTasks.Api\RoskildeTasks.Api.csproj", "{F80F7838-BBD3-4A8D-8DCD-C1FB67251CE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8B16E96-A650-4E51-AB94-CEC2FB2E70FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F80F7838-BBD3-4A8D-8DCD-C1FB67251CE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F80F7838-BBD3-4A8D-8DCD-C1FB67251CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F80F7838-BBD3-4A8D-8DCD-C1FB67251CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F80F7838-BBD3-4A8D-8DCD-C1FB67251CE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
