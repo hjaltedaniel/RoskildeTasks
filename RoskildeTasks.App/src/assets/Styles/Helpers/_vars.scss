@@ -1,0 +1,35 @@
+﻿//------- colors -------//
+// default
+$color-black: #505050;
+$color-white: #fff;
+
+//Greys
+$color-grey-dove: #707070;
+$color-grey-gallery: #F0F0F0;
+
+// orange
+$color-orange-chilean-fire: #EE7203;
+$color-red-carnation: #F84F4F;
+
+// blue
+$color-blue-ribbon: #245BFF;
+$color-purple-electric-violet: #A000FF;
+
+//brown
+$color-brown-nutmeg-wood-finish: #634900;
+
+//green
+$color-green-shamrock: #38C885;
+
+//------- Transistions and animation -------//
+$transition--cubic: cubic-bezier(.645, .045, .355, 1);
+$transition: .3s $transition--cubic;
+$transition--slow: .7s $transition--cubic;
+
+//------- Media queries -------//
+$viewport-extra-small:350px;
+$viewport-small: 576px;
+$viewport-medium: 992px;
+$viewport-large: 1025px;
+$viewport-extra-large: 1200px;
+$viewport-max: 1920px;

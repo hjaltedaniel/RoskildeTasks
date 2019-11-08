@@ -1,19 +1,24 @@
 <template>
-    <div id="app">
-        <Home msg="Hello world!" />
-    </div>
+  <div class="columns">
+    <MainMenu />
+    <ContentArea>
+      <router-view />
+    </ContentArea>
+  </div>
 </template>
 
 <script>
-    import Home from './components/Home.vue';
-
-    export default {
-        name: 'app',
-        components: {
-            Home
-        }
-    };
+import MainMenu from "@/components/MainMenu.vue";
+import ContentArea from "@/components/ContentArea.vue";
+export default {
+  name: "Home",
+  components: {
+    MainMenu,
+    ContentArea
+  }
+};
 </script>
 
-<style>
+<style lang="scss">
+@import "../src/assets/Styles/Site";
 </style>

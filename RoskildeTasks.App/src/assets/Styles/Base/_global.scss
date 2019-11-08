@@ -1,0 +1,32 @@
+﻿/// <reference path="../Helpers/_vars" />
+/// <reference path="../Helpers/_mixins" />
+/// <reference path="../Helpers/_fonts" />
+
+html {
+	font-size: 62.5%; // 1.4rem = 14px, 2rem = 20px, 3.2rem = 32px
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	font-size: 1.6rem;
+}
+
+.reset-ul {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+
+img {
+	max-width: 100%;
+}
+
+@media (inverted-colors) {
+	img,
+	video,
+	picture {
+		filter: invert(100);
+	}
+}
