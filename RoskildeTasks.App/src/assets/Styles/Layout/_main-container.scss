@@ -1,0 +1,11 @@
+/// <reference path="../Helpers/_vars" />
+/// <reference path="../Helpers/_mixins" />
+/// <reference path="../Helpers/_fonts" />
+
+.notfication::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    color: $color-red-carnation;
+}
