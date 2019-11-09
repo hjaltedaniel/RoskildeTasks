@@ -1,3 +1,0 @@
-﻿# RoskildeTasks.App
-
-

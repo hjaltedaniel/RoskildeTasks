@@ -1,0 +1,35 @@
+.main-menu {
+	position: fixed;
+	width: 120px;
+	height: 100vh;
+	background-color: $color-orange-chilean-fire;
+	color: $color-white;
+	box-shadow: 2px 0px 10px rgba($color-black, .3);
+	span {
+		color: $color-white;
+	}
+	.logo {
+		border-top: initial;
+		div {
+			height: 80px;
+		}
+		img {
+			width: 90px;
+		}
+	}	
+	li {
+		a {
+			display: block;
+			padding: 20px 0;
+		}
+		.router-link-exact-active {
+			box-shadow: inset 6px 0px 0 white;
+		}
+		border-top: 2px solid $color-white;
+		width: 100%;
+		img {
+			width: 45px;
+		}
+	}
+}
+
