@@ -27,6 +27,8 @@ export default {
         .container-fluid {
             padding: 60px;
             .view-wrapper {
+				height: 87vh;
+				overflow-y: auto;
                 border-radius: 5px;
                 background-color: $color-white;
                 box-shadow: 0 0 7px #00000061;

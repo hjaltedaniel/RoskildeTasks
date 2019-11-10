@@ -1,0 +1,42 @@
+.tasks-list {
+	ul {
+		padding-left: 0;
+		height: 77.8vh;
+		overflow-y: auto;
+		margin-bottom: 0;
+		.task {
+			&:first-child {
+				border-top: none;
+			}
+			padding: 20px 50px;
+			border-top: 1px solid $color-black;
+			&:hover {
+				background-color: $color-grey-gallery;
+				cursor: pointer;
+			}
+			p {
+				margin-bottom: 0;
+			}
+			&__name {
+				width: 80%;
+			}
+			&__deadline {
+				color: $color-green-shamrock;
+				&--expired {
+					color: $color-red-carnation
+				}
+			}
+			&__type {
+				width: 160px;
+				padding: 10px 20px;
+				background-color: $color-purple-electric-violet;
+				border-radius: 14px;
+				text-align: center;
+				p {
+					margin-top: -5px;
+					color: $color-white;
+				}
+			}
+		}
+	}
+}

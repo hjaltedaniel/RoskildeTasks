@@ -1,7 +1,9 @@
-
+import TasksList from '../../components/TasksList/index.vue'
 export default {
   name: 'tasks',
-  components: {},
+  components: {
+	TasksList
+  },
   props: [],
   data () {
     return {
