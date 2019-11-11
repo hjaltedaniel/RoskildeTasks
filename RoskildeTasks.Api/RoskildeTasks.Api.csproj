@@ -214,7 +214,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\TasksController.cs" />
+    <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Models\ColorItem.cs" />
     <Compile Include="Models\MessageItem.cs" />
     <Compile Include="Models\TaskItem.cs" />
@@ -222,7 +222,7 @@
     <Compile Include="RoleAuthorizeAttribute.cs" />
     <Compile Include="Controllers\RessourceController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
-    <Compile Include="Controllers\MembersController.cs" />
+    <Compile Include="Controllers\MemberController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Models\CategoryItem.cs" />
     <Compile Include="Models\MemberItem.cs" />

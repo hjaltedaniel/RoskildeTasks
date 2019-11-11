@@ -14,7 +14,7 @@ using System.Net;
 
 namespace RoskildeTasks.Api.Controllers
 {
-    public class TasksController : UmbracoApiController
+    public class TaskController : UmbracoApiController
     {
 
         [RoleAuthorize]
