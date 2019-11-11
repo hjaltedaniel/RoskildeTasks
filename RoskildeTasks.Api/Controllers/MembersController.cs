@@ -33,48 +33,5 @@ namespace RoskildeTasks.Api.Controllers
                 return StatusCode(HttpStatusCode.Unauthorized);
             }
         }
-
-        [RoleAuthorize]
-        [HttpGet]
-        public List<TaskItem> GetAllTasks()
-        {
-            var currentUser = Members.CurrentUserName;
-            IMemberService ms = Services.MemberService;
-            IContentService cs = Services.ContentService;
-
-            var everyTask = cs.GetContentOfContentType(1056);
-
-            List<TaskItem> userTasks = new List<TaskItem>();
-
-            foreach (var task in everyTask)
-            {
-                var taskGroup = task.GetValue("members").ToString();
-                var allMembers = ms.GetMembersInRole(taskGroup);
-                bool memberInGroup = false;
-                foreach(var thisMember in allMembers)
-                {
-                    if (thisMember.Username == currentUser)
-                    {
-                        memberInGroup = true;
-                    }
-                }
-
-                if(memberInGroup)
-                {
-                    TaskItem usersTask = new TaskItem();
-                    usersTask.Name = task.Name;
-                    usersTask.Description = task.GetValue("description").ToString();
-                    usersTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
-
-                    var categoryUri = task.GetValue("category");
-                    var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
-                    usersTask.CategoryName = thisCategory.Name;
-
-                    userTasks.Add(usersTask);
-                }
-            }
-
-            return userTasks;
-        }
     }
 }
