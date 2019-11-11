@@ -214,6 +214,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Models\MessageItem.cs" />
     <Compile Include="Models\TaskItem.cs" />
     <Compile Include="Models\TaskMessageItem.cs" />

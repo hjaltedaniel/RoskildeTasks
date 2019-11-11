@@ -8,7 +8,7 @@ using  Umbraco.Web;
 using  Umbraco.ModelsBuilder;
 using  Umbraco.ModelsBuilder.Umbraco;
 [assembly: PureLiveAssembly]
-[assembly:ModelsBuilderAssembly(PureLive = true, SourceHash = "f60507de975b716")]
+[assembly:ModelsBuilderAssembly(PureLive = true, SourceHash = "12d47dd7b6bcc723")]
 [assembly:System.Reflection.AssemblyVersion("0.0.0.1")]
 
 
@@ -292,6 +292,15 @@ namespace Umbraco.Web.PublishedContentModels
 		public string Content
 		{
 			get { return this.GetPropertyValue<string>("content"); }
+		}
+
+		///<summary>
+		/// Is message from admin?: Mark this if the message is send by an admnistrator
+		///</summary>
+		[ImplementPropertyType("isFromAdmin")]
+		public bool IsFromAdmin
+		{
+			get { return this.GetPropertyValue<bool>("isFromAdmin"); }
 		}
 
 		///<summary>
