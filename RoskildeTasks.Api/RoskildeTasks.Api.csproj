@@ -214,9 +214,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\MessageItem.cs" />
+    <Compile Include="Models\TaskItem.cs" />
+    <Compile Include="Models\TaskMessageItem.cs" />
+    <Compile Include="RoleAuthorizeAttribute.cs" />
+    <Compile Include="Controllers\RessourceController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\MembersController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Models\CategoryItem.cs" />
-    <Compile Include="Models\MapItem.cs" />
+    <Compile Include="Models\MemberItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

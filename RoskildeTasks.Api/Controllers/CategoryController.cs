@@ -14,6 +14,8 @@ namespace RoskildeTasks.Api.Controllers
 {
     public class CategoryController : UmbracoApiController
     {
+        
+        [RoleAuthorize]
         [HttpGet]
         public List<CategoryItem> GetAllCategories()
         {

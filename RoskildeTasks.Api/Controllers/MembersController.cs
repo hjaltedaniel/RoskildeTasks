@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Security;
+using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Core.Services;
+using Umbraco.Web.WebApi;
+using RoskildeTasks.Api.Models;
+using System.Net;
+
+namespace RoskildeTasks.Api.Controllers
+{
+    public class MembersController : UmbracoApiController
+    {
+        [RoleAuthorize]
+        [HttpGet]
+        public IHttpActionResult Init()
+        {
+            var currentUser = Members.CurrentUserName;
+
+            IMemberService ms = Services.MemberService;
+
+            if(ms.GetByUsername(currentUser).IsApproved)
+            {
+                return StatusCode(HttpStatusCode.OK);
+            }
+            else
+            {
+                return StatusCode(HttpStatusCode.Unauthorized);
+            }
+        }
+
+        [RoleAuthorize]
+        [HttpGet]
+        public List<TaskItem> GetAllTasks()
+        {
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            IContentService cs = Services.ContentService;
+
+            var everyTask = cs.GetContentOfContentType(1056);
+
+            List<TaskItem> userTasks = new List<TaskItem>();
+
+            foreach (var task in everyTask)
+            {
+                var taskGroup = task.GetValue("members").ToString();
+                var allMembers = ms.GetMembersInRole(taskGroup);
+                bool memberInGroup = false;
+                foreach(var thisMember in allMembers)
+                {
+                    if (thisMember.Username == currentUser)
+                    {
+                        memberInGroup = true;
+                    }
+                }
+
+                if(memberInGroup)
+                {
+                    TaskItem usersTask = new TaskItem();
+                    usersTask.Name = task.Name;
+                    usersTask.Description = task.GetValue("description").ToString();
+                    usersTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
+
+                    var categoryUri = task.GetValue("category");
+                    var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
+                    usersTask.CategoryName = thisCategory.Name;
+
+                    userTasks.Add(usersTask);
+                }
+            }
+
+            return userTasks;
+        }
+    }
+}
