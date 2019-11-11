@@ -9,6 +9,8 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using RoskildeTasks.Api.Models;
+using Umbraco.Core.PropertyEditors.ValueConverters;
+using Newtonsoft.Json;
 
 namespace RoskildeTasks.Api.Controllers
 {
@@ -31,8 +33,13 @@ namespace RoskildeTasks.Api.Controllers
                 category.Id = content.Id;
                 category.Name = content.Name;
                 category.ShortName = content.GetValue("shortName").ToString();
-                category.Color = content.GetValue("categoryColor").ToString();
+
+                var colorString = content.GetValue("categoryColor").ToString();
+                ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+
+                category.Color = color;
                 category.StandardMessage = content.GetValue("standardMessage").ToString();
+                category.isOnlyMessages = content.GetValue<bool>("isOnlyMessages");
 
                 allCategories.Add(category);
             }

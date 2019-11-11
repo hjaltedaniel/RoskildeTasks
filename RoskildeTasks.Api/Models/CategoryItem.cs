@@ -11,7 +11,8 @@ namespace RoskildeTasks.Api.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string ShortName { get; set; }
-        public string Color { get; set; }
+        public ColorItem Color { get; set; }
         public string StandardMessage { get; set; }
+        public bool isOnlyMessages { get; set; }
     }
 }
