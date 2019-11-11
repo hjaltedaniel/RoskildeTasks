@@ -44,6 +44,7 @@ namespace RoskildeTasks.Api.Controllers
                             TaskMessageItem taskMessage = new TaskMessageItem();
                             taskMessage.MemberUdi = messageMember;
                             taskMessage.Content = message.GetValue("content").ToString();
+                            taskMessage.isFromAdmin = message.GetValue<bool>("isFromAdmin");
                             taskMessage.TaskID = memberTaskId;
                             taskMessage.Date = message.CreateDate;
                             messages.Add(taskMessage);
@@ -73,6 +74,7 @@ namespace RoskildeTasks.Api.Controllers
 
             newMessage.SetValue("member", userUdi);
             newMessage.SetValue("content", content);
+            newMessage.SetValue("isFromAdmin", false);
             newMessage.SetValue("task", taskUdi);
 
             cs.Save(newMessage);
@@ -118,6 +120,33 @@ namespace RoskildeTasks.Api.Controllers
             }
 
             return messages;
+        }
+
+        [RoleAuthorize]
+        [HttpPost]
+        public IHttpActionResult SubmitMessageForCategory(int categoryId, string content)
+        {
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            var userUdi = ms.GetByUsername(currentUser).GetUdi().ToString();
+
+            IContentService cs = Services.ContentService;
+
+            var categoryUdi = cs.GetById(categoryId).GetUdi().ToString();
+
+            var messageParent = cs.GetById(1086).GetUdi();
+
+            var newMessage = cs.CreateContent("message", messageParent, "Message");
+
+            newMessage.SetValue("member", userUdi);
+            newMessage.SetValue("content", content);
+            newMessage.SetValue("isFromAdmin", false);
+            newMessage.SetValue("category", categoryUdi);
+
+            cs.Save(newMessage);
+            cs.Publish(newMessage);
+
+            return StatusCode(HttpStatusCode.OK);
         }
     }
 }
