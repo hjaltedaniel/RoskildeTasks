@@ -8,6 +8,7 @@ namespace RoskildeTasks.Api.Models
 {
     public class CategoryItem
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string ShortName { get; set; }
         public string Color { get; set; }

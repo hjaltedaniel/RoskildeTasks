@@ -45,6 +45,7 @@ namespace RoskildeTasks.Api.Controllers
                 if(memberInGroup)
                 {
                     TaskItem usersTask = new TaskItem();
+                    usersTask.Id = task.Id;
                     usersTask.Name = task.Name;
                     usersTask.Description = task.GetValue("description").ToString();
                     usersTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());

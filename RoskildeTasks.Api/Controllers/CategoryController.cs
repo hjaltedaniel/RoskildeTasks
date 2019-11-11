@@ -28,6 +28,7 @@ namespace RoskildeTasks.Api.Controllers
             foreach(var content in allContent)
             {
                 CategoryItem category = new CategoryItem();
+                category.Id = content.Id;
                 category.Name = content.Name;
                 category.ShortName = content.GetValue("shortName").ToString();
                 category.Color = content.GetValue("categoryColor").ToString();
