@@ -36,21 +36,25 @@ namespace RoskildeTasks.Api.Controllers
                 if (userUdi == messageMember)
                 {
                     var taskUri = message.GetValue("task");
-                    var memberTaskId = Umbraco.TypedContent(taskUri).Id;
-                    if(taskId == memberTaskId)
+                    if(taskUri != null)
                     {
-                        TaskMessageItem taskMessage = new TaskMessageItem();
-                        taskMessage.MemberUdi = messageMember;
-                        taskMessage.Content = message.GetValue("content").ToString();
-                        taskMessage.TaskID = memberTaskId;
-                        taskMessage.Date = message.CreateDate;
-                        messages.Add(taskMessage);
+                        var memberTaskId = Umbraco.TypedContent(taskUri).Id;
+                        if (taskId == memberTaskId)
+                        {
+                            TaskMessageItem taskMessage = new TaskMessageItem();
+                            taskMessage.MemberUdi = messageMember;
+                            taskMessage.Content = message.GetValue("content").ToString();
+                            taskMessage.TaskID = memberTaskId;
+                            taskMessage.Date = message.CreateDate;
+                            messages.Add(taskMessage);
+                        }
                     }
                 }
             }
 
             return messages;
         }
+
         [RoleAuthorize]
         [HttpPost]
         public IHttpActionResult SubmitMessageForTask(int taskId, string content)
@@ -75,6 +79,45 @@ namespace RoskildeTasks.Api.Controllers
             cs.Publish(newMessage);
 
             return StatusCode(HttpStatusCode.OK);
+        }
+
+        [RoleAuthorize]
+        [HttpGet]
+        public List<MessageItem> GetMessagesForCategory(int categoryId)
+        {
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            var userUdi = ms.GetByUsername(currentUser).GetUdi().ToString();
+
+            IContentService cs = Services.ContentService;
+
+            var allMessages = cs.GetContentOfContentType(1080);
+
+            List<MessageItem> messages = new List<MessageItem>();
+
+            foreach (var message in allMessages)
+            {
+                var messageMember = message.GetValue("member").ToString();
+
+                if (userUdi == messageMember)
+                {
+                    var categoryUri = message.GetValue("category");
+                    if(categoryUri != null)
+                    {
+                        var memberCategoryId = Umbraco.TypedContent(categoryUri).Id;
+                        if (categoryId == memberCategoryId)
+                        {
+                            MessageItem categoryMessage = new MessageItem();
+                            categoryMessage.MemberUdi = messageMember;
+                            categoryMessage.Content = message.GetValue("content").ToString();
+                            categoryMessage.Date = message.CreateDate;
+                            messages.Add(categoryMessage);
+                        }
+                    }
+                }
+            }
+
+            return messages;
         }
     }
 }
