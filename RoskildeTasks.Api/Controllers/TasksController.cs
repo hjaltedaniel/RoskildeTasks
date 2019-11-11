@@ -60,5 +60,47 @@ namespace RoskildeTasks.Api.Controllers
 
             return userTasks;
         }
+
+        [RoleAuthorize]
+        [HttpGet]
+        public TaskItem GetTask(int taskId)
+        {
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            IContentService cs = Services.ContentService;
+
+            var everyTask = cs.GetContentOfContentType(1056);
+
+            TaskItem currentTask = new TaskItem();
+
+            foreach (var task in everyTask)
+            {
+                var taskGroup = task.GetValue("members").ToString();
+                var allMembers = ms.GetMembersInRole(taskGroup);
+                bool memberInGroup = false;
+                foreach (var thisMember in allMembers)
+                {
+                    if (thisMember.Username == currentUser)
+                    {
+                        memberInGroup = true;
+                    }
+                }
+
+                if (memberInGroup & task.Id == taskId)
+                {
+                    currentTask.Id = task.Id;
+                    currentTask.Name = task.Name;
+                    currentTask.Description = task.GetValue("description").ToString();
+                    currentTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
+
+                    var categoryUri = task.GetValue("category");
+                    var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
+                    currentTask.CategoryName = thisCategory.Name;
+                }
+            }
+
+            return currentTask;
+        }
+
     }
 }
