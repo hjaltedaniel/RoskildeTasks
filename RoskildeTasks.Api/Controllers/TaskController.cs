@@ -12,6 +12,7 @@ using Umbraco.Web.WebApi;
 using RoskildeTasks.Api.Models;
 using System.Net;
 using Newtonsoft.Json;
+using Archetype.Models;
 
 namespace RoskildeTasks.Api.Controllers
 {
@@ -41,6 +42,51 @@ namespace RoskildeTasks.Api.Controllers
                     usersTask.Name = task.Name;
                     usersTask.Description = task.GetValue("description").ToString();
                     usersTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
+
+                    var editorUri = task.GetValue("editor");
+                    var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
+                    usersTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
+
+                    var allAnswers = cs.GetContentOfContentType(1133);
+                    foreach (var answer in allAnswers)
+                    {
+                        var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
+                        if(answerTaskId == task.Id)
+                        {
+                            List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
+                            var answerRows = answer.Children();
+                            foreach(var row in answerRows)
+                            {
+                                AnswerRootItem answersForTask = new AnswerRootItem();
+                                answersForTask.TaskId = answerTaskId;
+                                List<AnswerItem> answersList = new List<AnswerItem>();
+                                var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
+
+                                foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
+                                {
+                                    AnswerItem singleAnswer = new AnswerItem();
+                                    singleAnswer.Name = property.GetValue("name");
+                                    if(!string.IsNullOrWhiteSpace(property.GetValue("string")))
+                                    {
+                                        singleAnswer.Content = property.GetValue("string");
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(property.GetValue("int32")))
+                                    {
+                                        singleAnswer.Content = property.GetValue("int32");
+                                    }
+                                    else
+                                    {
+                                        singleAnswer.Content = null;
+                                    }
+                                    answersList.Add(singleAnswer);
+                                }
+                                answersForTask.Rows = answersList;
+                                answerRootList.Add(answersForTask);
+                            }
+                            
+                            usersTask.Answers = answerRootList;
+                        }
+                    }
 
                     var categoryUri = task.GetValue("category");
                     var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);

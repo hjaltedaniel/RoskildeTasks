@@ -11,6 +11,8 @@ namespace RoskildeTasks.Api.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public List<EditorItem> Editor { get; set; }
+        public List<AnswerRootItem> Answers { get; set; }
         public DateTime Deadline { get; set; }
         public CategoryItem Category { get; set; }
     }
