@@ -1,0 +1,57 @@
+<div class="task-details">
+	<div class="row task-details__wrapper">
+		<div class="col-md-6 content d-flex flex-column">
+			<div class="back">
+				<router-link to="/tasks">
+					<h5>
+						<i class="fas fa-long-arrow-alt-left"></i> GO BACK TO TASKS LIST
+					</h5>
+				</router-link>
+			</div>
+			<div class="content__description">
+				<div class="headline">
+					<h1>Upload food stall logo</h1>
+					<h5>DEADLINE {{ new Date().toString().toUpperCase() }}</h5>
+				</div>
+				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt, doloremque. Hic dolorem amet
+					placeat. Nihil nobis aut earum, commodi iste accusamus modi sed recusandae, dolorum velit corporis
+					aspernatur ullam placeat.</p>
+			</div>
+			<div class="content__upload-area">
+				<form class="d-flex flex-column" ref="uploadForm" @submit.prevet="onSubmit">
+					<div class="upload-area form-group">
+						<label for="upload-area" class="d-flex justify-content-center align-items-center flex-column">
+							<template v-if="filesLength">
+								<h2 class="selected-files">{{ `${filesLength} file${filesLength > 1 ? "s" : ''} selected` }}<br /><br /> </h2>
+							</template>
+							<template v-else>
+								<div class="d-flex justify-content-center align-items-center flex-column">
+									<i class="fas fa-cloud-upload-alt"></i>
+									<h2>Drag & drop files here<br /> </h2>
+									<h5>or</h5>
+								</div>
+							</template>
+							<div class="btn btn-primary">
+								<h6>Browse Files</h6>
+							</div>
+						</label>
+						<input id="upload-area" type="file" multiple @change="onFileInputChange"/>
+					</div>
+					<div class="upload-controls d-flex justify-content-between">
+						<button class="btn btn-success d-flex align-items-center justify-content-center" type="submit">
+							<h4>SAVE</h4>
+							<i class="fas fa-save"></i>
+						</button>
+						<button class="btn btn-danger d-flex align-items-center justify-content-center" @click="onClear" type="button">
+							<h4>CLEAR</h4>
+							<i class="fas fa-times"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="col-md-6">
+			Comments
+		</div>
+	</div>
+</div>
