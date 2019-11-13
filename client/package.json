@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
+    "test:unit": "vue-cli-service test:unit --no-cache",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -44,7 +44,7 @@
     "overrides": [
       {
         "files": [
-          "**/__tests__/*.{j,t}s?(x)",
+          "**/__tests__/*.spec.{j,t}s?(x)",
           "**/tests/unit/**/*.spec.{j,t}s?(x)"
         ],
         "env": {
