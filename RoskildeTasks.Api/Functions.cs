@@ -7,6 +7,9 @@ using Umbraco.Web.WebApi;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
+using RoskildeTasks.Api.Models;
+using Newtonsoft.Json;
+using Archetype.Models;
 
 namespace RoskildeTasks.Api
 {
@@ -31,6 +34,44 @@ namespace RoskildeTasks.Api
                 }
             }
             return memberInGroup;
+        }
+        public static List<EditorItem> ConvertToEditorItem(string json)
+        {
+            List<EditorItem> returnList  = new List<EditorItem>();
+
+            var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(json);
+
+            foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
+            {
+                var thisName = property.GetValue("fieldName");
+                var thisType = property.GetValue("datatype");
+
+                EditorItem editor = new EditorItem();
+                editor.Name = thisName;
+                editor.ValueType = GetTypeFromPrevalue(thisType);
+                returnList.Add(editor);
+            }
+            return returnList;
+
+        }
+        public static string GetTypeFromPrevalue (string prevalue)
+        {
+            if(prevalue == "54")
+            {
+                return Type.GetType("System.IO.File").FullName;
+            }
+            else if (prevalue == "52")
+            {
+                return Type.GetType("System.String").FullName;
+            }
+            else if (prevalue == "53")
+            {
+                return Type.GetType("System.Int32").FullName;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
