@@ -9,6 +9,7 @@ namespace RoskildeTasks.Api.Models
     public class AnswerRootItem
     {
         public int TaskId { get; set; }
+        public bool isPublished { get; set; }
         public List<AnswerItem> Rows { get; set; }
     }
 }

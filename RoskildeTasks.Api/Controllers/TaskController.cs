@@ -59,6 +59,7 @@ namespace RoskildeTasks.Api.Controllers
                             {
                                 AnswerRootItem answersForTask = new AnswerRootItem();
                                 answersForTask.TaskId = answerTaskId;
+                                answersForTask.isPublished = row.Published;
                                 List<AnswerItem> answersList = new List<AnswerItem>();
                                 var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
 
@@ -91,6 +92,7 @@ namespace RoskildeTasks.Api.Controllers
                     var categoryUri = task.GetValue("category");
                     var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
                     CategoryItem category = new CategoryItem();
+                    category.Id = thisCategory.Id;
                     category.Name = thisCategory.Name;
                     category.ShortName = thisCategory.GetValue("shortName").ToString();
                     category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
@@ -100,6 +102,24 @@ namespace RoskildeTasks.Api.Controllers
                     category.Color = color;
 
                     usersTask.Category = category;
+
+                    if(usersTask.Answers == null)
+                    {
+                        usersTask.isDone = false;
+                    }
+                    else
+                    {
+                        if (usersTask.Answers.All(item => item.isPublished))
+                        {
+                            usersTask.isDone = true;
+                        }
+                        else
+                        {
+                            usersTask.isDone = false;
+                        }
+                    }
+
+
 
                     userTasks.Add(usersTask);
                 }
@@ -131,9 +151,56 @@ namespace RoskildeTasks.Api.Controllers
                     currentTask.Description = task.GetValue("description").ToString();
                     currentTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
 
+                    var editorUri = task.GetValue("editor");
+                    var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
+                    currentTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
+
+                    var allAnswers = cs.GetContentOfContentType(1133);
+                    foreach (var answer in allAnswers)
+                    {
+                        var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
+                        if (answerTaskId == task.Id)
+                        {
+                            List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
+                            var answerRows = answer.Children();
+                            foreach (var row in answerRows)
+                            {
+                                AnswerRootItem answersForTask = new AnswerRootItem();
+                                answersForTask.TaskId = answerTaskId;
+                                answersForTask.isPublished = row.Published;
+                                List<AnswerItem> answersList = new List<AnswerItem>();
+                                var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
+
+                                foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
+                                {
+                                    AnswerItem singleAnswer = new AnswerItem();
+                                    singleAnswer.Name = property.GetValue("name");
+                                    if (!string.IsNullOrWhiteSpace(property.GetValue("string")))
+                                    {
+                                        singleAnswer.Content = property.GetValue("string");
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(property.GetValue("int32")))
+                                    {
+                                        singleAnswer.Content = property.GetValue("int32");
+                                    }
+                                    else
+                                    {
+                                        singleAnswer.Content = null;
+                                    }
+                                    answersList.Add(singleAnswer);
+                                }
+                                answersForTask.Rows = answersList;
+                                answerRootList.Add(answersForTask);
+                            }
+
+                            currentTask.Answers = answerRootList;
+                        }
+                    }
+
                     var categoryUri = task.GetValue("category");
                     var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
                     CategoryItem category = new CategoryItem();
+                    category.Id = thisCategory.Id;
                     category.Name = thisCategory.Name;
                     category.ShortName = thisCategory.GetValue("shortName").ToString();
                     category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
@@ -143,6 +210,15 @@ namespace RoskildeTasks.Api.Controllers
                     category.Color = color;
 
                     currentTask.Category = category;
+
+                    if (currentTask.Answers.All(item => item.isPublished))
+                    {
+                        currentTask.isDone = true;
+                    }
+                    else
+                    {
+                        currentTask.isDone = false;
+                    }
                 }
             }
 

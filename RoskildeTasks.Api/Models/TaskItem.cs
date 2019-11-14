@@ -15,5 +15,6 @@ namespace RoskildeTasks.Api.Models
         public List<AnswerRootItem> Answers { get; set; }
         public DateTime Deadline { get; set; }
         public CategoryItem Category { get; set; }
+        public bool isDone { get; set; }
     }
 }
