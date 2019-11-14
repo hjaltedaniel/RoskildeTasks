@@ -1,21 +1,14 @@
-
+import TasksList from '../../components/TasksList/index.vue';
+import TasksService from '../../services/TasksService';
 export default {
   name: 'tasks',
-  components: {},
-  props: [],
-  data () {
-    return {
-
-    }
+  components: {
+	TasksList
   },
-  computed: {
-
-  },
-  mounted () {
-
-  },
-  methods: {
-
+  provide () {
+	  return {
+		  'tasksService': TasksService
+	  }
   }
 }
 

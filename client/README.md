@@ -43,6 +43,7 @@ The ```vue.config.js``` file can be found in the root folder of the client and i
 
 ### Unit Testing
 The project uses Jest for unit testing.
+All tests are placed under ```client/tests/unit/**/*.spec.js```
 
 See [Jest reference](https://jestjs.io/)
 
