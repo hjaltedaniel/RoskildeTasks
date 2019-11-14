@@ -217,11 +217,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AnswerController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="Models\AnswerItem.cs" />
     <Compile Include="Models\AnswerRootItem.cs" />
+    <Compile Include="Models\AnswerSend\Root.cs" />
     <Compile Include="Models\ColorItem.cs" />
+    <Compile Include="Models\AnswerSend\Item.cs" />
     <Compile Include="Models\EditorItem.cs" />
     <Compile Include="Models\MessageItem.cs" />
     <Compile Include="Models\RessourceItem.cs" />

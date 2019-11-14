@@ -58,15 +58,15 @@ namespace RoskildeTasks.Api
         {
             if(prevalue == "54")
             {
-                return Type.GetType("System.IO.File").FullName;
+                return Type.GetType("System.IO.File").Name;
             }
             else if (prevalue == "52")
             {
-                return Type.GetType("System.String").FullName;
+                return Type.GetType("System.String").Name;
             }
             else if (prevalue == "53")
             {
-                return Type.GetType("System.Int32").FullName;
+                return Type.GetType("System.Int32").Name;
             }
             else
             {
