@@ -1,3 +1,9 @@
 .resources {
-
+    h1 {
+        font-family: $font-bold;
+        color: $color-black;
+    }
+    #left-row {
+        height: 87vh;
+    }
 }

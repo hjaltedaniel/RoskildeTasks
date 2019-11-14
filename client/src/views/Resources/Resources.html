@@ -1,5 +1,58 @@
-
 <section class="resources">
-  <h1>resources Component</h1>
-</section>
+  <div class="container-fluid">
+    <div class="row">
+      <div id="left-row" class="col-md-5 border-right border-secondary px-0">
+        <h1 class="text-uppercase border-bottom border-secondary mb-0 p-2">Resources</h1>
+        <ul class="list-group">
+          <li class="list-group-item" v-for="category in categories">
+            <div class="d-flex flex-row">
+              <svg xmlns="http://www.w3.org/2000/svg" width="62.908" height="71.895" viewBox="0 0 62.908 71.895">
+                <path v-bind:fill="iconColor" class="a" d="M44.934,62.908v5.617a3.37,3.37,0,0,1-3.37,3.37H3.37A3.37,3.37,0,0,1,0,68.525V16.85a3.37,3.37,0,0,1,3.37-3.37H13.48V55.045a7.872,7.872,0,0,0,7.864,7.864Zm0-48.3V0H21.344a3.37,3.37,0,0,0-3.37,3.37V55.045a3.37,3.37,0,0,0,3.37,3.37H59.538a3.37,3.37,0,0,0,3.37-3.37V17.974H48.3A3.38,3.38,0,0,1,44.934,14.6Zm16.987-4.357L52.662.987A3.37,3.37,0,0,0,50.279,0h-.851V13.48h13.48V12.63a3.37,3.37,0,0,0-.987-2.383Z"/>
+              </svg>
+              <p class="ml-4 my-0 align-self-center">{{ category.title }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-7 px-0">
+        <h1 class="border-secondary border-bottom p-2"><span class="invisible">Files</span></h1>
+      </div>
+    </div>
+  </div>
+<!--   	<div class="container-fluid">
+      <div class="row">
+        // RESSOURCES CATEGORIES START
+        <div class="col-md-5 border-bottom border-right border-secondary">
+          <h1 class="text-uppercase m-1">Ressources</h1>
+        </div>
+        // RESSOURCES CATEGORIES END 
+        
+        // RESSOURCES FILE WINDOW START
+        <div class="col-md-7 border-bottom border-secondary">
+          <div class="row">
+            <div class="col-md-1 mt-1">
+              <div class="circle-container">
+                <div class="circle" v-bind:style="{backgroundColor: iconBackground}">
+                  <h2 class="text-uppercase circle-text" v-bind:style="{color: iconLetterColor}">{{ iconLetter }}</h2>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-11 d-flex align-self-end">
+              <h2 class="mt-1">{{ categoryTitle }}</h2>
+            </div>
+          </div>
+        </div>
+       // RESSOURCES FILE WINDOW END
+      </div>
+      <div class="row">
+        <div class="col-md-5 pr-0 pl-0">
+          <ul class="list-group">
+              <li v-for="category in categories" class="list-group-item">
+                {{category.title}}
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div> -->
+  </section>
 
