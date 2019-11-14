@@ -1,0 +1,13 @@
+<section class="resources-list">
+  <ul class="list-group">
+          <li class="list-group-item" v-for="file in files">
+            <div class="d-flex flex-row justify-content-between">
+              <span class="align-self-center my-0 resources-list__icon" v-bind:class="{invisible: file.unread}"></span>
+              <p class="align-self-center my-0">{{ file.title }}</p>
+              <p class="align-self-center my-0">{{ file.type }}</p>
+              <button type="button" class="btn btn-primary align-self-center my-0">{{ file.category }}</button>
+            </div>
+          </li>
+        </ul>
+</section>
+

@@ -1,7 +1,10 @@
+import ResourcesList from '../../components/ResourcesList/index.vue';
 
 export default {
   name: 'resources',
-  components: {},
+  components: {
+    ResourcesList
+  },
   props: [],
   data () {
     return {
