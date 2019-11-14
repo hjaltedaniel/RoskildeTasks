@@ -183,9 +183,9 @@ namespace RoskildeTasks.Api.Controllers
                                     {
                                         singleAnswer.Content = property.GetValue("int32");
                                     }
-                                    else
+                                    else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
                                     {
-                                        singleAnswer.Content = null;
+                                        singleAnswer.Content = property.GetValue("file");
                                     }
                                     answersList.Add(singleAnswer);
                                 }
