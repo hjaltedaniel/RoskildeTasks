@@ -1,0 +1,12 @@
+@import './font-faces';
+
+* {
+	font-family: $font-default;
+}
+body {
+	background-color: $color-grey-gallery !important;
+}
+
+a {
+	text-decoration: none !important;
+}

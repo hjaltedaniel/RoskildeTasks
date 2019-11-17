@@ -1,0 +1,54 @@
+.main-menu {
+	position: fixed;
+	width: 120px;
+	height: 100vh;
+	background-color: $color-orange-chilean-fire;
+	color: $color-white;
+	span {
+		color: $color-white;
+	}
+	.logo {
+		border-top: initial;
+		div {
+			height: 80px;
+		}
+		img {
+			width: 90px;
+		}
+	}	
+	li {
+		a {
+			position: relative;
+			display: block;
+			padding: 20px 0;
+			&::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				height: 0%;	
+				width: 6px;
+				-ms-flex-item-align: start;
+				align-self: flex-start;
+				background-color: #fff;
+				-webkit-transition: 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) height;
+				transition: 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) height;
+			}	
+			&:hover {
+				&::before {
+					height: 100%;	
+				}	
+			}
+		}
+		.router-link-exact-active {
+			&::before {
+				height: 100%;	
+			}
+		}
+		border-top: 2px solid $color-white;
+		width: 100%;
+		img {
+			width: 45px;
+		}
+	}
+}
+
