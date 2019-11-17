@@ -19,8 +19,8 @@ using Umbraco.ModelsBuilder;
 using Umbraco.ModelsBuilder.Umbraco;
 
 [assembly: PureLiveAssembly]
-[assembly:ModelsBuilderAssembly(PureLive = true, SourceHash = "12d47dd7b6bcc723")]
-[assembly:System.Reflection.AssemblyVersion("0.0.0.1")]
+[assembly:ModelsBuilderAssembly(PureLive = true, SourceHash = "3aa0900054f43e38")]
+[assembly:System.Reflection.AssemblyVersion("0.0.0.8")]
 
 namespace Umbraco.Web.PublishedContentModels
 {
@@ -121,6 +121,15 @@ namespace Umbraco.Web.PublishedContentModels
 		}
 
 		///<summary>
+		/// Editor
+		///</summary>
+		[ImplementPropertyType("editor")]
+		public IPublishedContent Editor
+		{
+			get { return this.GetPropertyValue<IPublishedContent>("editor"); }
+		}
+
+		///<summary>
 		/// Members: Use this field to assign the task to specific user groups.
 		///</summary>
 		[ImplementPropertyType("members")]
@@ -188,6 +197,15 @@ namespace Umbraco.Web.PublishedContentModels
 		public string CategoryColor
 		{
 			get { return this.GetPropertyValue<string>("categoryColor"); }
+		}
+
+		///<summary>
+		/// Only message-category: Mark this if this category, is only relevant for messages and not tasks.
+		///</summary>
+		[ImplementPropertyType("isOnlyMessages")]
+		public bool IsOnlyMessages
+		{
+			get { return this.GetPropertyValue<bool>("isOnlyMessages"); }
 		}
 
 		///<summary>
@@ -329,6 +347,251 @@ namespace Umbraco.Web.PublishedContentModels
 		public static PublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Messages, TValue>> selector)
 		{
 			return PublishedContentModelUtility.GetModelPropertyType(GetModelContentType(), selector);
+		}
+	}
+
+	/// <summary>Ressource</summary>
+	[PublishedContentModel("ressource")]
+	public partial class Ressource : PublishedContentModel
+	{
+#pragma warning disable 0109 // new is redundant
+		public new const string ModelTypeAlias = "ressource";
+		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
+#pragma warning restore 0109
+
+		public Ressource(IPublishedContent content)
+			: base(content)
+		{ }
+
+#pragma warning disable 0109 // new is redundant
+		public new static PublishedContentType GetModelContentType()
+		{
+			return PublishedContentType.Get(ModelItemType, ModelTypeAlias);
+		}
+#pragma warning restore 0109
+
+		public static PublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Ressource, TValue>> selector)
+		{
+			return PublishedContentModelUtility.GetModelPropertyType(GetModelContentType(), selector);
+		}
+
+		///<summary>
+		/// Category: Pick the category of this ressource
+		///</summary>
+		[ImplementPropertyType("category")]
+		public IPublishedContent Category
+		{
+			get { return this.GetPropertyValue<IPublishedContent>("category"); }
+		}
+
+		///<summary>
+		/// File: Here you upload the file, you like this ressource to be based on.
+		///</summary>
+		[ImplementPropertyType("file")]
+		public string File
+		{
+			get { return this.GetPropertyValue<string>("file"); }
+		}
+
+		///<summary>
+		/// Member Access: Pick the member group, or groups to have access to this ressource.
+		///</summary>
+		[ImplementPropertyType("memberAccess")]
+		public string MemberAccess
+		{
+			get { return this.GetPropertyValue<string>("memberAccess"); }
+		}
+	}
+
+	/// <summary>Ressources</summary>
+	[PublishedContentModel("ressources")]
+	public partial class Ressources : PublishedContentModel
+	{
+#pragma warning disable 0109 // new is redundant
+		public new const string ModelTypeAlias = "ressources";
+		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
+#pragma warning restore 0109
+
+		public Ressources(IPublishedContent content)
+			: base(content)
+		{ }
+
+#pragma warning disable 0109 // new is redundant
+		public new static PublishedContentType GetModelContentType()
+		{
+			return PublishedContentType.Get(ModelItemType, ModelTypeAlias);
+		}
+#pragma warning restore 0109
+
+		public static PublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Ressources, TValue>> selector)
+		{
+			return PublishedContentModelUtility.GetModelPropertyType(GetModelContentType(), selector);
+		}
+	}
+
+	/// <summary>Editor</summary>
+	[PublishedContentModel("editor")]
+	public partial class Editor : PublishedContentModel
+	{
+#pragma warning disable 0109 // new is redundant
+		public new const string ModelTypeAlias = "editor";
+		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
+#pragma warning restore 0109
+
+		public Editor(IPublishedContent content)
+			: base(content)
+		{ }
+
+#pragma warning disable 0109 // new is redundant
+		public new static PublishedContentType GetModelContentType()
+		{
+			return PublishedContentType.Get(ModelItemType, ModelTypeAlias);
+		}
+#pragma warning restore 0109
+
+		public static PublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Editor, TValue>> selector)
+		{
+			return PublishedContentModelUtility.GetModelPropertyType(GetModelContentType(), selector);
+		}
+
+		///<summary>
+		/// Properties: Please fill in the properties the user need to fill out
+		///</summary>
+		[ImplementPropertyType("editorProperties")]
+		public Archetype.Models.ArchetypeModel EditorProperties
+		{
+			get { return this.GetPropertyValue<Archetype.Models.ArchetypeModel>("editorProperties"); }
+		}
+	}
+
+	/// <summary>Editors</summary>
+	[PublishedContentModel("editors")]
+	public partial class Editors : PublishedContentModel
+	{
+#pragma warning disable 0109 // new is redundant
+		public new const string ModelTypeAlias = "editors";
+		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
+#pragma warning restore 0109
+
+		public Editors(IPublishedContent content)
+			: base(content)
+		{ }
+
+#pragma warning disable 0109 // new is redundant
+		public new static PublishedContentType GetModelContentType()
+		{
+			return PublishedContentType.Get(ModelItemType, ModelTypeAlias);
+		}
+#pragma warning restore 0109
+
+		public static PublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Editors, TValue>> selector)
+		{
+			return PublishedContentModelUtility.GetModelPropertyType(GetModelContentType(), selector);
+		}
+	}
+
+	/// <summary>SingleAnswer</summary>
+	[PublishedContentModel("singleAnswer")]
+	public partial class SingleAnswer : PublishedContentModel
+	{
+#pragma warning disable 0109 // new is redundant
+		public new const string ModelTypeAlias = "singleAnswer";
+		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
+#pragma warning restore 0109
+
+		public SingleAnswer(IPublishedContent content)
+			: base(content)
+		{ }
+
+#pragma warning disable 0109 // new is redundant
+		public new static PublishedContentType GetModelContentType()
+		{
+			return PublishedContentType.Get(ModelItemType, ModelTypeAlias);
+		}
+#pragma warning restore 0109
+
+		public static PublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<SingleAnswer, TValue>> selector)
+		{
+			return PublishedContentModelUtility.GetModelPropertyType(GetModelContentType(), selector);
+		}
+
+		///<summary>
+		/// Content: Here the answer is available
+		///</summary>
+		[ImplementPropertyType("content")]
+		public Archetype.Models.ArchetypeModel Content
+		{
+			get { return this.GetPropertyValue<Archetype.Models.ArchetypeModel>("content"); }
+		}
+	}
+
+	/// <summary>Answers</summary>
+	[PublishedContentModel("answers")]
+	public partial class Answers : PublishedContentModel
+	{
+#pragma warning disable 0109 // new is redundant
+		public new const string ModelTypeAlias = "answers";
+		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
+#pragma warning restore 0109
+
+		public Answers(IPublishedContent content)
+			: base(content)
+		{ }
+
+#pragma warning disable 0109 // new is redundant
+		public new static PublishedContentType GetModelContentType()
+		{
+			return PublishedContentType.Get(ModelItemType, ModelTypeAlias);
+		}
+#pragma warning restore 0109
+
+		public static PublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Answers, TValue>> selector)
+		{
+			return PublishedContentModelUtility.GetModelPropertyType(GetModelContentType(), selector);
+		}
+	}
+
+	/// <summary>Answer</summary>
+	[PublishedContentModel("answer")]
+	public partial class Answer : PublishedContentModel
+	{
+#pragma warning disable 0109 // new is redundant
+		public new const string ModelTypeAlias = "answer";
+		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
+#pragma warning restore 0109
+
+		public Answer(IPublishedContent content)
+			: base(content)
+		{ }
+
+#pragma warning disable 0109 // new is redundant
+		public new static PublishedContentType GetModelContentType()
+		{
+			return PublishedContentType.Get(ModelItemType, ModelTypeAlias);
+		}
+#pragma warning restore 0109
+
+		public static PublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Answer, TValue>> selector)
+		{
+			return PublishedContentModelUtility.GetModelPropertyType(GetModelContentType(), selector);
+		}
+
+		///<summary>
+		/// Task
+		///</summary>
+		[ImplementPropertyType("task")]
+		public IPublishedContent Task
+		{
+			get { return this.GetPropertyValue<IPublishedContent>("task"); }
+		}
+
+		///<summary>
+		/// User
+		///</summary>
+		[ImplementPropertyType("user")]
+		public IPublishedContent User
+		{
+			get { return this.GetPropertyValue<IPublishedContent>("user"); }
 		}
 	}
 
