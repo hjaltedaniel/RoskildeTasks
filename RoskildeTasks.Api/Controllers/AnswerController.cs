@@ -275,6 +275,7 @@ namespace RoskildeTasks.Api.Controllers
 
             return StatusCode(HttpStatusCode.OK);
         }
+
         [RoleAuthorize]
         [HttpPost]
         public string SubmitFile()
