@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RoskildeTasks.Api.Models.AnswerSend
+namespace RoskildeTasks.Api.Models.DTO
 {
-    public class Item : EditorItem
+    public class AnswerItem : EditorItem
     {
         public string Content { get; set; }
     }

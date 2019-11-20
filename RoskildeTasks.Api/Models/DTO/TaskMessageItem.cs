@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RoskildeTasks.Api.Models.AnswerSend
+namespace RoskildeTasks.Api.Models.DTO
 {
-    public class Root
+    public class TaskMessageItem:MessageItem
     {
         public int TaskId { get; set; }
-        public List<Item> Rows { get; set; }
     }
 }
