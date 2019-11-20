@@ -222,9 +222,14 @@
     <Compile Include="Functions.cs" />
     <Compile Include="Models\AnswerItem.cs" />
     <Compile Include="Models\AnswerRootItem.cs" />
-    <Compile Include="Models\AnswerSend\Root.cs" />
+    <Compile Include="Models\DTO\AnswerRoot.cs">
+      <Generator>Answer</Generator>
+    </Compile>
     <Compile Include="Models\ColorItem.cs" />
-    <Compile Include="Models\AnswerSend\Item.cs" />
+    <Compile Include="Models\DTO\AnswerItem.cs" />
+    <Compile Include="Models\DTO\TaskMessageItem.cs" />
+    <Compile Include="Models\DTO\CategoryMessageItem.cs" />
+    <Compile Include="Models\DTO\MessageItem.cs" />
     <Compile Include="Models\EditorItem.cs" />
     <Compile Include="Models\MessageItem.cs" />
     <Compile Include="Models\RessourceItem.cs" />
