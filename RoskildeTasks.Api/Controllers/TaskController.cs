@@ -59,6 +59,7 @@ namespace RoskildeTasks.Api.Controllers
                             {
                                 AnswerRootItem answersForTask = new AnswerRootItem();
                                 answersForTask.TaskId = answerTaskId;
+                                answersForTask.AnswerId = row.Id;
                                 answersForTask.isPublished = row.Published;
                                 List<AnswerItem> answersList = new List<AnswerItem>();
                                 var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
@@ -167,6 +168,7 @@ namespace RoskildeTasks.Api.Controllers
                             {
                                 AnswerRootItem answersForTask = new AnswerRootItem();
                                 answersForTask.TaskId = answerTaskId;
+                                answersForTask.AnswerId = row.Id;
                                 answersForTask.isPublished = row.Published;
                                 List<AnswerItem> answersList = new List<AnswerItem>();
                                 var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
