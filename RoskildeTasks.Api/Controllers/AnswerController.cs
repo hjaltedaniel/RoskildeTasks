@@ -199,6 +199,82 @@ namespace RoskildeTasks.Api.Controllers
 
             return StatusCode(HttpStatusCode.OK);
         }
+
+        [RoleAuthorize]
+        [HttpPost]
+        public IHttpActionResult UpdateAnswer(int id)
+        {
+            string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
+
+            Models.DTO.AnswerRoot Answer = JsonConvert.DeserializeObject<Models.DTO.AnswerRoot>(Json);
+
+            IContentService cs = Services.ContentService;
+
+            var singleNewAnswer = cs.GetById(id);
+
+            var archetype = new ArchetypeModel();
+            var fieldsets = new List<ArchetypeFieldsetModel>();
+
+            foreach (Models.DTO.AnswerItem row in Answer.Rows)
+            {
+                var fieldset = new ArchetypeFieldsetModel();
+                fieldset.Alias = "column";
+                fieldset.AllowedMemberGroups = "";
+                fieldset.Disabled = false;
+                var properties = new List<ArchetypePropertyModel>();
+
+                var nameProp = new ArchetypePropertyModel();
+                nameProp.Alias = "name";
+                nameProp.Value = row.Name;
+                properties.Add(nameProp);
+
+                if (row.ValueType == "String")
+                {
+                    var stringProp = new ArchetypePropertyModel();
+                    stringProp.Alias = "string";
+                    stringProp.Value = row.Content;
+                    properties.Add(stringProp);
+
+                    var intProp = new ArchetypePropertyModel();
+                    intProp.Alias = "int32";
+                    intProp.Value = null;
+                    properties.Add(intProp);
+
+                    var fileProp = new ArchetypePropertyModel();
+                    fileProp.Alias = "file";
+                    fileProp.Value = null;
+                    properties.Add(fileProp);
+                }
+                else if (row.ValueType == "Int32")
+                {
+                    var stringProp = new ArchetypePropertyModel();
+                    stringProp.Alias = "string";
+                    stringProp.Value = null;
+                    properties.Add(stringProp);
+
+                    var intProp = new ArchetypePropertyModel();
+                    intProp.Alias = "int32";
+                    intProp.Value = row.Content;
+                    properties.Add(intProp);
+
+                    var fileProp = new ArchetypePropertyModel();
+                    fileProp.Alias = "file";
+                    fileProp.Value = null;
+                    properties.Add(fileProp);
+                }
+
+                fieldset.Properties = properties;
+                fieldsets.Add(fieldset);
+            }
+
+            archetype.Fieldsets = fieldsets;
+
+            singleNewAnswer.SetValue("content", JsonConvert.SerializeObject(archetype));
+
+            cs.Save(singleNewAnswer);
+
+            return StatusCode(HttpStatusCode.OK);
+        }
         [RoleAuthorize]
         [HttpPost]
         public string SubmitFile()
