@@ -75,9 +75,9 @@ namespace RoskildeTasks.Api.Controllers
                                     {
                                         singleAnswer.Content = property.GetValue("int32");
                                     }
-                                    else
+                                    else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
                                     {
-                                        singleAnswer.Content = null;
+                                        singleAnswer.Content = Umbraco.TypedMedia(property.GetValue("file")).Url;
                                     }
                                     answersList.Add(singleAnswer);
                                 }
@@ -185,7 +185,7 @@ namespace RoskildeTasks.Api.Controllers
                                     }
                                     else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
                                     {
-                                        singleAnswer.Content = property.GetValue("file");
+                                        singleAnswer.Content = Umbraco.TypedMedia(property.GetValue("file")).Url;
                                     }
                                     answersList.Add(singleAnswer);
                                 }

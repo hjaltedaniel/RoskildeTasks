@@ -108,7 +108,7 @@ namespace RoskildeTasks.Api.Controllers
 
                             var intProp = new ArchetypePropertyModel();
                             intProp.Alias = "int32";
-                            intProp.Value = row.Content;
+                            intProp.Value = null;
                             properties.Add(intProp);
 
                             var fileProp = new ArchetypePropertyModel();
@@ -201,6 +201,26 @@ namespace RoskildeTasks.Api.Controllers
             }
 
             return StatusCode(HttpStatusCode.OK);
+        }
+        [RoleAuthorize]
+        [HttpPost]
+        public string SubmitFile()
+        {
+            HttpPostedFile upload = HttpContext.Current.Request.Files["file"];
+
+            Stream inputStream = upload.InputStream;
+
+            IMediaService ms = Services.MediaService;
+
+            var name = Path.GetFileName(upload.FileName);
+
+            IMedia file = ms.CreateMedia(name, Constants.System.Root, Constants.Conventions.MediaTypes.File);
+            file.SetValue("umbracoFile", name, inputStream);
+
+            // Save the media
+            ms.Save(file);
+
+            return file.GetUdi().ToString();
         }
     }
 }

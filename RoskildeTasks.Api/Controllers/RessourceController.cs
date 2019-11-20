@@ -60,5 +60,39 @@ namespace RoskildeTasks.Api.Controllers
 
             return usersRessources;
         }
+
+        [RoleAuthorize]
+        [HttpGet]
+        public List<RessourceItem> GetRessourcesForCategory(int categoryId)
+        {
+            var currentUser = Members.CurrentUserName;
+            IContentService cs = Services.ContentService;
+
+            var everyRessource = cs.GetContentOfContentType(1100);
+
+            List<RessourceItem> categoryRessources = new List<RessourceItem>();
+
+            foreach (var ressource in everyRessource)
+            {
+                string ressourceGroups = ressource.GetValue("memberAccess").ToString();
+
+                if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
+                {
+                    var categoryUri = ressource.GetValue("category");
+                    var thisCategoryId = Umbraco.TypedContent(categoryUri).Id;
+
+                    if(thisCategoryId == categoryId)
+                    {
+                        RessourceItem usersRessource = new RessourceItem();
+                        usersRessource.Name = ressource.Name;
+                        usersRessource.Url = ressource.GetValue("file").ToString();
+                        usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
+                        categoryRessources.Add(usersRessource);
+                    }
+                }
+            }
+
+            return categoryRessources;
+        }
     }
 }

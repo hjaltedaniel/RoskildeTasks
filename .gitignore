@@ -12,6 +12,8 @@
 **/App_Data/NuGetBackup/
 **/App_Data/Models/
 
+**/Media/
+
 # Ignore Umbraco content cache file
 **/App_Data/umbraco.config
 
