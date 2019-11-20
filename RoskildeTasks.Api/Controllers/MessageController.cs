@@ -10,6 +10,9 @@ using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using RoskildeTasks.Api.Models;
 using System.Net;
+using Newtonsoft.Json;
+using System.IO;
+using System.Web;
 
 namespace RoskildeTasks.Api.Controllers
 {
@@ -58,22 +61,26 @@ namespace RoskildeTasks.Api.Controllers
 
         [RoleAuthorize]
         [HttpPost]
-        public IHttpActionResult SubmitMessageForTask(int taskId, string content)
+        public IHttpActionResult SubmitMessageForTask()
         {
+            string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
+
+            Models.DTO.TaskMessageItem message = JsonConvert.DeserializeObject<Models.DTO.TaskMessageItem>(Json);
+
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
             var userUdi = ms.GetByUsername(currentUser).GetUdi().ToString();
 
             IContentService cs = Services.ContentService;
 
-            var taskUdi = cs.GetById(taskId).GetUdi().ToString();
+            var taskUdi = cs.GetById(message.TaskId).GetUdi().ToString();
 
             var messageParent = cs.GetById(1086).GetUdi();
 
             var newMessage = cs.CreateContent("message", messageParent, "Message");
 
             newMessage.SetValue("member", userUdi);
-            newMessage.SetValue("content", content);
+            newMessage.SetValue("content", message.Content);
             newMessage.SetValue("isFromAdmin", false);
             newMessage.SetValue("task", taskUdi);
 
@@ -124,22 +131,26 @@ namespace RoskildeTasks.Api.Controllers
 
         [RoleAuthorize]
         [HttpPost]
-        public IHttpActionResult SubmitMessageForCategory(int categoryId, string content)
+        public IHttpActionResult SubmitMessageForCategory()
         {
+            string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
+
+            Models.DTO.CatgoryMessageItem message = JsonConvert.DeserializeObject<Models.DTO.CatgoryMessageItem>(Json);
+
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
             var userUdi = ms.GetByUsername(currentUser).GetUdi().ToString();
 
             IContentService cs = Services.ContentService;
 
-            var categoryUdi = cs.GetById(categoryId).GetUdi().ToString();
+            var categoryUdi = cs.GetById(message.CategoryId).GetUdi().ToString();
 
             var messageParent = cs.GetById(1086).GetUdi();
 
             var newMessage = cs.CreateContent("message", messageParent, "Message");
 
             newMessage.SetValue("member", userUdi);
-            newMessage.SetValue("content", content);
+            newMessage.SetValue("content", message.Content);
             newMessage.SetValue("isFromAdmin", false);
             newMessage.SetValue("category", categoryUdi);
 
