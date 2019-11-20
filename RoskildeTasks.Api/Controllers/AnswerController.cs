@@ -23,12 +23,9 @@ namespace RoskildeTasks.Api.Controllers
         [HttpPost]
         public IHttpActionResult SubmitAnswer()
         {
-            var bodyStream = new StreamReader(HttpContext.Current.Request.InputStream);
-            bodyStream.BaseStream.Seek(0, SeekOrigin.Begin);
-            var bodyText = bodyStream.ReadToEnd();
-            string Json = bodyText;
+            string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
 
-            Models.AnswerSend.Root Answer = JsonConvert.DeserializeObject<Models.AnswerSend.Root>(Json);
+            Models.DTO.AnswerRoot Answer = JsonConvert.DeserializeObject<Models.DTO.AnswerRoot>(Json);
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
             var user = ms.GetByUsername(currentUser);
@@ -52,7 +49,7 @@ namespace RoskildeTasks.Api.Controllers
                     var archetype = new ArchetypeModel();
                     var fieldsets = new List<ArchetypeFieldsetModel>();
 
-                    foreach (Models.AnswerSend.Item row in Answer.Rows)
+                    foreach (Models.DTO.AnswerItem row in Answer.Rows)
                     {
                         var fieldset = new ArchetypeFieldsetModel();
                         fieldset.Alias = "column";
@@ -139,7 +136,7 @@ namespace RoskildeTasks.Api.Controllers
                 var archetype = new ArchetypeModel();
                 var fieldsets = new List<ArchetypeFieldsetModel>();
 
-                foreach (Models.AnswerSend.Item row in Answer.Rows)
+                foreach (Models.DTO.AnswerItem row in Answer.Rows)
                 {
                     var fieldset = new ArchetypeFieldsetModel();
                     fieldset.Alias = "column";
@@ -217,7 +214,6 @@ namespace RoskildeTasks.Api.Controllers
             IMedia file = ms.CreateMedia(name, Constants.System.Root, Constants.Conventions.MediaTypes.File);
             file.SetValue("umbracoFile", name, inputStream);
 
-            // Save the media
             ms.Save(file);
 
             return file.GetUdi().ToString();
