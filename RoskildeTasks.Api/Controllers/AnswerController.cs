@@ -278,6 +278,34 @@ namespace RoskildeTasks.Api.Controllers
 
         [RoleAuthorize]
         [HttpPost]
+        public IHttpActionResult SendAllAnswersForTask(int taskId)
+        {
+
+            IContentService cs = Services.ContentService;
+
+            var allAnswers = cs.GetById(1135).Children();
+
+            foreach (var answer in allAnswers)
+            {
+                var task = answer.GetValue("task");
+                var answerTaskId = Umbraco.TypedContent(task).Id;
+
+                if (answerTaskId == taskId)
+                {
+                    foreach (var child in answer.Children())
+                    {
+                        cs.Publish(child);
+                    }
+
+                    cs.Publish(answer);
+                }
+            }
+
+            return StatusCode(HttpStatusCode.OK);
+        }
+
+        [RoleAuthorize]
+        [HttpPost]
         public string SubmitFile()
         {
             HttpPostedFile upload = HttpContext.Current.Request.Files["file"];
@@ -294,6 +322,48 @@ namespace RoskildeTasks.Api.Controllers
             ms.Save(file);
 
             return file.GetUdi().ToString();
+        }
+
+        [RoleAuthorize]
+        [HttpDelete]
+        public IHttpActionResult DeleteSingleAnswer(int id)
+        {
+
+            IContentService cs = Services.ContentService;
+
+            var singleNewAnswer = cs.GetById(id);
+
+            cs.Delete(singleNewAnswer);
+
+            return StatusCode(HttpStatusCode.OK);
+        }
+
+        [RoleAuthorize]
+        [HttpDelete]
+        public IHttpActionResult DeleteAllAnswersForTask(int taskId)
+        {
+
+            IContentService cs = Services.ContentService;
+
+            var allAnswers = cs.GetById(1135).Children();
+
+            foreach(var answer in allAnswers)
+            {
+                var task = answer.GetValue("task");
+                var answerTaskId = Umbraco.TypedContent(task).Id;
+
+                if(answerTaskId == taskId)
+                {
+                    foreach(var child in answer.Children())
+                    {
+                        cs.Delete(child);
+                    }
+
+                    cs.Delete(answer);
+                }
+            }
+
+            return StatusCode(HttpStatusCode.OK);
         }
     }
 }
