@@ -18,52 +18,57 @@ namespace RoskildeTasks.Api.Controllers
     {
         [RoleAuthorize]
         [HttpGet]
-        public List<RessourceItem> GetAllRessources()
+        public IHttpActionResult GetAllRessources()
         {
             var currentUser = Members.CurrentUserName;
-            IMemberService ms = Services.MemberService;
             IContentService cs = Services.ContentService;
 
             var everyRessource = cs.GetContentOfContentType(1100);
 
-            List<RessourceItem> usersRessources = new List<RessourceItem>();
-
-            foreach (var ressource in everyRessource)
+            if (everyRessource != null)
             {
-                string ressourceGroups = ressource.GetValue("memberAccess").ToString();
+                List<RessourceItem> usersRessources = new List<RessourceItem>();
 
-                if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
+                foreach (var ressource in everyRessource)
                 {
-                    RessourceItem usersRessource = new RessourceItem();
-                    usersRessource.Name = ressource.Name;
-                    usersRessource.Url = ressource.GetValue("file").ToString();
-                    usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
+                    string ressourceGroups = ressource.GetValue("memberAccess").ToString();
 
-                    var categoryUri = ressource.GetValue("category");
-                    var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
-                    CategoryItem ressourceCategory = new CategoryItem();
-                    ressourceCategory.Id = thisCategory.Id;
-                    ressourceCategory.Name = thisCategory.Name;
-                    ressourceCategory.ShortName = thisCategory.GetValue("shortName").ToString();
+                    if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
+                    {
+                        RessourceItem usersRessource = new RessourceItem();
+                        usersRessource.Name = ressource.Name;
+                        usersRessource.Url = ressource.GetValue("file").ToString();
+                        usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
 
-                    var colorString = thisCategory.GetValue("categoryColor").ToString();
-                    ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
-                    ressourceCategory.Color = color;
+                        var categoryUri = ressource.GetValue("category");
+                        var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
+                        CategoryItem ressourceCategory = new CategoryItem();
+                        ressourceCategory.Id = thisCategory.Id;
+                        ressourceCategory.Name = thisCategory.Name;
+                        ressourceCategory.ShortName = thisCategory.GetValue("shortName").ToString();
 
-                    ressourceCategory.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
-                    ressourceCategory.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
-                    usersRessource.Category = ressourceCategory;
+                        var colorString = thisCategory.GetValue("categoryColor").ToString();
+                        ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                        ressourceCategory.Color = color;
 
-                    usersRessources.Add(usersRessource);
+                        ressourceCategory.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
+                        ressourceCategory.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
+                        usersRessource.Category = ressourceCategory;
+
+                        usersRessources.Add(usersRessource);
+                    }
                 }
+                return Ok(usersRessources);
             }
-
-            return usersRessources;
+            else
+            {
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
+            }
         }
 
         [RoleAuthorize]
         [HttpGet]
-        public List<RessourceItem> GetRessourcesForCategory(int categoryId)
+        public IHttpActionResult GetRessourcesForCategory(int categoryId)
         {
             var currentUser = Members.CurrentUserName;
             IContentService cs = Services.ContentService;
@@ -87,12 +92,38 @@ namespace RoskildeTasks.Api.Controllers
                         usersRessource.Name = ressource.Name;
                         usersRessource.Url = ressource.GetValue("file").ToString();
                         usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
+
+                        var categoryUdi = ressource.GetValue("category").ToString();
+                        var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUdi).Id);
+
+                        CategoryItem category = new CategoryItem();
+
+                        category.Id = thisCategory.Id;
+                        category.Name = thisCategory.Name;
+                        category.ShortName = thisCategory.GetValue("shortName").ToString();
+                        category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
+                        category.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
+                        var colorString = thisCategory.GetValue("categoryColor").ToString();
+                        ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                        category.Color = color;
+
+                        usersRessource.Category = category;
+
                         categoryRessources.Add(usersRessource);
                     }
                 }
             }
 
-            return categoryRessources;
+            if(categoryRessources.Any())
+            {
+                return Ok(categoryRessources);
+            }
+            else
+            {
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
+            }
+
+            
         }
     }
 }
