@@ -20,117 +20,140 @@ namespace RoskildeTasks.Api.Controllers
     {
         [RoleAuthorize]
         [HttpGet]
-        public List<TaskItem> GetAllTasks()
+        public IHttpActionResult GetAllTasks()
         {
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
             IContentService cs = Services.ContentService;
 
             var everyTask = cs.GetContentOfContentType(1056);
-
             List<TaskItem> userTasks = new List<TaskItem>();
 
-            foreach (var task in everyTask)
+            if (everyTask.Any())
             {
-                var taskGroups = task.GetValue("members").ToString();
-
-                if(Functions.IsMemberInGroups(taskGroups, currentUser))
+                foreach (var task in everyTask)
                 {
-                    TaskItem usersTask = new TaskItem();
-                    usersTask.Id = task.Id;
-                    usersTask.Name = task.Name;
-                    usersTask.Description = task.GetValue("description").ToString();
-                    usersTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
 
-                    var editorUri = task.GetValue("editor");
-                    var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
-                    usersTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
-
-                    var allAnswers = cs.GetContentOfContentType(1133);
-                    foreach (var answer in allAnswers)
+                    var taskMembers = task.GetValue("members");
+                    string taskGroups;
+                    try
                     {
-                        var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
-                        if(answerTaskId == task.Id)
+                        taskGroups = taskMembers.ToString();
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    if (Functions.IsMemberInGroups(taskGroups, currentUser))
+                    {
+                        TaskItem usersTask = new TaskItem();
+                        usersTask.Id = task.Id;
+                        usersTask.Name = task.Name;
+                        usersTask.Description = task.GetValue("description").ToString();
+                        usersTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
+
+                        var editorUri = task.GetValue("editor");
+                        var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
+                        usersTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
+
+                        var allAnswers = cs.GetContentOfContentType(1133);
+                        foreach (var answer in allAnswers)
                         {
-                            List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
-                            var answerRows = answer.Children();
-                            foreach(var row in answerRows)
+                            var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
+                            if (answerTaskId == task.Id)
                             {
-                                AnswerRootItem answersForTask = new AnswerRootItem();
-                                answersForTask.TaskId = answerTaskId;
-                                answersForTask.AnswerId = row.Id;
-                                answersForTask.isPublished = row.Published;
-                                List<AnswerItem> answersList = new List<AnswerItem>();
-                                var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
-
-                                foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
+                                List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
+                                var answerRows = answer.Children();
+                                foreach (var row in answerRows)
                                 {
-                                    AnswerItem singleAnswer = new AnswerItem();
-                                    singleAnswer.Name = property.GetValue("name");
-                                    if(!string.IsNullOrWhiteSpace(property.GetValue("string")))
+                                    AnswerRootItem answersForTask = new AnswerRootItem();
+                                    answersForTask.TaskId = answerTaskId;
+                                    answersForTask.AnswerId = row.Id;
+                                    answersForTask.isPublished = row.Published;
+                                    List<AnswerItem> answersList = new List<AnswerItem>();
+                                    var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
+
+                                    foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
                                     {
-                                        singleAnswer.Content = property.GetValue("string");
+                                        AnswerItem singleAnswer = new AnswerItem();
+                                        singleAnswer.Name = property.GetValue("name");
+                                        if (!string.IsNullOrWhiteSpace(property.GetValue("string")))
+                                        {
+                                            singleAnswer.Content = property.GetValue("string");
+                                        }
+                                        else if (!string.IsNullOrWhiteSpace(property.GetValue("int32")))
+                                        {
+                                            singleAnswer.Content = property.GetValue("int32");
+                                        }
+                                        else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
+                                        {
+                                            singleAnswer.Content = Umbraco.TypedMedia(property.GetValue("file")).Url;
+                                        }
+                                        answersList.Add(singleAnswer);
                                     }
-                                    else if (!string.IsNullOrWhiteSpace(property.GetValue("int32")))
-                                    {
-                                        singleAnswer.Content = property.GetValue("int32");
-                                    }
-                                    else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
-                                    {
-                                        singleAnswer.Content = Umbraco.TypedMedia(property.GetValue("file")).Url;
-                                    }
-                                    answersList.Add(singleAnswer);
+                                    answersForTask.Rows = answersList;
+                                    answerRootList.Add(answersForTask);
                                 }
-                                answersForTask.Rows = answersList;
-                                answerRootList.Add(answersForTask);
+
+                                usersTask.Answers = answerRootList;
                             }
-                            
-                            usersTask.Answers = answerRootList;
                         }
-                    }
 
-                    var categoryUri = task.GetValue("category");
-                    var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
-                    CategoryItem category = new CategoryItem();
-                    category.Id = thisCategory.Id;
-                    category.Name = thisCategory.Name;
-                    category.ShortName = thisCategory.GetValue("shortName").ToString();
-                    category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
-                    category.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
-                    var colorString = thisCategory.GetValue("categoryColor").ToString();
-                    ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
-                    category.Color = color;
+                        var categoryUri = task.GetValue("category");
+                        var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
+                        CategoryItem category = new CategoryItem();
+                        category.Id = thisCategory.Id;
+                        category.Name = thisCategory.Name;
+                        category.ShortName = thisCategory.GetValue("shortName").ToString();
+                        category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
+                        category.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
+                        var colorString = thisCategory.GetValue("categoryColor").ToString();
+                        ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                        category.Color = color;
 
-                    usersTask.Category = category;
+                        usersTask.Category = category;
 
-                    if(usersTask.Answers == null)
-                    {
-                        usersTask.isDone = false;
-                    }
-                    else
-                    {
-                        if (usersTask.Answers.All(item => item.isPublished))
-                        {
-                            usersTask.isDone = true;
-                        }
-                        else
+                        if (usersTask.Answers == null)
                         {
                             usersTask.isDone = false;
                         }
+                        else
+                        {
+                            if (usersTask.Answers.All(item => item.isPublished))
+                            {
+                                usersTask.isDone = true;
+                            }
+                            else
+                            {
+                                usersTask.isDone = false;
+                            }
+                        }
+
+                        userTasks.Add(usersTask);
                     }
 
-
-
-                    userTasks.Add(usersTask);
                 }
             }
+            else
+            {
+                return StatusCode(HttpStatusCode.NoContent);
+            }
 
-            return userTasks;
+            if(userTasks.Any())
+            {
+                return Ok(userTasks);
+            }
+            else
+            {
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+
         }
 
         [RoleAuthorize]
         [HttpGet]
-        public TaskItem GetTask(int taskId)
+        public IHttpActionResult GetTask(int taskId)
         {
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
@@ -138,13 +161,25 @@ namespace RoskildeTasks.Api.Controllers
 
             var everyTask = cs.GetContentOfContentType(1056);
 
-            TaskItem currentTask = new TaskItem();
+            var task = cs.GetById(taskId);
 
-            foreach (var task in everyTask)
+            if(task != null)
             {
-                var taskGroups = task.GetValue("members").ToString();
+                TaskItem currentTask = new TaskItem();
 
-                if (Functions.IsMemberInGroups(taskGroups, currentUser) & task.Id == taskId)
+                var taskMembers = task.GetValue("members");
+
+                string taskGroups;
+                try
+                {
+                    taskGroups = taskMembers.ToString();
+                }
+                catch
+                {
+                    return Unauthorized();
+                }
+
+                if (Functions.IsMemberInGroups(taskGroups, currentUser))
                 {
                     currentTask.Id = task.Id;
                     currentTask.Name = task.Name;
@@ -226,10 +261,19 @@ namespace RoskildeTasks.Api.Controllers
                             currentTask.isDone = false;
                         }
                     }
+                    return Ok(currentTask);
+                }
+                else
+                {
+                    return Unauthorized();
                 }
             }
+            else
+            {
+                return StatusCode(HttpStatusCode.NotFound);
+            }
 
-            return currentTask;
+
         }
     }
 }
