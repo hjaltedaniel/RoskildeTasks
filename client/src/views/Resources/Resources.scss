@@ -9,4 +9,14 @@
     &--active {
         background-color: red;
     }
+    &__file-item {
+        margin-top: 1rem !important;
+    }
+    &__button {
+        background-color :$color-orange-chilean-fire;
+        color: $color-white;
+        &:hover {
+            border: none;
+        }
+    }
 }

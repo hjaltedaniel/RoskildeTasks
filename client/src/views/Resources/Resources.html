@@ -1,16 +1,36 @@
 <section class="resources">
   <div class="container-fluid">
     
-    <Tabs>
-      <ResourcesList name="Signs and Layouts" selected="true">
-        <p>Content of Signs and Layouts</p>
+    <!-- Render categories dynamically-->
+    <Tabs >
+      <ResourcesList v-for="(category, index) in categories" :key="index" :name="category.title">
+        <ul class="list-group">
+          <li class="list-group-item" v-for="(file, index) in category.info"  :key="index">
+            <div class="d-flex justify-content-between">
+              <div class="col-md-1 d-flex align-items-center">
+                  <span class="align-self-center my-0 resources-list__icon" :class="{ 'invisible': isRead }"></span>
+              </div>
+              <div class="col-md-5 d-flex align-items-center">
+                  <p class="align-self-center my-0"> {{ file.name }} </p>
+              </div>
+              <div class="col-md-2 d-flex align-items-center">
+                  <p class="align-self-center my-0"> {{ file.type }} </p>
+              </div>
+              <div class="col-md-4 d-flex justify-content-end">
+                <!--  <p class="align-self-center my-0"> {{ file.filePath }} </p> -->
+                  <button class="btn btn-warning resources__button border-0">Download</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+
       </ResourcesList>
-      <ResourcesList name="Construction">
+<!--       <ResourcesList name="Construction">
         <p>Content of Construction</p>
       </ResourcesList>
       <ResourcesList name="Supplies">
         <p>Content of Supplies</p>
-      </ResourcesList>
+      </ResourcesList> -->
     </Tabs>
 
   </div>
