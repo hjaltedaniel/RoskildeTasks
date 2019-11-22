@@ -18,7 +18,6 @@ namespace RoskildeTasks.Api.Controllers
 {
     public class TaskController : UmbracoApiController
     {
-
         [RoleAuthorize]
         [HttpGet]
         public List<TaskItem> GetAllTasks()
@@ -212,20 +211,25 @@ namespace RoskildeTasks.Api.Controllers
                     category.Color = color;
 
                     currentTask.Category = category;
-
-                    if (currentTask.Answers.All(item => item.isPublished))
+                    if (currentTask.Answers == null)
                     {
-                        currentTask.isDone = true;
+                        currentTask.isDone = false;
                     }
                     else
                     {
-                        currentTask.isDone = false;
+                        if (currentTask.Answers.All(item => item.isPublished))
+                        {
+                            currentTask.isDone = true;
+                        }
+                        else
+                        {
+                            currentTask.isDone = false;
+                        }
                     }
                 }
             }
 
             return currentTask;
         }
-
     }
 }
