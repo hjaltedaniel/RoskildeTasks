@@ -20,7 +20,7 @@ namespace RoskildeTasks.Api.Controllers
     {
         [RoleAuthorize]
         [HttpGet]
-        public List<TaskMessageItem> GetMessagesForTask(int taskId)
+        public IHttpActionResult GetMessagesForTask(int taskId)
         {
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
@@ -55,8 +55,15 @@ namespace RoskildeTasks.Api.Controllers
                     }
                 }
             }
-
-            return messages;
+            var task = cs.GetById(taskId);
+            if(task == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(messages);
+            } 
         }
 
         [RoleAuthorize]
@@ -64,8 +71,16 @@ namespace RoskildeTasks.Api.Controllers
         public IHttpActionResult SubmitMessageForTask()
         {
             string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
+            Models.DTO.TaskMessageItem message = new Models.DTO.TaskMessageItem();
 
-            Models.DTO.TaskMessageItem message = JsonConvert.DeserializeObject<Models.DTO.TaskMessageItem>(Json);
+            try
+            {
+                message = JsonConvert.DeserializeObject<Models.DTO.TaskMessageItem>(Json);
+            }
+            catch
+            {
+                return BadRequest();
+            }
 
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
@@ -73,7 +88,25 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var taskUdi = cs.GetById(message.TaskId).GetUdi().ToString();
+            string taskUdi;
+
+            try
+            {
+                var task = cs.GetById(message.TaskId);
+                
+                if (task.ContentTypeId == 1056)
+                {
+                    taskUdi = task.GetUdi().ToString();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
 
             var messageParent = cs.GetById(1086).GetUdi();
 
@@ -84,15 +117,22 @@ namespace RoskildeTasks.Api.Controllers
             newMessage.SetValue("isFromAdmin", false);
             newMessage.SetValue("task", taskUdi);
 
-            cs.Save(newMessage);
-            cs.Publish(newMessage);
+            try
+            {
+                cs.Save(newMessage);
+                cs.Publish(newMessage);
 
-            return StatusCode(HttpStatusCode.OK);
+                return Content(HttpStatusCode.Created, newMessage);
+            }
+            catch
+            {
+                return InternalServerError();
+            }
         }
 
         [RoleAuthorize]
         [HttpGet]
-        public List<MessageItem> GetMessagesForCategory(int categoryId)
+        public IHttpActionResult GetMessagesForCategory(int categoryId)
         {
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
@@ -126,7 +166,15 @@ namespace RoskildeTasks.Api.Controllers
                 }
             }
 
-            return messages;
+            var category = cs.GetById(categoryId);
+            if (category == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(messages);
+            }
         }
 
         [RoleAuthorize]
@@ -135,7 +183,16 @@ namespace RoskildeTasks.Api.Controllers
         {
             string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
 
-            Models.DTO.CatgoryMessageItem message = JsonConvert.DeserializeObject<Models.DTO.CatgoryMessageItem>(Json);
+            Models.DTO.CatgoryMessageItem message = new Models.DTO.CatgoryMessageItem();
+
+            try
+            {
+                message = JsonConvert.DeserializeObject<Models.DTO.CatgoryMessageItem>(Json);
+            }
+            catch
+            {
+                return BadRequest();
+            }
 
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
@@ -143,7 +200,24 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var categoryUdi = cs.GetById(message.CategoryId).GetUdi().ToString();
+            string categoryUdi;
+            try
+            {
+                var category = cs.GetById(message.CategoryId);
+                if(category.ContentTypeId == 1063)
+                {
+                    categoryUdi = category.GetUdi().ToString();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            
 
             var messageParent = cs.GetById(1086).GetUdi();
 
@@ -154,10 +228,17 @@ namespace RoskildeTasks.Api.Controllers
             newMessage.SetValue("isFromAdmin", false);
             newMessage.SetValue("category", categoryUdi);
 
-            cs.Save(newMessage);
-            cs.Publish(newMessage);
+            try
+            {
+                cs.Save(newMessage);
+                cs.Publish(newMessage);
 
-            return StatusCode(HttpStatusCode.OK);
+                return Content(HttpStatusCode.Created, newMessage);
+            }
+            catch
+            {
+                return InternalServerError();
+            }
         }
     }
 }
