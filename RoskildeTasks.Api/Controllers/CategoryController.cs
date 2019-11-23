@@ -19,34 +19,46 @@ namespace RoskildeTasks.Api.Controllers
         
         [RoleAuthorize]
         [HttpGet]
-        public List<CategoryItem> GetAllCategories()
+        public IHttpActionResult GetAllCategories()
         {
             IContentService cs = Services.ContentService;
 
             var allContent = cs.GetContentOfContentType(1063);
 
-            List<CategoryItem> allCategories = new List<CategoryItem>();
-
-            foreach(var content in allContent)
+            if(allContent.Any())
             {
-                CategoryItem category = new CategoryItem();
-                category.Id = content.Id;
-                category.Name = content.Name;
-                category.ShortName = content.GetValue("shortName").ToString();
+                List<CategoryItem> allCategories = new List<CategoryItem>();
 
-                var colorString = content.GetValue("categoryColor").ToString();
-                ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                foreach (var content in allContent)
+                {
+                    CategoryItem category = new CategoryItem();
+                    category.Id = content.Id;
+                    category.Name = content.Name;
+                    category.ShortName = content.GetValue("shortName").ToString();
 
-                category.Color = color;
-                category.StandardMessage = content.GetValue("standardMessage").ToString();
-                category.isOnlyMessages = content.GetValue<bool>("isOnlyMessages");
+                    var colorString = content.GetValue("categoryColor").ToString();
+                    ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
 
-                allCategories.Add(category);
+                    category.Color = color;
+                    category.StandardMessage = content.GetValue("standardMessage").ToString();
+                    category.isOnlyMessages = content.GetValue<bool>("isOnlyMessages");
+
+                    allCategories.Add(category);
+                }
+
+                if (allCategories.Any())
+                {
+                    return Ok(allCategories);
+                }
+                else
+                {
+                    return StatusCode(System.Net.HttpStatusCode.NoContent);
+                }
             }
-
-            return allCategories;
-
-            
+            else
+            {
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
+            }
         }
     }
 }
