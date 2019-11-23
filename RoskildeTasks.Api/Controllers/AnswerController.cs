@@ -249,7 +249,16 @@ namespace RoskildeTasks.Api.Controllers
         {
             string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
 
-            Models.DTO.AnswerRoot Answer = JsonConvert.DeserializeObject<Models.DTO.AnswerRoot>(Json);
+            Models.DTO.AnswerRoot Answer;
+
+            try
+            {
+                Answer = JsonConvert.DeserializeObject<Models.DTO.AnswerRoot>(Json);
+            }
+            catch
+            {
+                return BadRequest();
+            }
 
             IContentService cs = Services.ContentService;
 
@@ -257,68 +266,101 @@ namespace RoskildeTasks.Api.Controllers
 
             if (singleNewAnswer != null && singleNewAnswer.ContentTypeId == 1125)
             {
-                var archetype = new ArchetypeModel();
-                var fieldsets = new List<ArchetypeFieldsetModel>();
+                var taskUdi = singleNewAnswer.Parent().GetValue("task").ToString();
+                var task = cs.GetById(Umbraco.TypedContent(taskUdi).Id);
 
-                foreach (Models.DTO.AnswerItem row in Answer.Rows)
+                TaskItem currentTask = new TaskItem();
+                currentTask.Id = task.Id;
+
+                var editorUri = task.GetValue("editor");
+                var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
+                currentTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
+
+                if(Answer.TaskId == currentTask.Id)
                 {
-                    var fieldset = new ArchetypeFieldsetModel();
-                    fieldset.Alias = "column";
-                    fieldset.AllowedMemberGroups = "";
-                    fieldset.Disabled = false;
-                    var properties = new List<ArchetypePropertyModel>();
 
-                    var nameProp = new ArchetypePropertyModel();
-                    nameProp.Alias = "name";
-                    nameProp.Value = row.Name;
-                    properties.Add(nameProp);
+                    var listComparison = Answer.Rows.Where(row => currentTask.Editor.Any(editor => editor.Name == row.Name && editor.ValueType == row.ValueType));
+                    bool isCorrectFormated = false;
 
-                    if (row.ValueType == "String")
+                    if (listComparison.Count() == currentTask.Editor.Count)
                     {
-                        var stringProp = new ArchetypePropertyModel();
-                        stringProp.Alias = "string";
-                        stringProp.Value = row.Content;
-                        properties.Add(stringProp);
-
-                        var intProp = new ArchetypePropertyModel();
-                        intProp.Alias = "int32";
-                        intProp.Value = null;
-                        properties.Add(intProp);
-
-                        var fileProp = new ArchetypePropertyModel();
-                        fileProp.Alias = "file";
-                        fileProp.Value = null;
-                        properties.Add(fileProp);
-                    }
-                    else if (row.ValueType == "Int32")
-                    {
-                        var stringProp = new ArchetypePropertyModel();
-                        stringProp.Alias = "string";
-                        stringProp.Value = null;
-                        properties.Add(stringProp);
-
-                        var intProp = new ArchetypePropertyModel();
-                        intProp.Alias = "int32";
-                        intProp.Value = row.Content;
-                        properties.Add(intProp);
-
-                        var fileProp = new ArchetypePropertyModel();
-                        fileProp.Alias = "file";
-                        fileProp.Value = null;
-                        properties.Add(fileProp);
+                        isCorrectFormated = true;
                     }
 
-                    fieldset.Properties = properties;
-                    fieldsets.Add(fieldset);
+                    if(isCorrectFormated)
+                    {
+                        var archetype = new ArchetypeModel();
+                        var fieldsets = new List<ArchetypeFieldsetModel>();
+
+                        foreach (Models.DTO.AnswerItem row in Answer.Rows)
+                        {
+                            var fieldset = new ArchetypeFieldsetModel();
+                            fieldset.Alias = "column";
+                            fieldset.AllowedMemberGroups = "";
+                            fieldset.Disabled = false;
+                            var properties = new List<ArchetypePropertyModel>();
+
+                            var nameProp = new ArchetypePropertyModel();
+                            nameProp.Alias = "name";
+                            nameProp.Value = row.Name;
+                            properties.Add(nameProp);
+
+                            if (row.ValueType == "String")
+                            {
+                                var stringProp = new ArchetypePropertyModel();
+                                stringProp.Alias = "string";
+                                stringProp.Value = row.Content;
+                                properties.Add(stringProp);
+
+                                var intProp = new ArchetypePropertyModel();
+                                intProp.Alias = "int32";
+                                intProp.Value = null;
+                                properties.Add(intProp);
+
+                                var fileProp = new ArchetypePropertyModel();
+                                fileProp.Alias = "file";
+                                fileProp.Value = null;
+                                properties.Add(fileProp);
+                            }
+                            else if (row.ValueType == "Int32")
+                            {
+                                var stringProp = new ArchetypePropertyModel();
+                                stringProp.Alias = "string";
+                                stringProp.Value = null;
+                                properties.Add(stringProp);
+
+                                var intProp = new ArchetypePropertyModel();
+                                intProp.Alias = "int32";
+                                intProp.Value = row.Content;
+                                properties.Add(intProp);
+
+                                var fileProp = new ArchetypePropertyModel();
+                                fileProp.Alias = "file";
+                                fileProp.Value = null;
+                                properties.Add(fileProp);
+                            }
+
+                            fieldset.Properties = properties;
+                            fieldsets.Add(fieldset);
+                        }
+
+                        archetype.Fieldsets = fieldsets;
+
+                        singleNewAnswer.SetValue("content", JsonConvert.SerializeObject(archetype));
+
+                        cs.Save(singleNewAnswer);
+
+                        return Ok();
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
                 }
-
-                archetype.Fieldsets = fieldsets;
-
-                singleNewAnswer.SetValue("content", JsonConvert.SerializeObject(archetype));
-
-                cs.Save(singleNewAnswer);
-
-                return StatusCode(HttpStatusCode.OK);
+                else
+                {
+                    return BadRequest();
+                }
             }
             else
             {
@@ -336,44 +378,86 @@ namespace RoskildeTasks.Api.Controllers
             IContentService cs = Services.ContentService;
 
             var allAnswers = cs.GetById(1135).Children();
+            var realTask = cs.GetById(taskId);
+
+            List<int> answerId = new List<int>();
 
             foreach (var answer in allAnswers)
             {
                 var task = answer.GetValue("task");
                 var answerTaskId = Umbraco.TypedContent(task).Id;
 
-                if (answerTaskId == taskId)
+                if (answerTaskId == taskId && realTask.ContentTypeId == 1056)
                 {
                     foreach (var child in answer.Children())
                     {
                         cs.Publish(child);
                     }
-
+                    answerId.Add(answer.Id);
                     cs.Publish(answer);
                 }
             }
 
-            return StatusCode(HttpStatusCode.OK);
+            bool isTaskExisting = false;
+            if (realTask != null && realTask.ContentTypeId == 1056)
+            {
+                isTaskExisting = true;
+            }
+
+
+            if(answerId.Any())
+            {
+                return Ok();
+            }
+            else if (isTaskExisting)
+            {
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [RoleAuthorize]
         [HttpPost]
-        public string SubmitFile()
+        public IHttpActionResult SubmitFile()
         {
             HttpPostedFile upload = HttpContext.Current.Request.Files["file"];
 
-            Stream inputStream = upload.InputStream;
+            if(upload != null)
+            {
+                List<string> allowedFileTypes = new List<string>() { "pdf", "ai", "docx", "svg", "jpg", "png", "xlsx" };
+                Stream inputStream = upload.InputStream;
 
-            IMediaService ms = Services.MediaService;
+                IMediaService ms = Services.MediaService;
 
-            var name = Path.GetFileName(upload.FileName);
+                var filetype = Path.GetExtension(upload.FileName).Replace(".", "");
 
-            IMedia file = ms.CreateMedia(name, Constants.System.Root, Constants.Conventions.MediaTypes.File);
-            file.SetValue("umbracoFile", name, inputStream);
+                if(allowedFileTypes.Contains(filetype))
+                {
+                    var name = Path.GetFileName(upload.FileName);
 
-            ms.Save(file);
+                    IMedia file = ms.CreateMedia(name, Constants.System.Root, Constants.Conventions.MediaTypes.File);
+                    file.SetValue("umbracoFile", name, inputStream);
 
-            return file.GetUdi().ToString();
+                    ms.Save(file);
+
+                    return Ok(file.GetUdi().ToString());
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.Forbidden);
+                }
+
+
+            }
+            else
+            {
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+
+
         }
 
         [RoleAuthorize]
@@ -385,9 +469,17 @@ namespace RoskildeTasks.Api.Controllers
 
             var singleNewAnswer = cs.GetById(id);
 
-            cs.Delete(singleNewAnswer);
+            if(singleNewAnswer != null && singleNewAnswer.ContentTypeId == 1125)
+            {
+                cs.Delete(singleNewAnswer);
+                return StatusCode(HttpStatusCode.OK);
+            }
+            else
+            {
+                return BadRequest();
+            }
 
-            return StatusCode(HttpStatusCode.OK);
+
         }
 
         [RoleAuthorize]
@@ -397,25 +489,41 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var allAnswers = cs.GetById(1135).Children();
+            var task = cs.GetById(taskId);
 
-            foreach(var answer in allAnswers)
+            if(task != null && task.ContentTypeId == 1056)
             {
-                var task = answer.GetValue("task");
-                var answerTaskId = Umbraco.TypedContent(task).Id;
-
-                if(answerTaskId == taskId)
+                List<int> answerId = new List<int>();
+                var allAnswers = cs.GetById(1135).Children();
+                foreach (var answer in allAnswers)
                 {
-                    foreach(var child in answer.Children())
+                    var answerTaskUdi = answer.GetValue("task");
+                    var answerTaskId = Umbraco.TypedContent(answerTaskUdi).Id;
+
+                    if (answerTaskId == task.Id)
                     {
-                        cs.Delete(child);
+                        foreach (var child in answer.Children())
+                        {
+                            cs.Delete(child);
+                        }
+                        answerId.Add(answer.Id);
+                        cs.Delete(answer);
                     }
-
-                    cs.Delete(answer);
                 }
+                if(answerId.Any())
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                
             }
-
-            return StatusCode(HttpStatusCode.OK);
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }
