@@ -23,7 +23,7 @@ namespace RoskildeTasks.Api.Controllers
         {
             IContentService cs = Services.ContentService;
 
-            var allContent = cs.GetContentOfContentType(1063);
+            var allContent = cs.GetContentOfContentType(Configurations.CategoryDocType);
 
             if(allContent.Any())
             {

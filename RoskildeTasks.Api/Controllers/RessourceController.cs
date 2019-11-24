@@ -23,7 +23,7 @@ namespace RoskildeTasks.Api.Controllers
             var currentUser = Members.CurrentUserName;
             IContentService cs = Services.ContentService;
 
-            var everyRessource = cs.GetContentOfContentType(1100);
+            var everyRessource = cs.GetContentOfContentType(Configurations.RessourceDocType);
 
             if (everyRessource != null)
             {
@@ -73,7 +73,7 @@ namespace RoskildeTasks.Api.Controllers
             var currentUser = Members.CurrentUserName;
             IContentService cs = Services.ContentService;
 
-            var everyRessource = cs.GetContentOfContentType(1100);
+            var everyRessource = cs.GetContentOfContentType(Configurations.RessourceDocType);
 
             List<RessourceItem> categoryRessources = new List<RessourceItem>();
 

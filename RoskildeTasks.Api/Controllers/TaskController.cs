@@ -26,7 +26,7 @@ namespace RoskildeTasks.Api.Controllers
             IMemberService ms = Services.MemberService;
             IContentService cs = Services.ContentService;
 
-            var everyTask = cs.GetContentOfContentType(1056);
+            var everyTask = cs.GetContentOfContentType(Configurations.TaskDocType);
             List<TaskItem> userTasks = new List<TaskItem>();
 
             if (everyTask.Any())
@@ -57,7 +57,7 @@ namespace RoskildeTasks.Api.Controllers
                         var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
                         usersTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
 
-                        var allAnswers = cs.GetContentOfContentType(1133);
+                        var allAnswers = cs.GetContentOfContentType(Configurations.AnswerDocType);
                         foreach (var answer in allAnswers)
                         {
                             var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
@@ -159,7 +159,7 @@ namespace RoskildeTasks.Api.Controllers
             IMemberService ms = Services.MemberService;
             IContentService cs = Services.ContentService;
 
-            var everyTask = cs.GetContentOfContentType(1056);
+            var everyTask = cs.GetContentOfContentType(Configurations.TaskDocType);
 
             var task = cs.GetById(taskId);
 
@@ -190,7 +190,7 @@ namespace RoskildeTasks.Api.Controllers
                     var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
                     currentTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
 
-                    var allAnswers = cs.GetContentOfContentType(1133);
+                    var allAnswers = cs.GetContentOfContentType(Configurations.AnswerDocType);
                     foreach (var answer in allAnswers)
                     {
                         var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;

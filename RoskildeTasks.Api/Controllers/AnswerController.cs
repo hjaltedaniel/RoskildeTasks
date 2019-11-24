@@ -44,7 +44,7 @@ namespace RoskildeTasks.Api.Controllers
 
             var task = cs.GetById(Answer.TaskId);
 
-            if(task != null && task.ContentTypeId == 1056)
+            if(task != null && task.ContentTypeId == Configurations.TaskDocType)
             {
                 TaskItem currentTask = new TaskItem();
                 currentTask.Id = task.Id;
@@ -68,10 +68,10 @@ namespace RoskildeTasks.Api.Controllers
                 {
                     var taskUdi = task.GetUdi().ToString();
 
-                    var answerParent = cs.GetById(1135).GetUdi();
+                    var answerParent = cs.GetById(Configurations.AnswerNode).GetUdi();
                     string answerTitle = task.Name + " - " + user.Name;
 
-                    var answerInDb = cs.GetChildrenByName(1135, answerTitle);
+                    var answerInDb = cs.GetChildrenByName(Configurations.AnswerNode, answerTitle);
 
                     if (answerInDb.Any())
                     {
@@ -264,7 +264,7 @@ namespace RoskildeTasks.Api.Controllers
 
             var singleNewAnswer = cs.GetById(id);
 
-            if (singleNewAnswer != null && singleNewAnswer.ContentTypeId == 1125)
+            if (singleNewAnswer != null && singleNewAnswer.ContentTypeId == Configurations.SingleAnswerDocType)
             {
                 var taskUdi = singleNewAnswer.Parent().GetValue("task").ToString();
                 var task = cs.GetById(Umbraco.TypedContent(taskUdi).Id);
@@ -377,7 +377,7 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var allAnswers = cs.GetById(1135).Children();
+            var allAnswers = cs.GetById(Configurations.AnswerNode).Children();
             var realTask = cs.GetById(taskId);
 
             List<int> answerId = new List<int>();
@@ -387,7 +387,7 @@ namespace RoskildeTasks.Api.Controllers
                 var task = answer.GetValue("task");
                 var answerTaskId = Umbraco.TypedContent(task).Id;
 
-                if (answerTaskId == taskId && realTask.ContentTypeId == 1056)
+                if (answerTaskId == taskId && realTask.ContentTypeId == Configurations.TaskDocType)
                 {
                     foreach (var child in answer.Children())
                     {
@@ -399,7 +399,7 @@ namespace RoskildeTasks.Api.Controllers
             }
 
             bool isTaskExisting = false;
-            if (realTask != null && realTask.ContentTypeId == 1056)
+            if (realTask != null && realTask.ContentTypeId == Configurations.TaskDocType)
             {
                 isTaskExisting = true;
             }
@@ -469,7 +469,7 @@ namespace RoskildeTasks.Api.Controllers
 
             var singleNewAnswer = cs.GetById(id);
 
-            if(singleNewAnswer != null && singleNewAnswer.ContentTypeId == 1125)
+            if(singleNewAnswer != null && singleNewAnswer.ContentTypeId == Configurations.SingleAnswerDocType)
             {
                 cs.Delete(singleNewAnswer);
                 return StatusCode(HttpStatusCode.OK);
@@ -491,10 +491,10 @@ namespace RoskildeTasks.Api.Controllers
 
             var task = cs.GetById(taskId);
 
-            if(task != null && task.ContentTypeId == 1056)
+            if(task != null && task.ContentTypeId == Configurations.TaskDocType)
             {
                 List<int> answerId = new List<int>();
-                var allAnswers = cs.GetById(1135).Children();
+                var allAnswers = cs.GetById(Configurations.AnswerNode).Children();
                 foreach (var answer in allAnswers)
                 {
                     var answerTaskUdi = answer.GetValue("task");

@@ -28,7 +28,7 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var allMessages = cs.GetContentOfContentType(1080);
+            var allMessages = cs.GetContentOfContentType(Configurations.MessageDocType);
 
             List<TaskMessageItem> messages = new List<TaskMessageItem>();
 
@@ -94,7 +94,7 @@ namespace RoskildeTasks.Api.Controllers
             {
                 var task = cs.GetById(message.TaskId);
                 
-                if (task.ContentTypeId == 1056)
+                if (task.ContentTypeId == Configurations.TaskDocType)
                 {
                     taskUdi = task.GetUdi().ToString();
                 }
@@ -140,7 +140,7 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var allMessages = cs.GetContentOfContentType(1080);
+            var allMessages = cs.GetContentOfContentType(Configurations.MessageDocType);
 
             List<MessageItem> messages = new List<MessageItem>();
 
@@ -204,7 +204,7 @@ namespace RoskildeTasks.Api.Controllers
             try
             {
                 var category = cs.GetById(message.CategoryId);
-                if(category.ContentTypeId == 1063)
+                if(category.ContentTypeId == Configurations.CategoryDocType)
                 {
                     categoryUdi = category.GetUdi().ToString();
                 }
@@ -219,7 +219,7 @@ namespace RoskildeTasks.Api.Controllers
             }
             
 
-            var messageParent = cs.GetById(1086).GetUdi();
+            var messageParent = cs.GetById(Configurations.MessageNode).GetUdi();
 
             var newMessage = cs.CreateContent("message", messageParent, "Message");
 
