@@ -229,7 +229,7 @@ namespace RoskildeTasks.Api.Controllers
                         cs.Save(singleNewAnswer);
                     }
 
-                    return StatusCode(HttpStatusCode.OK);
+                    return StatusCode(HttpStatusCode.Created);
                 }
                 else
                 {
@@ -376,6 +376,10 @@ namespace RoskildeTasks.Api.Controllers
         {
 
             IContentService cs = Services.ContentService;
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            var user = ms.GetByUsername(currentUser);
+            var userUdi = user.GetUdi().ToString();
 
             var allAnswers = cs.GetById(Configurations.AnswerNode).Children();
             var realTask = cs.GetById(taskId);
@@ -387,7 +391,9 @@ namespace RoskildeTasks.Api.Controllers
                 var task = answer.GetValue("task");
                 var answerTaskId = Umbraco.TypedContent(task).Id;
 
-                if (answerTaskId == taskId && realTask.ContentTypeId == Configurations.TaskDocType)
+                var answerUser = answer.GetValue("user").ToString();
+
+                if (answerTaskId == taskId && realTask.ContentTypeId == Configurations.TaskDocType && answerUser == userUdi)
                 {
                     foreach (var child in answer.Children())
                     {
@@ -443,14 +449,12 @@ namespace RoskildeTasks.Api.Controllers
 
                     ms.Save(file);
 
-                    return Ok(file.GetUdi().ToString());
+                    return Content(HttpStatusCode.Created, file.GetUdi().ToString());
                 }
                 else
                 {
                     return StatusCode(HttpStatusCode.Forbidden);
                 }
-
-
             }
             else
             {
@@ -466,18 +470,33 @@ namespace RoskildeTasks.Api.Controllers
         {
 
             IContentService cs = Services.ContentService;
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            var user = ms.GetByUsername(currentUser);
+            var userUdi = user.GetUdi().ToString();
 
             var singleNewAnswer = cs.GetById(id);
+            var parentAnswer = singleNewAnswer.Parent();
+            var parentAnswerUser = parentAnswer.GetValue("user").ToString();
 
-            if(singleNewAnswer != null && singleNewAnswer.ContentTypeId == Configurations.SingleAnswerDocType)
+            if(parentAnswerUser == userUdi)
             {
-                cs.Delete(singleNewAnswer);
-                return StatusCode(HttpStatusCode.OK);
+                if (singleNewAnswer != null && singleNewAnswer.ContentTypeId == Configurations.SingleAnswerDocType)
+                {
+                    cs.Delete(singleNewAnswer);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             else
             {
-                return BadRequest();
+                return Unauthorized();
             }
+
+
 
 
         }
@@ -488,6 +507,10 @@ namespace RoskildeTasks.Api.Controllers
         {
 
             IContentService cs = Services.ContentService;
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            var user = ms.GetByUsername(currentUser);
+            var userUdi = user.GetUdi().ToString();
 
             var task = cs.GetById(taskId);
 
@@ -497,10 +520,11 @@ namespace RoskildeTasks.Api.Controllers
                 var allAnswers = cs.GetById(Configurations.AnswerNode).Children();
                 foreach (var answer in allAnswers)
                 {
+                    var answerUser = answer.GetValue("user").ToString();
                     var answerTaskUdi = answer.GetValue("task");
                     var answerTaskId = Umbraco.TypedContent(answerTaskUdi).Id;
 
-                    if (answerTaskId == task.Id)
+                    if (answerTaskId == task.Id && answerUser == userUdi)
                     {
                         foreach (var child in answer.Children())
                         {

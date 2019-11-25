@@ -28,42 +28,53 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var allMessages = cs.GetContentOfContentType(Configurations.MessageDocType);
+            var task = cs.GetById(taskId);
 
-            List<TaskMessageItem> messages = new List<TaskMessageItem>();
-
-            foreach (var message in allMessages)
+            if(task != null && task.ContentTypeId == Configurations.TaskDocType)
             {
-                var messageMember = message.GetValue("member").ToString();
+                var allMessages = cs.GetContentOfContentType(Configurations.MessageDocType);
 
-                if (userUdi == messageMember)
+                List<TaskMessageItem> messages = new List<TaskMessageItem>();
+
+                foreach (var message in allMessages)
                 {
-                    var taskUri = message.GetValue("task");
-                    if(taskUri != null)
+                    var messageMember = message.GetValue("member").ToString();
+
+                    if (userUdi == messageMember)
                     {
-                        var memberTaskId = Umbraco.TypedContent(taskUri).Id;
-                        if (taskId == memberTaskId)
+                        var taskUri = message.GetValue("task");
+                        if (taskUri != null)
                         {
-                            TaskMessageItem taskMessage = new TaskMessageItem();
-                            taskMessage.MemberUdi = messageMember;
-                            taskMessage.Content = message.GetValue("content").ToString();
-                            taskMessage.isFromAdmin = message.GetValue<bool>("isFromAdmin");
-                            taskMessage.TaskID = memberTaskId;
-                            taskMessage.Date = message.CreateDate;
-                            messages.Add(taskMessage);
+                            var memberTaskId = Umbraco.TypedContent(taskUri).Id;
+                            if (taskId == memberTaskId)
+                            {
+                                TaskMessageItem taskMessage = new TaskMessageItem();
+                                taskMessage.MemberUdi = messageMember;
+                                taskMessage.Content = message.GetValue("content").ToString();
+                                taskMessage.isFromAdmin = message.GetValue<bool>("isFromAdmin");
+                                taskMessage.TaskID = memberTaskId;
+                                taskMessage.Date = message.CreateDate;
+                                messages.Add(taskMessage);
+                            }
                         }
                     }
                 }
-            }
-            var task = cs.GetById(taskId);
-            if(task == null)
-            {
-                return BadRequest();
+                if(messages.Any())
+                {
+                    return Ok(messages);
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                
             }
             else
             {
-                return Ok(messages);
-            } 
+                return BadRequest();
+            }
+
+
         }
 
         [RoleAuthorize]
@@ -140,41 +151,53 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var allMessages = cs.GetContentOfContentType(Configurations.MessageDocType);
+            var category = cs.GetById(categoryId);
 
-            List<MessageItem> messages = new List<MessageItem>();
-
-            foreach (var message in allMessages)
+            if(category != null && category.ContentTypeId == Configurations.CategoryDocType)
             {
-                var messageMember = message.GetValue("member").ToString();
+                var allMessages = cs.GetContentOfContentType(Configurations.MessageDocType);
 
-                if (userUdi == messageMember)
+                List<MessageItem> messages = new List<MessageItem>();
+
+                foreach (var message in allMessages)
                 {
-                    var categoryUri = message.GetValue("category");
-                    if(categoryUri != null)
+                    var messageMember = message.GetValue("member").ToString();
+
+                    if (userUdi == messageMember)
                     {
-                        var memberCategoryId = Umbraco.TypedContent(categoryUri).Id;
-                        if (categoryId == memberCategoryId)
+                        var categoryUri = message.GetValue("category");
+                        if (categoryUri != null)
                         {
-                            MessageItem categoryMessage = new MessageItem();
-                            categoryMessage.MemberUdi = messageMember;
-                            categoryMessage.Content = message.GetValue("content").ToString();
-                            categoryMessage.Date = message.CreateDate;
-                            messages.Add(categoryMessage);
+                            var memberCategoryId = Umbraco.TypedContent(categoryUri).Id;
+                            if (categoryId == memberCategoryId)
+                            {
+                                MessageItem categoryMessage = new MessageItem();
+                                categoryMessage.MemberUdi = messageMember;
+                                categoryMessage.Content = message.GetValue("content").ToString();
+                                categoryMessage.Date = message.CreateDate;
+                                messages.Add(categoryMessage);
+                            }
                         }
                     }
                 }
+                if(messages.Any())
+                {
+                    return Ok(messages);
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                
             }
 
-            var category = cs.GetById(categoryId);
-            if (category == null)
+            else
             {
                 return BadRequest();
             }
-            else
-            {
-                return Ok(messages);
-            }
+
+
+
         }
 
         [RoleAuthorize]

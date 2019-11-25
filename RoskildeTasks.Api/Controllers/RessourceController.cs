@@ -28,6 +28,7 @@ namespace RoskildeTasks.Api.Controllers
             if (everyRessource != null)
             {
                 List<RessourceItem> usersRessources = new List<RessourceItem>();
+                List<int> noAcessRessources = new List<int>();
 
                 foreach (var ressource in everyRessource)
                 {
@@ -57,8 +58,21 @@ namespace RoskildeTasks.Api.Controllers
 
                         usersRessources.Add(usersRessource);
                     }
+                    else
+                    {
+                        noAcessRessources.Add(ressource.Id);
+                    }
                 }
-                return Ok(usersRessources);
+
+                if(noAcessRessources.Any() && usersRessources.Count == 0)
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    return Ok(usersRessources);
+                }
+               
             }
             else
             {
@@ -76,54 +90,64 @@ namespace RoskildeTasks.Api.Controllers
             var everyRessource = cs.GetContentOfContentType(Configurations.RessourceDocType);
 
             List<RessourceItem> categoryRessources = new List<RessourceItem>();
+            List<int> noAcessRessources = new List<int>();
 
-            foreach (var ressource in everyRessource)
+            if(everyRessource != null)
             {
-                string ressourceGroups = ressource.GetValue("memberAccess").ToString();
-
-                if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
+                foreach (var ressource in everyRessource)
                 {
-                    var categoryUri = ressource.GetValue("category");
-                    var thisCategoryId = Umbraco.TypedContent(categoryUri).Id;
+                    string ressourceGroups = ressource.GetValue("memberAccess").ToString();
 
-                    if(thisCategoryId == categoryId)
+                    if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
                     {
-                        RessourceItem usersRessource = new RessourceItem();
-                        usersRessource.Name = ressource.Name;
-                        usersRessource.Url = ressource.GetValue("file").ToString();
-                        usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
+                        var categoryUri = ressource.GetValue("category");
+                        var thisCategoryId = Umbraco.TypedContent(categoryUri).Id;
 
-                        var categoryUdi = ressource.GetValue("category").ToString();
-                        var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUdi).Id);
+                        if (thisCategoryId == categoryId)
+                        {
+                            RessourceItem usersRessource = new RessourceItem();
+                            usersRessource.Name = ressource.Name;
+                            usersRessource.Url = ressource.GetValue("file").ToString();
+                            usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
 
-                        CategoryItem category = new CategoryItem();
+                            var categoryUdi = ressource.GetValue("category").ToString();
+                            var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUdi).Id);
 
-                        category.Id = thisCategory.Id;
-                        category.Name = thisCategory.Name;
-                        category.ShortName = thisCategory.GetValue("shortName").ToString();
-                        category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
-                        category.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
-                        var colorString = thisCategory.GetValue("categoryColor").ToString();
-                        ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
-                        category.Color = color;
+                            CategoryItem category = new CategoryItem();
 
-                        usersRessource.Category = category;
+                            category.Id = thisCategory.Id;
+                            category.Name = thisCategory.Name;
+                            category.ShortName = thisCategory.GetValue("shortName").ToString();
+                            category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
+                            category.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
+                            var colorString = thisCategory.GetValue("categoryColor").ToString();
+                            ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                            category.Color = color;
 
-                        categoryRessources.Add(usersRessource);
+                            usersRessource.Category = category;
+
+                            categoryRessources.Add(usersRessource);
+                        }
+                    }
+                    else
+                    {
+                        noAcessRessources.Add(ressource.Id);
                     }
                 }
-            }
 
-            if(categoryRessources.Any())
-            {
-                return Ok(categoryRessources);
+                if (noAcessRessources.Any() && categoryRessources.Count == 0)
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    return Ok(categoryRessources);
+                }
             }
             else
             {
                 return StatusCode(System.Net.HttpStatusCode.NoContent);
-            }
-
-            
+            }            
         }
     }
 }
