@@ -10,10 +10,10 @@ export default {
 	mounted() {
 		this.tasksService.getAllTasks()
 			.then((response) => {
-				response.forEach(task => {
+				response.data.forEach(task => {
 					task.timeToDeadline = this.getTimeToDeadline(task.deadline);
 				});
-				this.tasksList = response;
+				this.tasksList = response.data;
 			});
 	},
 	methods: {
