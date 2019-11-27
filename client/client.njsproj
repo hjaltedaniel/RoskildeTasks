@@ -28,6 +28,12 @@
     <Content Include="src\services\ApiService.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="src\services\MembersService.js" />
+    <Content Include="src\services\CategoriesService.js" />
+    <Content Include="src\store.js" />
+    <Content Include="src\views\Login.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="vue.config.js" />
     <Content Include="public\index.html" />
     <Content Include="public\favicon.ico" />
