@@ -1,6 +1,12 @@
 <section class="tasks-list">
 	<ul>
-		<li v-for="task in tasksList" class="task d-flex justify-content-between align-items-center">
+		<router-link 
+			v-for="task in tasksList" 
+			class="task d-flex justify-content-between align-items-center"
+			:to="'tasks/' + task.id"
+			tag="li"
+			:key="task.id"
+		>
 			<p class="task__name">{{ task.name }}</p>
 			<div class="task__deadline d-flex align-items-center">
 				<p :class="
@@ -12,6 +18,6 @@
 			<div class="task__type">
 				<p>{{ task.type }}</p>
 			</div>
-		</li>
+		</router-link>
 	</ul>
 </section>

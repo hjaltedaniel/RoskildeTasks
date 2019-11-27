@@ -4,7 +4,7 @@
 		<div class="main-content">
 			<div class="container-fluid col-md-12">
 				<div class="view-wrapper">
-					<router-view />
+					<router-view/>
 				</div>
 			</div>
 		</div>
@@ -25,7 +25,7 @@ export default {
 	.main-content {
         padding-left: 120px;
         .container-fluid {
-            padding: 60px;
+            padding: 3%;
             .view-wrapper {
 				height: 87vh;
 				overflow-y: auto;

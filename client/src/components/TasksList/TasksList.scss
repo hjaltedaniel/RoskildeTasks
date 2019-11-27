@@ -1,7 +1,6 @@
 .tasks-list {
 	ul {
 		padding-left: 0;
-		height: 77.8vh;
 		overflow-y: auto;
 		margin-bottom: 0;
 		.task {
@@ -22,16 +21,19 @@
 			}
 			&__deadline {
 				color: $color-green-shamrock;
+				min-width: 100px;
+				margin-right: 5px;
+				text-align: center;
 				&--expired {
 					color: $color-red-carnation
 				}
 			}
 			&__type {
-				width: 160px;
 				padding: 10px 20px;
 				background-color: $color-purple-electric-violet;
 				border-radius: 14px;
 				text-align: center;
+				min-width: 170px;
 				p {
 					margin-top: -5px;
 					color: $color-white;
