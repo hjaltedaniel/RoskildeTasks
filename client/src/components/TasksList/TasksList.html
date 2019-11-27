@@ -9,7 +9,7 @@
 						: null"
 				>{{ task.timeToDeadline }}</p>
 			</div>
-			<div class="task__type">
+			<div class="task__type" v-bind:style="{ backgroundColor: '#' + task.Category.Color.Value }">
 				<p>{{ task.Category.Name }}</p>
 			</div>
 		</li>
