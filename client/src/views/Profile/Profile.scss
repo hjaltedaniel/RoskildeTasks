@@ -7,6 +7,10 @@
     &__border-color {
         border-color: $color-orange-chilean-fire !important;
     }
+    &__list-info {
+        color: $color-black;
+        font-family: $font-bold;
+    }
     &--btn {
         padding: .1rem 3rem !important;
     }
