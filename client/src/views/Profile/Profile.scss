@@ -4,4 +4,10 @@
         color: $color-black;
         text-transform: uppercase;
     }
+    &__border-color {
+        border-color: $color-orange-chilean-fire !important;
+    }
+    &--btn {
+        padding: .1rem 3rem !important;
+    }
 }
