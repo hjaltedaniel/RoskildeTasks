@@ -1,20 +1,10 @@
 export default {
 	name: 'tasks-list',
 	components: {},
-	inject: ['tasksService'],
-	data() {
-		return {
-			tasksList: []
+	computed: {
+		tasksList() {
+			return this.$store.state.tasksList;
 		}
-	},
-	mounted() {
-		this.tasksService.getAllTasks()
-			.then((response) => {
-				response.data.forEach(task => {
-					task.timeToDeadline = this.getTimeToDeadline(task.deadline);
-				});
-				this.tasksList = response.data;
-			});
 	},
 	methods: {
 		getTimeToDeadline(deadline) {
