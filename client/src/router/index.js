@@ -6,6 +6,7 @@ import TaskDetails from '../views/TaskDetails';
 import Messages from '../views/Messages';
 import Profile from '../views/Profile';
 import Resources from '../views/Resources';
+import ResourceTabs from '../components/ResourceTabs';
 
 Vue.use(VueRouter);
 
@@ -34,6 +35,11 @@ const routes = [
 		path: '/resources',
 		name: 'Resources',
 		component: Resources,
+	},
+	{
+		path: '/resources/:id',
+		name: 'resources-category',
+		component: ResourceTabs,
 	},
 	{
 		path: '/profile',
