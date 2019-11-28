@@ -16,7 +16,7 @@ namespace Umbraco
     {
         public static void Register(HttpConfiguration config)
         {
-            var corsAttr = new EnableCorsAttribute("https://roskildetasks.netlify.com/", "*", "*");
+            var corsAttr = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(corsAttr);
         }
     }
