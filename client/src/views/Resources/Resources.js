@@ -14,6 +14,7 @@ export default {
       isRead: false,
       categories: [
         {
+          id: 1,
           title: 'Signs and Layout',
           info: [
             {
@@ -34,6 +35,7 @@ export default {
           ],
         },
         {
+          id: 2,
           title: 'Construction',
           info: [
             {
@@ -49,6 +51,7 @@ export default {
           ]
         },
         {
+          id: 3,
           title: 'Supply',
           info: [
             {
