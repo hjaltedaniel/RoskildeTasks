@@ -3,7 +3,8 @@
 		<input v-model="auth.username" placeholder="username">
 		<input v-model="auth.password" placeholder="password" type="password">
 		<input type="submit" value="Login" v-on:click="login">
-		<span v-show="errorMessage != null">{{errorMessage}}</span>
+		<span v-show="errorMessage != ''">{{errorMessage}}</span>
+		<span v-show="logoutMessage != ''">{{logoutMessage}}</span>
 	</div>
 </template>
 
@@ -24,7 +25,9 @@
 		}
 	  },
 	  computed: {
-
+		  logoutMessage() {
+			  return this.$store.state.logoutMessage;
+		  }
 	  },
 	  mounted () {
 
@@ -33,15 +36,10 @@
 		login() {
 			membersService.login(this.auth.username, this.auth.password)
 				.then((response) => {
-					let token = response.config.headers.Authorization;
+					let token = response.config.headers.Authorization.replace("Basic ", "");
 					this.auth.username = undefined;
 					this.auth.password = undefined;
-					this.isLoggedIn = true;
 					this.$store.dispatch("setAuthorization", token);
-					let d = new Date();
-					d.setTime(d.getTime() + (1 * 2 * 60 * 60 * 1000));
-					let expires = "expires="+ d.toUTCString();
-					document.cookie = "Token=" + token + ";" + expires + ";path=/";
 				})
 				.catch((error) => {
 					this.errorMessage = error.message;

@@ -1,5 +1,6 @@
 ﻿import Vue from "vue";
 import Vuex from "vuex";
+import Cookies from 'js-cookie';
 import ApiService from "./services/ApiService";
 import TasksService from "./services/TasksService";
 import CategoriesService from "./services/CategoriesService";
@@ -10,16 +11,26 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
 		token: undefined,
+		logoutMessage: "",
 		tasksList: [],
 		categoriesList: [],
 		ressourcesList: []
 	},
 	getters: {
-
+		filterRessourcesByCategory: (state) => (category) => {
+			return state.ressourcesList.filter(ressource => ressource.Category.Id === category)
+		},
+		getTask: (state) => (id) => {
+			return state.tasksList.find(task => task.Id === id)
+		}
 	},
 	mutations: {
 		SET_TOKEN(state, payload) {
 			state.token = payload
+		},
+		DELETE_TOKEN(state, payload) {
+			state.token = undefined;
+			state.logoutMessage = payload;
 		},
 		SET_TASKS_LIST(state, payload) {
 			state.tasksList = payload;
@@ -34,9 +45,15 @@ export default new Vuex.Store({
 	actions: {
 		setAuthorization(context, token) {
 			context.commit("SET_TOKEN", token)
+			Cookies.set('Token', token, { expires: 1 })
+		},
+		logout(context, message) {
+			context.commit("DELETE_TOKEN", message)
+			Cookies.remove('Token')
 		},
 		getTaskList(context) {
-			ApiService.defaults.headers.common['Authorization'] = this.state.token;
+			let auth = "Basic " + this.state.token;
+			ApiService.defaults.headers.common['Authorization'] = auth;
 			//loading...
 			context.commit("SET_TASKS_LIST");
 			TasksService.getAllTasks()
@@ -48,7 +65,8 @@ export default new Vuex.Store({
 			});
 		},
 		getCategoryList(context) {
-			ApiService.defaults.headers.common['Authorization'] = this.state.token;
+			let auth = "Basic " + this.state.token;
+			ApiService.defaults.headers.common['Authorization'] = auth;
 			//loading...
 			context.commit("SET_TASKS_LIST");
 			CategoriesService.getAllCategories()
@@ -60,7 +78,8 @@ export default new Vuex.Store({
 				});
 		},
 		getRessourceList(context) {
-			ApiService.defaults.headers.common['Authorization'] = this.state.token;
+			let auth = "Basic " + this.state.token;
+			ApiService.defaults.headers.common['Authorization'] = auth;
 			//loading...
 			context.commit("SET_RESSOURCES_LIST");
 			RessourcesService.getAllRessources()

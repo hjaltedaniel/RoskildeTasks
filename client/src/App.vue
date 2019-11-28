@@ -17,6 +17,7 @@
 <script>
 	import MainMenu from "./components/MainMenu";
 	import Login from "./views/Login";
+	import Cookies from 'js-cookie';
 
 export default {
 	components: {
@@ -25,43 +26,32 @@ export default {
 	},
 	computed: {
 		isLoggedIn() {
-			let tokenCookie = this.getCookie("Token");
 			if (this.$store.state.token != undefined) {
-				this.$store.dispatch("getTaskList");
-				this.$store.dispatch("getCategoryList");
-				this.$store.dispatch("getRessourceList");
-
 				return true
 			}
-			else if (tokenCookie != "") {
-				this.$store.dispatch("setAuthorization", tokenCookie);
-				this.$store.dispatch("getTaskList");
-				this.$store.dispatch("getCategoryList");
-				this.$store.dispatch("getRessourceList");
-
-				return true
+			else if (Cookies.get('Token') != undefined) {
+				this.$store.dispatch("setAuthorization", Cookies.get('Token'));
+				return true;
 			}
 			else {
 				return false
 			}
+		},
+		token() {
+			return this.$store.state.token;
+		}
+	},
+	watch: {
+		token: function () {
+			if (this.token != undefined) {
+				this.$store.dispatch("getTaskList");
+				this.$store.dispatch("getCategoryList");
+				this.$store.dispatch("getRessourceList");
+			}
+
 		}
 	},
 	methods: {
-		getCookie(cname) {
-			var name = cname + "=";
-			var decodedCookie = decodeURIComponent(document.cookie);
-			var ca = decodedCookie.split(';');
-			for(var i = 0; i <ca.length; i++) {
-			var c = ca[i];
-			while (c.charAt(0) == ' ') {
-				c = c.substring(1);
-			}
-			if (c.indexOf(name) == 0) {
-				return c.substring(name.length, c.length);
-			}
-			}
-			return "";
-		}
 	}
 };
 </script>
