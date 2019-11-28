@@ -25,6 +25,7 @@
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="babel.config.js" />
+    <Content Include="src\assets\rf19_people_wallpaper.png" />
     <Content Include="src\services\ApiService.js">
       <SubType>Code</SubType>
     </Content>
