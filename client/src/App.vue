@@ -29,6 +29,7 @@ export default {
 			if (this.$store.state.token != undefined) {
 				this.$store.dispatch("getTaskList");
 				this.$store.dispatch("getCategoryList");
+				this.$store.dispatch("getRessourceList");
 
 				return true
 			}
@@ -36,6 +37,7 @@ export default {
 				this.$store.dispatch("setAuthorization", tokenCookie);
 				this.$store.dispatch("getTaskList");
 				this.$store.dispatch("getCategoryList");
+				this.$store.dispatch("getRessourceList");
 
 				return true
 			}
