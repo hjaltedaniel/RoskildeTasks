@@ -34,9 +34,9 @@ $transition: .3s $transition--cubic;
 $transition--slow: .7s $transition--cubic;
 
 // //------- Media queries -------//
-// $viewport-extra-small:350px;
-// $viewport-small: 576px;
-// $viewport-medium: 992px;
-// $viewport-large: 1025px;
-// $viewport-extra-large: 1200px;
-// $viewport-max: 1920px;
+$viewport-extra-small:350px;
+$viewport-small: 576px;
+$viewport-medium: 992px;
+$viewport-large: 1025px;
+$viewport-extra-large: 1200px;
+$viewport-max: 1920px;
