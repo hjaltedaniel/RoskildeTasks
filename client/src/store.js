@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import ApiService from "./services/ApiService";
 import TasksService from "./services/TasksService";
 import CategoriesService from "./services/CategoriesService";
+import RessourcesService from "./services/RessourcesService";
 
 Vue.use(Vuex);
 
@@ -10,7 +11,11 @@ export default new Vuex.Store({
 	state: {
 		token: undefined,
 		tasksList: [],
-		categoriesList: []
+		categoriesList: [],
+		ressourcesList: []
+	},
+	getters: {
+
 	},
 	mutations: {
 		SET_TOKEN(state, payload) {
@@ -21,6 +26,9 @@ export default new Vuex.Store({
 		},
 		SET_CATEGORIES_LIST(state, payload) {
 			state.categoriesList = payload;
+		},
+		SET_RESSOURCES_LIST(state, payload) {
+			state.ressourcesList = payload;
 		}
 	},
 	actions: {
@@ -49,6 +57,18 @@ export default new Vuex.Store({
 				})
 				.catch((error) => {
 					context.commit("SET_CATEGORIES_LIST", error);
+				});
+		},
+		getRessourceList(context) {
+			ApiService.defaults.headers.common['Authorization'] = this.state.token;
+			//loading...
+			context.commit("SET_RESSOURCES_LIST");
+			RessourcesService.getAllRessources()
+				.then((response) => {
+					context.commit("SET_RESSOURCES_LIST", response.data);
+				})
+				.catch((error) => {
+					context.commit("SET_RESSOURCES_LIST", error);
 				});
 		}
 	}
