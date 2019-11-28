@@ -18,81 +18,136 @@ namespace RoskildeTasks.Api.Controllers
     {
         [RoleAuthorize]
         [HttpGet]
-        public List<RessourceItem> GetAllRessources()
-        {
-            var currentUser = Members.CurrentUserName;
-            IMemberService ms = Services.MemberService;
-            IContentService cs = Services.ContentService;
-
-            var everyRessource = cs.GetContentOfContentType(1100);
-
-            List<RessourceItem> usersRessources = new List<RessourceItem>();
-
-            foreach (var ressource in everyRessource)
-            {
-                string ressourceGroups = ressource.GetValue("memberAccess").ToString();
-
-                if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
-                {
-                    RessourceItem usersRessource = new RessourceItem();
-                    usersRessource.Name = ressource.Name;
-                    usersRessource.Url = ressource.GetValue("file").ToString();
-                    usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
-
-                    var categoryUri = ressource.GetValue("category");
-                    var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
-                    CategoryItem ressourceCategory = new CategoryItem();
-                    ressourceCategory.Id = thisCategory.Id;
-                    ressourceCategory.Name = thisCategory.Name;
-                    ressourceCategory.ShortName = thisCategory.GetValue("shortName").ToString();
-
-                    var colorString = thisCategory.GetValue("categoryColor").ToString();
-                    ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
-                    ressourceCategory.Color = color;
-
-                    ressourceCategory.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
-                    ressourceCategory.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
-                    usersRessource.Category = ressourceCategory;
-
-                    usersRessources.Add(usersRessource);
-                }
-            }
-
-            return usersRessources;
-        }
-
-        [RoleAuthorize]
-        [HttpGet]
-        public List<RessourceItem> GetRessourcesForCategory(int categoryId)
+        public IHttpActionResult GetAllRessources()
         {
             var currentUser = Members.CurrentUserName;
             IContentService cs = Services.ContentService;
 
-            var everyRessource = cs.GetContentOfContentType(1100);
+            var everyRessource = cs.GetContentOfContentType(Configurations.RessourceDocType);
 
-            List<RessourceItem> categoryRessources = new List<RessourceItem>();
-
-            foreach (var ressource in everyRessource)
+            if (everyRessource != null)
             {
-                string ressourceGroups = ressource.GetValue("memberAccess").ToString();
+                List<RessourceItem> usersRessources = new List<RessourceItem>();
+                List<int> noAcessRessources = new List<int>();
 
-                if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
+                foreach (var ressource in everyRessource)
                 {
-                    var categoryUri = ressource.GetValue("category");
-                    var thisCategoryId = Umbraco.TypedContent(categoryUri).Id;
+                    string ressourceGroups = ressource.GetValue("memberAccess").ToString();
 
-                    if(thisCategoryId == categoryId)
+                    if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
                     {
                         RessourceItem usersRessource = new RessourceItem();
                         usersRessource.Name = ressource.Name;
                         usersRessource.Url = ressource.GetValue("file").ToString();
                         usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
-                        categoryRessources.Add(usersRessource);
+
+                        var categoryUri = ressource.GetValue("category");
+                        var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
+                        CategoryItem ressourceCategory = new CategoryItem();
+                        ressourceCategory.Id = thisCategory.Id;
+                        ressourceCategory.Name = thisCategory.Name;
+                        ressourceCategory.ShortName = thisCategory.GetValue("shortName").ToString();
+
+                        var colorString = thisCategory.GetValue("categoryColor").ToString();
+                        ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                        ressourceCategory.Color = color;
+
+                        ressourceCategory.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
+                        ressourceCategory.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
+                        usersRessource.Category = ressourceCategory;
+
+                        usersRessources.Add(usersRessource);
+                    }
+                    else
+                    {
+                        noAcessRessources.Add(ressource.Id);
                     }
                 }
-            }
 
-            return categoryRessources;
+                if(noAcessRessources.Any() && usersRessources.Count == 0)
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    return Ok(usersRessources);
+                }
+               
+            }
+            else
+            {
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
+            }
+        }
+
+        [RoleAuthorize]
+        [HttpGet]
+        public IHttpActionResult GetRessourcesForCategory(int categoryId)
+        {
+            var currentUser = Members.CurrentUserName;
+            IContentService cs = Services.ContentService;
+
+            var everyRessource = cs.GetContentOfContentType(Configurations.RessourceDocType);
+
+            List<RessourceItem> categoryRessources = new List<RessourceItem>();
+            List<int> noAcessRessources = new List<int>();
+
+            if(everyRessource != null)
+            {
+                foreach (var ressource in everyRessource)
+                {
+                    string ressourceGroups = ressource.GetValue("memberAccess").ToString();
+
+                    if (Functions.IsMemberInGroups(ressourceGroups, currentUser))
+                    {
+                        var categoryUri = ressource.GetValue("category");
+                        var thisCategoryId = Umbraco.TypedContent(categoryUri).Id;
+
+                        if (thisCategoryId == categoryId)
+                        {
+                            RessourceItem usersRessource = new RessourceItem();
+                            usersRessource.Name = ressource.Name;
+                            usersRessource.Url = ressource.GetValue("file").ToString();
+                            usersRessource.Filetype = Path.GetExtension(usersRessource.Url).Replace(".", "");
+
+                            var categoryUdi = ressource.GetValue("category").ToString();
+                            var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUdi).Id);
+
+                            CategoryItem category = new CategoryItem();
+
+                            category.Id = thisCategory.Id;
+                            category.Name = thisCategory.Name;
+                            category.ShortName = thisCategory.GetValue("shortName").ToString();
+                            category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
+                            category.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
+                            var colorString = thisCategory.GetValue("categoryColor").ToString();
+                            ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                            category.Color = color;
+
+                            usersRessource.Category = category;
+
+                            categoryRessources.Add(usersRessource);
+                        }
+                    }
+                    else
+                    {
+                        noAcessRessources.Add(ressource.Id);
+                    }
+                }
+
+                if (noAcessRessources.Any() && categoryRessources.Count == 0)
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    return Ok(categoryRessources);
+                }
+            }
+            else
+            {
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
+            }            
         }
     }
 }

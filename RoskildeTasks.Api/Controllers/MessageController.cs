@@ -10,6 +10,9 @@ using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using RoskildeTasks.Api.Models;
 using System.Net;
+using Newtonsoft.Json;
+using System.IO;
+using System.Web;
 
 namespace RoskildeTasks.Api.Controllers
 {
@@ -17,7 +20,7 @@ namespace RoskildeTasks.Api.Controllers
     {
         [RoleAuthorize]
         [HttpGet]
-        public List<TaskMessageItem> GetMessagesForTask(int taskId)
+        public IHttpActionResult GetMessagesForTask(int taskId)
         {
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
@@ -25,67 +28,122 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var allMessages = cs.GetContentOfContentType(1080);
+            var task = cs.GetById(taskId);
 
-            List<TaskMessageItem> messages = new List<TaskMessageItem>();
-
-            foreach (var message in allMessages)
+            if(task != null && task.ContentTypeId == Configurations.TaskDocType)
             {
-                var messageMember = message.GetValue("member").ToString();
+                var allMessages = cs.GetContentOfContentType(Configurations.MessageDocType);
 
-                if (userUdi == messageMember)
+                List<TaskMessageItem> messages = new List<TaskMessageItem>();
+
+                foreach (var message in allMessages)
                 {
-                    var taskUri = message.GetValue("task");
-                    if(taskUri != null)
+                    var messageMember = message.GetValue("member").ToString();
+
+                    if (userUdi == messageMember)
                     {
-                        var memberTaskId = Umbraco.TypedContent(taskUri).Id;
-                        if (taskId == memberTaskId)
+                        var taskUri = message.GetValue("task");
+                        if (taskUri != null)
                         {
-                            TaskMessageItem taskMessage = new TaskMessageItem();
-                            taskMessage.MemberUdi = messageMember;
-                            taskMessage.Content = message.GetValue("content").ToString();
-                            taskMessage.isFromAdmin = message.GetValue<bool>("isFromAdmin");
-                            taskMessage.TaskID = memberTaskId;
-                            taskMessage.Date = message.CreateDate;
-                            messages.Add(taskMessage);
+                            var memberTaskId = Umbraco.TypedContent(taskUri).Id;
+                            if (taskId == memberTaskId)
+                            {
+                                TaskMessageItem taskMessage = new TaskMessageItem();
+                                taskMessage.MemberUdi = messageMember;
+                                taskMessage.Content = message.GetValue("content").ToString();
+                                taskMessage.isFromAdmin = message.GetValue<bool>("isFromAdmin");
+                                taskMessage.TaskID = memberTaskId;
+                                taskMessage.Date = message.CreateDate;
+                                messages.Add(taskMessage);
+                            }
                         }
                     }
                 }
+                if(messages.Any())
+                {
+                    return Ok(messages);
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                
+            }
+            else
+            {
+                return BadRequest();
             }
 
-            return messages;
+
         }
 
         [RoleAuthorize]
         [HttpPost]
-        public IHttpActionResult SubmitMessageForTask(int taskId, string content)
+        public IHttpActionResult SubmitMessageForTask()
         {
+            string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
+            Models.DTO.TaskMessageItem message = new Models.DTO.TaskMessageItem();
+
+            try
+            {
+                message = JsonConvert.DeserializeObject<Models.DTO.TaskMessageItem>(Json);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
             var userUdi = ms.GetByUsername(currentUser).GetUdi().ToString();
 
             IContentService cs = Services.ContentService;
 
-            var taskUdi = cs.GetById(taskId).GetUdi().ToString();
+            string taskUdi;
+
+            try
+            {
+                var task = cs.GetById(message.TaskId);
+                
+                if (task.ContentTypeId == Configurations.TaskDocType)
+                {
+                    taskUdi = task.GetUdi().ToString();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
 
             var messageParent = cs.GetById(1086).GetUdi();
 
             var newMessage = cs.CreateContent("message", messageParent, "Message");
 
             newMessage.SetValue("member", userUdi);
-            newMessage.SetValue("content", content);
+            newMessage.SetValue("content", message.Content);
             newMessage.SetValue("isFromAdmin", false);
             newMessage.SetValue("task", taskUdi);
 
-            cs.Save(newMessage);
-            cs.Publish(newMessage);
+            try
+            {
+                cs.Save(newMessage);
+                cs.Publish(newMessage);
 
-            return StatusCode(HttpStatusCode.OK);
+                return Content(HttpStatusCode.Created, newMessage);
+            }
+            catch
+            {
+                return InternalServerError();
+            }
         }
 
         [RoleAuthorize]
         [HttpGet]
-        public List<MessageItem> GetMessagesForCategory(int categoryId)
+        public IHttpActionResult GetMessagesForCategory(int categoryId)
         {
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
@@ -93,60 +151,117 @@ namespace RoskildeTasks.Api.Controllers
 
             IContentService cs = Services.ContentService;
 
-            var allMessages = cs.GetContentOfContentType(1080);
+            var category = cs.GetById(categoryId);
 
-            List<MessageItem> messages = new List<MessageItem>();
-
-            foreach (var message in allMessages)
+            if(category != null && category.ContentTypeId == Configurations.CategoryDocType)
             {
-                var messageMember = message.GetValue("member").ToString();
+                var allMessages = cs.GetContentOfContentType(Configurations.MessageDocType);
 
-                if (userUdi == messageMember)
+                List<MessageItem> messages = new List<MessageItem>();
+
+                foreach (var message in allMessages)
                 {
-                    var categoryUri = message.GetValue("category");
-                    if(categoryUri != null)
+                    var messageMember = message.GetValue("member").ToString();
+
+                    if (userUdi == messageMember)
                     {
-                        var memberCategoryId = Umbraco.TypedContent(categoryUri).Id;
-                        if (categoryId == memberCategoryId)
+                        var categoryUri = message.GetValue("category");
+                        if (categoryUri != null)
                         {
-                            MessageItem categoryMessage = new MessageItem();
-                            categoryMessage.MemberUdi = messageMember;
-                            categoryMessage.Content = message.GetValue("content").ToString();
-                            categoryMessage.Date = message.CreateDate;
-                            messages.Add(categoryMessage);
+                            var memberCategoryId = Umbraco.TypedContent(categoryUri).Id;
+                            if (categoryId == memberCategoryId)
+                            {
+                                MessageItem categoryMessage = new MessageItem();
+                                categoryMessage.MemberUdi = messageMember;
+                                categoryMessage.Content = message.GetValue("content").ToString();
+                                categoryMessage.Date = message.CreateDate;
+                                messages.Add(categoryMessage);
+                            }
                         }
                     }
                 }
+                if(messages.Any())
+                {
+                    return Ok(messages);
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                
             }
 
-            return messages;
+            else
+            {
+                return BadRequest();
+            }
+
+
+
         }
 
         [RoleAuthorize]
         [HttpPost]
-        public IHttpActionResult SubmitMessageForCategory(int categoryId, string content)
+        public IHttpActionResult SubmitMessageForCategory()
         {
+            string Json = Functions.GetJsonFromStream(HttpContext.Current.Request.InputStream);
+
+            Models.DTO.CatgoryMessageItem message = new Models.DTO.CatgoryMessageItem();
+
+            try
+            {
+                message = JsonConvert.DeserializeObject<Models.DTO.CatgoryMessageItem>(Json);
+            }
+            catch
+            {
+                return BadRequest("Json parser error:" + Json);
+            }
+
             var currentUser = Members.CurrentUserName;
             IMemberService ms = Services.MemberService;
             var userUdi = ms.GetByUsername(currentUser).GetUdi().ToString();
 
             IContentService cs = Services.ContentService;
 
-            var categoryUdi = cs.GetById(categoryId).GetUdi().ToString();
+            string categoryUdi;
+            try
+            {
+                var category = cs.GetById(message.CategoryId);
+                if(category.ContentTypeId == Configurations.CategoryDocType)
+                {
+                    categoryUdi = category.GetUdi().ToString();
+                }
+                else
+                {
+                    return BadRequest("CategoryId is not a category");
+                }
+            }
+            catch
+            {
+                return BadRequest("CategoryId is not a node");
+            }
+            
 
-            var messageParent = cs.GetById(1086).GetUdi();
+            var messageParent = cs.GetById(Configurations.MessageNode).GetUdi();
 
             var newMessage = cs.CreateContent("message", messageParent, "Message");
 
             newMessage.SetValue("member", userUdi);
-            newMessage.SetValue("content", content);
+            newMessage.SetValue("content", message.Content);
             newMessage.SetValue("isFromAdmin", false);
             newMessage.SetValue("category", categoryUdi);
 
-            cs.Save(newMessage);
-            cs.Publish(newMessage);
+            try
+            {
+                cs.Save(newMessage);
+                cs.Publish(newMessage);
 
-            return StatusCode(HttpStatusCode.OK);
+                return Content(HttpStatusCode.Created, newMessage);
+            }
+            catch
+            {
+                return InternalServerError();
+            }
         }
     }
 }

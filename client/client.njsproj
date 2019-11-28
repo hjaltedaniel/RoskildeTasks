@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6ae28b3e-2daa-4f4d-bd78-845742ae57d2}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <ProjectView>ProjectFiles</ProjectView>
+    <StartupFile>
+    </StartupFile>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">16.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <StartWebBrowser>True</StartWebBrowser>
+    <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
+    <ScriptArguments>npm run serve</ScriptArguments>
+    <LaunchUrl>localhost:8080</LaunchUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Content Include="package-lock.json" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+    <Content Include="babel.config.js" />
+    <Content Include="src\services\ApiService.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="src\services\MembersService.js" />
+    <Content Include="src\services\CategoriesService.js" />
+    <Content Include="src\services\MessageService.js" />
+    <Content Include="src\services\RessourcesService.js" />
+    <Content Include="src\store.js" />
+    <Content Include="src\views\Login.vue">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="vue.config.js" />
+    <Content Include="public\index.html" />
+    <Content Include="public\favicon.ico" />
+    <Content Include="src\App.vue" />
+    <Content Include="src\main.js" />
+    <Content Include="src\global-styles\index.scss" />
+    <Content Include="src\global-styles\_font-faces.scss" />
+    <Content Include="src\global-styles\_variables.scss" />
+    <Content Include="src\router\index.js" />
+    <Content Include="src\services\TasksService.js" />
+    <Content Include="src\assets\Icons\canopy.svg" />
+    <Content Include="src\assets\Icons\comments--grey.svg" />
+    <Content Include="src\assets\Icons\comments.svg" />
+    <Content Include="src\assets\Icons\copy.svg" />
+    <Content Include="src\assets\Icons\tasks.svg" />
+    <Content Include="src\assets\Icons\user.svg" />
+    <Content Include="src\components\MainMenu\index.vue" />
+    <Content Include="src\components\MainMenu\MainMenu.scss" />
+    <Content Include="src\components\MainMenu\MainMenu.html" />
+    <Content Include="src\components\MainMenu\MainMenu.js" />
+    <Content Include="src\components\MainMenu\MainMenu.spec.js" />
+    <Content Include="src\components\ResourcesList\index.vue" />
+    <Content Include="src\components\ResourcesList\ResourcesList.scss" />
+    <Content Include="src\components\ResourcesList\ResourcesList.html" />
+    <Content Include="src\components\ResourcesList\ResourcesList.js" />
+    <Content Include="src\components\ResourcesList\ResourcesList.spec.js" />
+    <Content Include="src\components\ResourceTabs\index.vue" />
+    <Content Include="src\components\ResourceTabs\ResourceTabs.scss" />
+    <Content Include="src\components\ResourceTabs\ResourceTabs.html" />
+    <Content Include="src\components\ResourceTabs\ResourceTabs.js" />
+    <Content Include="src\components\ResourceTabs\ResourceTabs.spec.js" />
+    <Content Include="src\components\TasksList\index.vue" />
+    <Content Include="src\components\TasksList\TasksList.scss" />
+    <Content Include="src\components\TasksList\TasksList.html" />
+    <Content Include="src\components\TasksList\TasksList.js" />
+    <Content Include="src\views\Home\index.vue" />
+    <Content Include="src\views\Home\Home.scss" />
+    <Content Include="src\views\Home\Home.html" />
+    <Content Include="src\views\Home\Home.js" />
+    <Content Include="src\views\Home\Home.spec.js" />
+    <Content Include="src\views\Messages\index.vue" />
+    <Content Include="src\views\Messages\Messages.scss" />
+    <Content Include="src\views\Messages\Messages.html" />
+    <Content Include="src\views\Messages\Messages.js" />
+    <Content Include="src\views\Messages\Messages.spec.js" />
+    <Content Include="src\views\Profile\index.vue" />
+    <Content Include="src\views\Profile\Profile.scss" />
+    <Content Include="src\views\Profile\Profile.html" />
+    <Content Include="src\views\Profile\Profile.js" />
+    <Content Include="src\views\Profile\Profile.spec.js" />
+    <Content Include="src\views\Resources\index.vue" />
+    <Content Include="src\views\Resources\Resources.scss" />
+    <Content Include="src\views\Resources\Resources.html" />
+    <Content Include="src\views\Resources\Resources.js" />
+    <Content Include="src\views\Resources\Resources.spec.js" />
+    <Content Include="src\views\Tasks\index.vue" />
+    <Content Include="src\views\Tasks\Tasks.scss" />
+    <Content Include="src\views\Tasks\Tasks.html" />
+    <Content Include="src\views\Tasks\Tasks.js" />
+    <Content Include="src\views\Tasks\Tasks.spec.js" />
+    <Content Include="tests\unit\TasksList.spec.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="public" />
+    <Folder Include="src" />
+    <Folder Include="src\assets" />
+    <Folder Include="src\assets\Fonts" />
+    <Folder Include="src\assets\Icons" />
+    <Folder Include="src\components" />
+    <Folder Include="src\components\MainMenu" />
+    <Folder Include="src\components\ResourcesList" />
+    <Folder Include="src\components\ResourceTabs" />
+    <Folder Include="src\components\TasksList" />
+    <Folder Include="src\global-styles" />
+    <Folder Include="src\router" />
+    <Folder Include="src\services" />
+    <Folder Include="src\views" />
+    <Folder Include="src\views\Home" />
+    <Folder Include="src\views\Messages" />
+    <Folder Include="src\views\Profile" />
+    <Folder Include="src\views\Resources" />
+    <Folder Include="src\views\Tasks" />
+    <Folder Include="tests" />
+    <Folder Include="tests\unit" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

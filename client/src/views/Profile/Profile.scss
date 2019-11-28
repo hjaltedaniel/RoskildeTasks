@@ -1,3 +1,17 @@
 .profile {
-
+    h1 {
+        font-family: $font-bold;
+        color: $color-black;
+        text-transform: uppercase;
+    }
+    &__border-color {
+        border-color: $color-orange-chilean-fire !important;
+    }
+    &__list-info {
+        color: $color-black;
+        font-family: $font-bold;
+    }
+    &--btn {
+        padding: .1rem 3rem !important;
+    }
 }

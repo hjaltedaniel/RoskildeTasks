@@ -10,6 +10,8 @@ using Umbraco.Core.Services;
 using RoskildeTasks.Api.Models;
 using Newtonsoft.Json;
 using Archetype.Models;
+using System.IO;
+using System.Web;
 
 namespace RoskildeTasks.Api
 {
@@ -72,6 +74,16 @@ namespace RoskildeTasks.Api
             {
                 return null;
             }
+        }
+
+        public static string GetJsonFromStream (Stream stream)
+        {
+            var bodyStream = new StreamReader(stream);
+            bodyStream.BaseStream.Seek(0, SeekOrigin.Begin);
+            var bodyText = bodyStream.ReadToEnd();
+            string Json = bodyText;
+
+            return Json;
         }
     }
 }

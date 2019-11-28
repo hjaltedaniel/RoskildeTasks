@@ -1,20 +1,10 @@
 export default {
 	name: 'tasks-list',
 	components: {},
-	inject: ['tasksService'],
-	data() {
-		return {
-			tasksList: []
+	computed: {
+		tasksList() {
+			return this.$store.state.tasksList;
 		}
-	},
-	mounted() {
-		this.tasksService.getAllTasks()
-			.then((response) => {
-				response.forEach(task => {
-					task.timeToDeadline = this.getTimeToDeadline(task.deadline);
-				});
-				this.tasksList = response;
-			});
 	},
 	methods: {
 		getTimeToDeadline(deadline) {
@@ -30,7 +20,6 @@ export default {
 				return "+" + Math.ceil(timeUntilDeadline / hour * 10) / 10 + " hours";
 			}
 			else if (timeUntilDeadline / hour < 1 && timeUntilDeadline / minute > 1) {
-				console.log(Math.ceil(timeUntilDeadline / minute * 10) / 10);
 				return "+" + Math.ceil(timeUntilDeadline / minute * 10) / 10 + " minutes";
 			}
 
