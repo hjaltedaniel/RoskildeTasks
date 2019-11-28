@@ -66,8 +66,13 @@ export default {
       ]
     }
   },
-  computed: {
-
+	computed: {
+		categoriesList() {
+			return this.$store.state.categoriesList;
+		},
+	  ressourcesList() {
+		  return this.$store.getters.filterRessourcesByCategory(1075);
+	  },
   },
   mounted () {
 

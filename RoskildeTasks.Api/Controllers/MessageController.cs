@@ -214,7 +214,7 @@ namespace RoskildeTasks.Api.Controllers
             }
             catch
             {
-                return BadRequest();
+                return BadRequest("Json parser error:" + Json);
             }
 
             var currentUser = Members.CurrentUserName;
@@ -233,12 +233,12 @@ namespace RoskildeTasks.Api.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest("CategoryId is not a category");
                 }
             }
             catch
             {
-                return BadRequest();
+                return BadRequest("CategoryId is not a node");
             }
             
 
