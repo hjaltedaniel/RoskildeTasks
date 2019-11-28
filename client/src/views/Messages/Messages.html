@@ -1,3 +1,10 @@
 <section class="messages">
-	<h1>messages Component</h1>
+    <h1>messages Component</h1>
+    <button v-for="category in categoriesList" v-on:click="setActive(category.Id)" :key="category.Id">{{ category.Name }}</button>
+    <ul>
+        <li v-for="message in messages" :key="message.Date">{{ message.Content }}</li>
+    </ul>
+    <input v-model="messageContent" placeholder="Aa">
+    <input type="submit" value="Send message" v-on:click="submitMessage">
+    <span v-show="errorMessage != null">{{ errorMessage }}</span>
 </section>
