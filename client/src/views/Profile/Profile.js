@@ -12,7 +12,7 @@ export default {
         password: '*********',
         status: 'Active',
         accessGroup: 'Food Stalls - RF2020'
-      }
+      },
 		logoutMessages: [
 			"Catch you later.",
 			"Tea time? See you later.",
