@@ -1,22 +1,16 @@
 <section class="tasks-list">
 	<ul>
-		<router-link 
-			v-for="task in tasksList" 
-			class="task d-flex justify-content-between align-items-center"
-			:to="'tasks/' + task.id"
-			tag="li"
-			:key="task.id"
-		>
-			<p class="task__name">{{ task.Name }}</p>
+		<router-link v-for="task in tasksList" class="task d-flex justify-content-between align-items-center"
+			:to="'tasks/' + task.id" tag="li" :key="task.id">
+			<p class="task__name">{{ task.name }}</p>
 			<div class="task__deadline d-flex align-items-center">
 				<p :class="
-					task.timeToDeadline === 'Overdue' 
-						? 'task__deadline--expired' 
-						: null"
-				>{{ task.timeToDeadline }}</p>
+				task.timeToDeadline === 'Overdue' 
+					? 'task__deadline--expired' 
+					: null">{{ task.timeToDeadline }}</p>
 			</div>
-			<div class="task__type" v-bind:style="{ backgroundColor: '#' + task.Category.Color.Value }">
-				<p>{{ task.Category.Name }}</p>
+			<div class="task__type">
+				<p>{{ task.type }}</p>
 			</div>
 		</router-link>
 	</ul>

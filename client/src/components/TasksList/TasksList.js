@@ -1,10 +1,21 @@
+import tasksService from './../../services/TasksService';
+
 export default {
 	name: 'tasks-list',
 	components: {},
-	computed: {
-		tasksList() {
-			return this.$store.state.tasksList;
+	data() {
+		return {
+			tasksList: []
 		}
+	},
+	mounted() {
+		tasksService.getAllTasks()
+			.then((response) => {
+				response.forEach(task => {
+					task.timeToDeadline = this.getTimeToDeadline(task.deadline);
+				});
+				this.tasksList = response;
+			});
 	},
 	methods: {
 		getTimeToDeadline(deadline) {
