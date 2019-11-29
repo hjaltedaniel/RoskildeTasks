@@ -1,0 +1,34 @@
+<div class="upload-area">
+	<form class="d-flex flex-column" ref="uploadForm" @submit.prevet="onSubmit">
+		<div class="upload-area form-group">
+			<label for="upload-area" class="d-flex justify-content-center align-items-center flex-column">
+				<template v-if="filesLength">
+					<h2 class="selected-files">
+						{{ `${filesLength} file${filesLength > 1 ? "s" : ''} selected` }}<br /><br /> </h2>
+				</template>
+				<template v-else>
+					<div class="d-flex justify-content-center align-items-center flex-column">
+						<font-awesome-icon icon="cloud-upload-alt" />
+						<h2>Drag & drop files here<br /> </h2>
+						<h5>or</h5>
+					</div>
+				</template>
+				<div class="btn btn-primary">
+					<h6>Browse Files</h6>
+				</div>
+			</label>
+			<input id="upload-area" type="file" multiple @change="onFileInputChange" />
+		</div>
+		<div class="upload-controls d-flex justify-content-between">
+			<button class="btn btn-success d-flex align-items-center justify-content-center" type="submit">
+				<h4>SAVE</h4>
+				<font-awesome-icon icon="save" />
+			</button>
+			<button class="btn btn-danger d-flex align-items-center justify-content-center" @click="onClear"
+				type="button">
+				<h4>CLEAR</h4>
+				<font-awesome-icon icon="times" />
+			</button>
+		</div>
+	</form>
+</div>

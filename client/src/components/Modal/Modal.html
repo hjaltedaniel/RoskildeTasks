@@ -1,0 +1,18 @@
+<div class="modal" :class="{show: visible}" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<span @click="toggleModal">
+					<i class="fas fa-times"></i>
+				</span>
+				<slot name="header"></slot>
+			</div>
+			<div class="modal-body">
+				<slot name="content"></slot>
+			</div>
+			<div class="modal-footer">
+				<slot name="footer"></slot>
+			</div>
+		</div>
+	</div>
+</div>

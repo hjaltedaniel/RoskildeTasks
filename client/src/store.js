@@ -12,7 +12,7 @@ export default new Vuex.Store({
 	state: {
 		token: undefined,
 		logoutMessage: "",
-		tasksList: [],
+		tasksList: {},
 		categoriesList: [],
 		ressourcesList: []
 	},
@@ -54,8 +54,7 @@ export default new Vuex.Store({
 		getTaskList(context) {
 			let auth = "Basic " + this.state.token;
 			ApiService.defaults.headers.common['Authorization'] = auth;
-			//loading...
-			context.commit("SET_TASKS_LIST");
+			
 			TasksService.getAllTasks()
 			.then((response) => {
 				context.commit("SET_TASKS_LIST", response.data);
@@ -74,7 +73,7 @@ export default new Vuex.Store({
 					context.commit("SET_CATEGORIES_LIST", response.data);
 				})
 				.catch((error) => {
-					context.commit("SET_CATEGORIES_LIST", error);
+					throw error
 				});
 		},
 		getRessourceList(context) {
