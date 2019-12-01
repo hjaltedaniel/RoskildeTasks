@@ -7,7 +7,7 @@
 					<li class="list-group-item" v-for="tab in tabs" :class="{'activeTab': tab.isActive}">
 						<a :href="tab.href" @click="selectTab(tab)">
 							<div class="d-flex flex-row">
-								<i class="fas fa-copy"></i>
+								<font-awesome-icon icon="copy" />
 								<p class="ml-4 my-0 align-self-center">{{ tab.name }}</p>
 							</div>
 						</a>
