@@ -1,11 +1,11 @@
 import ResourcesList from '../../components/ResourcesList/index.vue';
-import Tabs from '../../components/ResourceTabs/index.vue';
+import ResourceTabs from '../../components/ResourceTabs/index.vue';
 
 export default {
   name: 'resources',
   components: {
     ResourcesList,
-    Tabs,
+    ResourceTabs,
   },
   props: [],
   data () {

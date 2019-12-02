@@ -1,19 +1,23 @@
 <section class="resources">
   <div class="container-fluid">
-    <h1>hello world</h1>
-    <ul>
-      <li>
-        <router-link to="/">
-        Home (tabs)
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/profile">
-        About (resource list (right))
-        </router-link>
-      </li>
-    </ul>
-    <router-view name="resources"></router-view>
+      <div class="row">
+        <!-- RESSOURCES START-->
+        <div id="left-col" class="col-md-5  border-right border-secondary px-0">
+          <h1 class="text-uppercase border-bottom border-secondary mb-0 p-2">Resources</h1>
+          <ResourceTabs />
+        </div>
+        <!-- RESSOURCES END-->
+
+        <!-- FILES START-->
+        <div class="col-md-7 px-0">
+          <h1 class="border-secondary border-bottom p-2 mb-0"><span class="invisible">Files</span></h1>
+          <router-view ></router-view>
+        </div>
+        <!-- FILES START-->
+      </div>
+    </div>
+
+
     <!-- Render categories dynamically-->
 <!--     <Tabs >
       <ResourcesList v-for="(category, index) in categories" :key="index" :name="category.title">
@@ -39,5 +43,5 @@
       </ResourcesList>
     </Tabs> -->
 
-  </div>
+<!--   </div> -->
 </section>
