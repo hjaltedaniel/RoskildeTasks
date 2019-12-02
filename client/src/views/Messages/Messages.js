@@ -1,12 +1,17 @@
 import MessageService from "../../services/MessageService"
+import MessageView from "@/components/MessageView"
+import _ from "lodash";
 
 export default {
 	name: 'messages',
-	components: {},
+	components: {
+		MessageView
+	},
 	props: [],
 	data () {
 		return {
-			activeCategory: 0,
+			loaded: false,
+			activeCategory: {},
 			messageContent: "",
 			errorMessage: "",
 			messages: []
@@ -16,16 +21,31 @@ export default {
 		categoriesList() {
 			return this.$store.state.categoriesList;
 		},
+		sortedMessages() {
+			let sortedArray = _.sortBy(this.messages, function (dateObj) {
+				return new Date(dateObj.Date);
+			});
+			return sortedArray;
+		}
 	},
 	mounted() {
 	},
+	watch: {
+		categoriesList: function () {
+			if (this.categoriesList != undefined) {
+				this.activeCategory = this.categoriesList[0];
+				this.getMessages();
+				this.loaded = true;
+			}
+		}
+	},
 	methods: {
-		setActive(id) {
-			this.activeCategory = id;
+		setActive(category) {
+			this.activeCategory = category;
 			this.getMessages();
 		},
 		getMessages() {
-			MessageService.getMessagesForCategory(this.activeCategory)
+			MessageService.getMessagesForCategory(this.activeCategory.Id)
 				.then((response) => {
 					this.messages = response.data;
 				})
@@ -36,9 +56,8 @@ export default {
 		submitMessage() {
 			if (this.messageContent != "") {
 				this.errorMessage = "";
-				MessageService.setMessageForCategory(this.activeCategory, this.messageContent);
+				MessageService.setMessageForCategory(this.activeCategory.Id, this.messageContent);
 				this.messageContent = "";
-				this.getMessages();
 			}
 			else {
 				this.errorMessage = "No content set for message"

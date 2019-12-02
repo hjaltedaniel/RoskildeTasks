@@ -13,6 +13,7 @@ import {
 	faEdit,
 	faEye,
 	faEyeSlash,
+	faPaperPlane,
 	faPlus,
 	faCopy,
 	faLongArrowAltLeft
@@ -29,6 +30,7 @@ library.add(
 	faEyeSlash,
 	faPlus,
 	faCopy,
+	faPaperPlane,
 	faLongArrowAltLeft
 )
 

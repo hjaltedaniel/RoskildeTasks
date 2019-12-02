@@ -175,6 +175,7 @@ namespace RoskildeTasks.Api.Controllers
                                 categoryMessage.MemberUdi = messageMember;
                                 categoryMessage.Content = message.GetValue("content").ToString();
                                 categoryMessage.Date = message.CreateDate;
+                                categoryMessage.isFromAdmin = message.GetValue<bool>("isFromAdmin");
                                 messages.Add(categoryMessage);
                             }
                         }
