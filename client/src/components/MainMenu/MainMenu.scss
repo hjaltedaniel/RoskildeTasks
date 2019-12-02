@@ -1,4 +1,5 @@
 $icon-height: 110px;
+$icon-height-mobile: 55px;
 
 .main-menu {
     position: fixed;
@@ -6,14 +7,17 @@ $icon-height: 110px;
     height: 100vh;
     background-color: $color-orange-chilean-fire;
     color: $color-white;
+    box-shadow: 2px 0px 10px rgba($color-black, .3);
 
     span {
         color: $color-white;
     }
 
     .logo {
-        border-top: initial;
         height: 130px;
+        width: 100%;
+        border-bottom: 2px solid $color-white;
+
         &__content {
             height: 130px;
         }
@@ -23,16 +27,11 @@ $icon-height: 110px;
         }
     }
 
-
-
     .nav-item {
         height: $icon-height;
         position: relative;
         justify-content: center;
 
-        &:nth-child(2) {
-            border-top: 2px solid $color-white;
-        }
         &__content {
             height: $icon-height;
         }
@@ -69,6 +68,55 @@ $icon-height: 110px;
 
         img {
             width: 45px;
+        }
+    }
+}
+
+@media screen and (max-width: $viewport-small) {
+    .main-menu {
+        z-index: 1;
+        width: 60px;
+
+        .logo {
+            height: 65px;
+
+            &__content {
+                height: 65px;
+            }
+
+            img {
+                width: 45px;
+            }
+        }
+
+        .nav-item {
+            height: $icon-height-mobile;
+
+            &__content {
+                height: $icon-height-mobile;
+            }
+
+            a {
+                &::before {
+                    width: 3px;
+                }
+
+                &:hover {
+                    &::before {
+                        height: $icon-height-mobile;
+                    }
+                }
+            }
+
+            .router-link-exact-active {
+                &::before {
+                    height: $icon-height-mobile;
+                }
+            }
+
+            img {
+                width: 22px;
+            }
         }
     }
 }

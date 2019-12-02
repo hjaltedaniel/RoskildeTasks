@@ -30,7 +30,7 @@ export default {
 				return true
 			}
 			else if (Cookies.get('Token') != undefined) {
-				this.$store.dispatch("setAuthorization", Cookies.get('Token'));
+				this.$store.dispatch("setAuthorizationSession", Cookies.get('Token'));
 				return true;
 			}
 			else {
@@ -69,4 +69,20 @@ export default {
             }
         }
     }
+	@media screen and (max-width: $viewport-small) {
+			.main-content {
+        padding-left: 60px;
+		z-index: 0;
+        .container-fluid {
+            padding: 0;
+            .view-wrapper {
+				height: 100vh;
+				overflow-y: auto;
+                border-radius: 5px;
+                background-color: $color-white;
+                box-shadow: 0;
+            }
+        }
+    }
+	}
 </style>
