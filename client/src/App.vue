@@ -26,7 +26,6 @@ export default {
 	},
 	computed: {
 		isLoggedIn() {
-			return true
 			if (this.$store.state.token != undefined) {
 				return true
 			}
@@ -42,15 +41,15 @@ export default {
 			return this.$store.state.token;
 		}
 	},
-	// watch: {
-	// 	token: function () {
-	// 		if (this.token != undefined) {
-	// 			this.$store.dispatch("getTaskList");
-	// 			this.$store.dispatch("getCategoryList");
-	// 			this.$store.dispatch("getRessourceList");
-	// 		}
-	// 	}
-	// },
+	 watch: {
+	 	token: function () {
+	 		if (this.token != undefined) {
+	 			this.$store.dispatch("getTaskList");
+	 			this.$store.dispatch("getCategoryList");
+	 			this.$store.dispatch("getRessourceList");
+	 		}
+	 	}
+	 },
 	methods: {
 	}
 };
