@@ -1,7 +1,7 @@
 ﻿<template>
 	<section class="login">
 		<div class="login__logo">
-			<img src="../assets/Icons/canopy.svg" alt="RF Tasks" class="header-logo__image" />
+			<img src="../assets/Icons/canopy.svg" alt="RF Tasks" class="header-logo__image d-none d-md-block" />
 		</div>
 		<div class="container h-100 d-flex align-items-center justify-content-center">
 			<div class="login__content">
