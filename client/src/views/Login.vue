@@ -21,13 +21,19 @@
 							placeholder="Enter your password" :type="passwordFieldType" />
 					</div>
 					<div class="col-12 d-flex align-items-center justify-content-between">
-						<button v-on:click="login" type="button" class="btn btn-success login__button">Login</button>
+						<button v-on:click="login" type="button" class="btn btn-success login__button mr-3">Login</button>
+						<div class="form-check mr-auto d-flex align-items-center">
+							<input class="form-check-input" type="checkbox" v-model="auth.remember" id="remember">
+							<label class="form-check-label" for="remember">
+								Remember me
+							</label>
+						</div>
 						<span v-show="passwordFieldType == 'password'" class="login__visibility-toggle"
-							v-on:click="changePasswordVisibility">
+							  v-on:click="changePasswordVisibility">
 							<font-awesome-icon icon="eye" /> Show password
 						</span>
 						<span v-show="passwordFieldType == 'text'" class="login__visibility-toggle"
-							v-on:click="changePasswordVisibility">
+							  v-on:click="changePasswordVisibility">
 							<font-awesome-icon icon="eye-slash" /> Hide password
 						</span>
 					</div>
@@ -52,7 +58,8 @@
 			return {
 				auth: {
 					username: undefined,
-					password: undefined
+					password: undefined,
+					remember: false
 				},
 				passwordFieldType: "password",
 				errorMessage: ""
@@ -75,12 +82,27 @@
 						);
 						this.auth.username = undefined;
 						this.auth.password = undefined;
-						this.$store.dispatch("setAuthorization", token);
+						if (this.auth.remember) {
+							this.$store.dispatch("setAuthorization24h", token);
+						}
+						else {
+							this.$store.dispatch("setAuthorizationSession", token);
+						}
+						this.auth.remember = false;
 					})
 					.catch(error => {
-						this.errorMessage = error.message;
-						this.username = undefined;
-						this.password = undefined;
+						if (error.message == "Request failed with status code 401") {
+							this.errorMessage = "There was something wrong with your username or password. Try again - or contact Roskilde Festival if the problem continues.";
+							this.username = undefined;
+							this.password = undefined;
+						}
+						else {
+							console.log(error.message)
+							this.errorMessage = error.message;
+							this.username = undefined;
+							this.password = undefined;
+						}
+
 					});
 			},
 			changePasswordVisibility() {
