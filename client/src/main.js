@@ -14,6 +14,7 @@ import {
 	faEye,
 	faEyeSlash,
 	faPaperPlane,
+	faChevronLeft,
 	faPlus,
 	faCopy,
 	faLongArrowAltLeft
@@ -31,6 +32,7 @@ library.add(
 	faPlus,
 	faCopy,
 	faPaperPlane,
+	faChevronLeft,
 	faLongArrowAltLeft
 )
 

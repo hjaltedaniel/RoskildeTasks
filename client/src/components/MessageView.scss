@@ -37,5 +37,29 @@
                 order: 2;
             }
         }
+        &:last-child {
+            margin-bottom: 20px;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .message-view {
+        .single-message {
+            margin-top: 20px;
+            justify-content: flex-end;
+
+            &__content {
+                max-width: 90%;
+
+                .content {
+                    font-size: 15px;
+                }
+            }
+
+            &__time {
+                font-size: 10px;
+            }
+        }
     }
 }

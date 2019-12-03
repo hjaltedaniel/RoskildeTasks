@@ -1,5 +1,5 @@
 ﻿<template>
-	<div class="d-flex flex-column message-view">
+	<div v-if="messages.length != 0" class="d-flex flex-column message-view">
 		<div class="single-message d-flex align-items-center" v-bind:class="{ adminMessage: message.isFromAdmin }" v-for="message in messages" :key="message.Date">
 			<span class="single-message__time">
 				{{getTimeFromDate(message.Date)}}
@@ -11,13 +11,23 @@
 			</div>
 		</div>
 	</div>
+	<div v-else class="d-flex flex-column message-view">
+		<div class="single-message d-flex align-items-center adminMessage">
+			<div class="single-message__content">
+				<span class="content font-italic">
+					{{noMessage}}
+				</span>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
 	export default {
 		components: {},
 		props: {
-			messages: {required: true},
+			messages: { required: true },
+			noMessage: {required: true},
 		},
 		data () {
 			return {}

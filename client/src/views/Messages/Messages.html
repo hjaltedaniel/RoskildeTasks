@@ -1,13 +1,26 @@
-<section v-if="loaded" class="messages">
-    <div class="container-fluid">
+<section class="messages">
+    <div v-if="loaded" class="container-fluid">
         <div class="row">
-            <div class="col-md-3 col-sm-12 mr-auto px-0 messages__tabs">
+            <div class="col-md-3 col-sm-12 mr-auto px-0 messages__tabs" v-if="mobileOverlayActive == false">
                 <div class="header d-flex align-items-center">
                     <h1 class="mb-0 p-2 header__headline">Messages</h1>
                 </div>
-                <button v-for="category in categoriesList" v-on:click="setActive(category)" :key="category.Id">{{ category.Name }}</button>
+                <div class="categories-list">
+                    <div class="categories-list__item align-items-center d-flex" :class="{ active: isActive(category) }" v-for="category in categories" v-on:click="setActive(category)" :key="category.Id">
+                        <div class="category-icon" v-bind:style="{ backgroundColor: '#' + category.Color.Value }">
+                            <span>{{ category.ShortName }}</span>
+                        </div>
+                        <div class="category-content">
+                            <h4 class="category-content__name">{{ category.Name }}</h4>
+                            <span v-if="category.Messages != ''" class="category-content__message-snippet">
+                                {{ getSender(category.Messages[0].isFromAdmin) }} {{ textTruncate(category.Messages[0].Content, windowWidth > 768 ? 20 : 15, '...') }} - {{ getTimeFromDate(category.Messages[0].Date) }}
+                            </span>
+                            <span v-else class="category-content__message-snippet">No messages yet</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col messages__view">
+            <div class="col messages__view" v-if="windowWidth > 768">
                 <div class="row">
                     <div class="header d-flex align-items-center p-2">
                         <div class="header__message-icon" v-bind:style="{ backgroundColor: '#' + activeCategory.Color.Value }">
@@ -16,7 +29,7 @@
                         <h2 class="mb-0 p-2 header__headline">{{activeCategory.Name}}</h2>
                     </div>
                     <div class="col-12 content">
-                        <MessageView :messages="sortedMessages"></MessageView>
+                        <MessageView :messages="sortMessages(activeCategory.Messages)" :noMessage="activeCategory.StandardMessage"></MessageView>
                     </div>
                     <div class="col-12 editor">
                         <input class="editor__textfield" v-model="messageContent" placeholder="Aa">
@@ -24,11 +37,32 @@
                         <span v-show="errorMessage != ''">{{ errorMessage }}</span>
                     </div>
                 </div>
-
-
+            </div>
+            <div class="col messages__view" v-if="mobileOverlayActive">
+                <div class="row">
+                    <div class="header d-flex align-items-center p-2">
+                        <span class="header__back" v-on:click="mobileOverlayActive = false, activeCategory = undefined"><font-awesome-icon icon="chevron-left"/></span>
+                        <div class="header__message-icon" v-bind:style="{ backgroundColor: '#' + activeCategory.Color.Value }">
+                            <span>{{activeCategory.ShortName}}</span>
+                        </div>
+                        <h2 class="mb-0 p-2 header__headline">{{activeCategory.Name}}</h2>
+                    </div>
+                    <div class="col-12 content">
+                        <MessageView :messages="sortMessages(activeCategory.Messages)" :noMessage="activeCategory.StandardMessage"></MessageView>
+                    </div>
+                    <div class="col-12 editor">
+                        <input class="editor__textfield" v-model="messageContent" placeholder="Aa">
+                        <span class="editor__button" type="submit" v-on:click="submitMessage"><font-awesome-icon icon="paper-plane" /></span>
+                        <span v-show="errorMessage != ''">{{ errorMessage }}</span>
+                    </div>
+                </div>
             </div>
         </div>
-
+    </div>
+    <div v-else class="container-fluid h-100">
+        <div class="h-100 d-flex justify-content-center align-items-center">
+            <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
     </div>
 
 </section>
