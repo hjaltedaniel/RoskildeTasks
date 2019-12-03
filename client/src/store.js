@@ -43,7 +43,11 @@ export default new Vuex.Store({
 		}
 	},
 	actions: {
-		setAuthorization(context, token) {
+		setAuthorizationSession(context, token) {
+			context.commit("SET_TOKEN", token)
+			Cookies.set('Token', token)			
+		},
+		setAuthorization24h(context, token) {
 			context.commit("SET_TOKEN", token)
 			Cookies.set('Token', token, { expires: 1 })
 		},
@@ -57,18 +61,18 @@ export default new Vuex.Store({
 			//loading...
 			context.commit("SET_TASKS_LIST");
 			TasksService.getAllTasks()
-			.then((response) => {
-				context.commit("SET_TASKS_LIST", response.data);
-			})
-			.catch((error) => {
-				context.commit("SET_TASKS_LIST", error);
-			});
+				.then((response) => {
+					context.commit("SET_TASKS_LIST", response.data);
+				})
+				.catch((error) => {
+					context.commit("SET_TASKS_LIST", error);
+				});
 		},
 		getCategoryList(context) {
 			let auth = "Basic " + this.state.token;
 			ApiService.defaults.headers.common['Authorization'] = auth;
 			//loading...
-			context.commit("SET_TASKS_LIST");
+			context.commit("SET_CATEGORIES_LIST");
 			CategoriesService.getAllCategories()
 				.then((response) => {
 					context.commit("SET_CATEGORIES_LIST", response.data);

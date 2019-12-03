@@ -1,0 +1,26 @@
+<div class="editor-table-wrapper">
+	<div class="editor-table">
+		<table class="table table-hover">
+			<thead class="thead-light header-fixed">
+				<tr>
+					<th scope="col" v-for="(column, index) in columns" :key="index">{{ column }}</th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<EditorRow 
+					v-for="(row, index) in rows"
+					:key="index"
+					:row="row"
+					:onRowEdit="onRowEdit"
+					:onRowDelete="onRowDelete"
+				></EditorRow>
+			</tbody>
+		</table>
+	</div>
+	<div class="add-row d-flex justify-content-center">
+		<div class="d-flex justify-content-center align-items-center">
+			<font-awesome-icon icon="plus" />
+		</div>
+	</div>
+</div>

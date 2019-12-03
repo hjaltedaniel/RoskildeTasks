@@ -1,0 +1,9 @@
+.resource-file-list {
+    &--button {
+        background-color: $color-orange-chilean-fire;
+        color: $color-white !important;
+        &:hover {
+            cursor: pointer!important;
+        }
+    }
+}

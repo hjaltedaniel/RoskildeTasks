@@ -4,10 +4,43 @@ import router from './router';
 import store from './store';
 import './global-styles/index.scss';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import '@fortawesome/fontawesome-free/css/all.css'
-import '@fortawesome/fontawesome-free/js/all.js'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { 
+	faTimes,
+	faCloudUploadAlt,
+	faSave,
+	faCheck,
+	faEdit,
+	faEye,
+	faEyeSlash,
+	faPaperPlane,
+	faChevronLeft,
+	faPlus,
+	faCopy,
+	faLongArrowAltLeft
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import TextareaAutosize from 'vue-textarea-autosize'
+
+library.add(
+	faTimes,
+	faCloudUploadAlt,
+	faSave,
+	faCheck,
+	faEdit,
+	faEye,
+	faEyeSlash,
+	faPlus,
+	faCopy,
+	faPaperPlane,
+	faChevronLeft,
+	faLongArrowAltLeft
+)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;
+Vue.use(TextareaAutosize);
 
 new Vue({
 	router,

@@ -1,0 +1,56 @@
+.upload-area {
+  height: 100%;
+  form {
+    height: 100%;
+    .upload-area {
+      padding: 10px;
+      height: 100%;
+    }
+    label {
+      border: 6px dashed $color-grey-foundation;
+      border-spacing: 10px;
+      border-radius: 5px;
+      svg {
+        font-size: 3em;
+        color: $color-grey-foundation;
+      }
+      cursor: pointer;
+      height: 100%;
+      width: 100%;
+      margin-bottom: 0;
+      h2,
+      h5 {
+        color: $color-grey-foundation;
+      }
+      h2 {
+        margin-bottom: 0;
+        font-size: 1.75em;
+      }
+      h5 {
+        margin: 20px 0;
+        font-size: 1.5rem;
+      }
+      .btn {
+        h6 {
+          margin-bottom: 5px;
+        }
+      }
+      .selected-files {
+        color: darken($color-grey-foundation, 20%);
+      }
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .upload-controls {
+      width: 100%;
+      .btn {
+        width: 48%;
+        svg {
+          font-size: 1.5rem;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}

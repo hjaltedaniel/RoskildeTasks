@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home';
 import Tasks from '../views/Tasks';
 import TaskDetails from '../views/TaskDetails';
 import Messages from '../views/Messages';
 import Profile from '../views/Profile';
 import Resources from '../views/Resources';
+import ResourceFileList from '../components/ResourceFileList';
+import ResourceTabs from '../components/ResourceTabs';
 
 Vue.use(VueRouter);
 
@@ -13,7 +14,7 @@ const routes = [
 	{
 		path: '/',
 		name: 'home',
-		component: Home,
+		component: Tasks,
 	},
 	{
 		path: '/tasks',
@@ -34,6 +35,12 @@ const routes = [
 		path: '/resources',
 		name: 'Resources',
 		component: Resources,
+		children: [
+			{
+				path: ':resourcelist',
+				component: ResourceFileList
+			},
+		]
 	},
 	{
 		path: '/profile',

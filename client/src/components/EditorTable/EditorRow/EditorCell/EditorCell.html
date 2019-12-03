@@ -1,0 +1,10 @@
+
+<td>
+	<template v-if="isEditable">
+		<input :value="cell">
+	</template>
+	<template v-else>
+		{{ cell }}
+	</template>
+</td>
+

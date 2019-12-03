@@ -3,8 +3,11 @@ export default {
 	components: {},
 	computed: {
 		tasksList() {
-			return this.$store.state.tasksList;
-		}
+			return this.$store.state.tasksList
+		},
+	},
+	mounted() {
+		this.$store.dispatch("getTaskList")
 	},
 	methods: {
 		getTimeToDeadline(deadline) {

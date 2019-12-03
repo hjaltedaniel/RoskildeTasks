@@ -1,54 +1,123 @@
+$icon-height: 110px;
+$icon-height-mobile: 55px;
+
 .main-menu {
-	position: fixed;
-	width: 120px;
-	height: 100vh;
-	background-color: $color-orange-chilean-fire;
-	color: $color-white;
-	span {
-		color: $color-white;
-	}
-	.logo {
-		border-top: initial;
-		div {
-			height: 80px;
-		}
-		img {
-			width: 90px;
-		}
-	}	
-	li {
-		a {
-			position: relative;
-			display: block;
-			padding: 20px 0;
-			&::before {
-				content: '';
-				position: absolute;
-				top: 0;
-				height: 0%;	
-				width: 6px;
-				-ms-flex-item-align: start;
-				align-self: flex-start;
-				background-color: #fff;
-				-webkit-transition: 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) height;
-				transition: 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) height;
-			}	
-			&:hover {
-				&::before {
-					height: 100%;	
-				}	
-			}
-		}
-		.router-link-exact-active {
-			&::before {
-				height: 100%;	
-			}
-		}
-		border-top: 2px solid $color-white;
-		width: 100%;
-		img {
-			width: 45px;
-		}
-	}
+    position: fixed;
+    width: 120px;
+    height: 100vh;
+    background-color: $color-orange-chilean-fire;
+    color: $color-white;
+    box-shadow: 2px 0px 10px rgba($color-black, .3);
+
+    span {
+        color: $color-white;
+    }
+
+    .logo {
+        height: 130px;
+        width: 100%;
+        border-bottom: 2px solid $color-white;
+
+        &__content {
+            height: 130px;
+        }
+
+        img {
+            width: 90px;
+        }
+    }
+
+    .nav-item {
+        height: $icon-height;
+        position: relative;
+        justify-content: center;
+
+        &__content {
+            height: $icon-height;
+        }
+
+        a {
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                height: 0%;
+                width: 6px;
+                -ms-flex-item-align: start;
+                align-self: flex-start;
+                background-color: #fff;
+                -webkit-transition: 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) height;
+                transition: 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) height;
+            }
+
+            &:hover {
+                &::before {
+                    height: $icon-height;
+                }
+            }
+        }
+
+        .router-link-exact-active {
+            &::before {
+                height: $icon-height;
+            }
+        }
+
+        border-bottom: 2px solid $color-white;
+        width: 100%;
+
+        img {
+            width: 45px;
+        }
+    }
+}
+
+@media screen and (max-width: $viewport-small) {
+    .main-menu {
+        z-index: 1;
+        width: 60px;
+
+        .logo {
+            height: 65px;
+
+            &__content {
+                height: 65px;
+            }
+
+            img {
+                width: 45px;
+            }
+        }
+
+        .nav-item {
+            height: $icon-height-mobile;
+
+            &__content {
+                height: $icon-height-mobile;
+            }
+
+            a {
+                &::before {
+                    width: 3px;
+                }
+
+                &:hover {
+                    &::before {
+                        height: $icon-height-mobile;
+                    }
+                }
+            }
+
+            .router-link-exact-active {
+                &::before {
+                    height: $icon-height-mobile;
+                }
+            }
+
+            img {
+                width: 22px;
+            }
+        }
+    }
 }
 

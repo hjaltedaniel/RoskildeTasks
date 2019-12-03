@@ -14,13 +14,6 @@ beforeEach(() => {
 })
 
 describe('TaskslistComponent', () => {
-	describe('mounted', () => {
-		it('should call TasksService.getAllTasks', () => {
-			component.mounted();
-			expect(component.tasksService.getAllTasks.mock.calls.length).toBe(1);
-		})
-	})
-
 	describe('getTimeToDeadline', () => {
 		it('should return the number of minutes until deadline in the format `+{nrOfMinutes} minutes`', () => {
 			const result = component.methods.getTimeToDeadline(new Date(new Date().getTime() + 86400000 * 0.009));
