@@ -1,10 +1,8 @@
-import ResourcesList from '../../components/ResourcesList/index.vue';
 import ResourceTabs from '../../components/ResourceTabs/index.vue';
 
 export default {
   name: 'resources',
   components: {
-    ResourcesList,
     ResourceTabs,
   },
   props: [],
@@ -73,10 +71,10 @@ export default {
 
   },
   mounted () {
-
+    console.log(this.$route.query);
   },
   methods: {
-
+    
   }
 }
 

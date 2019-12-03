@@ -38,7 +38,7 @@ const routes = [
 		component: Resources,
 		children: [
 			{
-				path: ':resourceList',
+				path: ':resourcelist',
 				component: ResourceFileList
 			},
 		]
