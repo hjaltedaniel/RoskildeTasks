@@ -1,11 +1,9 @@
-import ResourcesList from '../../components/ResourcesList/index.vue';
-import Tabs from '../../components/ResourceTabs/index.vue';
+import ResourceTabs from '../../components/ResourceTabs/index.vue';
 
 export default {
   name: 'resources',
   components: {
-    ResourcesList,
-    Tabs,
+    ResourceTabs,
   },
   props: [],
   data () {
@@ -14,6 +12,7 @@ export default {
       isRead: false,
       categories: [
         {
+          id: 1,
           title: 'Signs and Layout',
           info: [
             {
@@ -34,6 +33,7 @@ export default {
           ],
         },
         {
+          id: 2,
           title: 'Construction',
           info: [
             {
@@ -49,6 +49,7 @@ export default {
           ]
         },
         {
+          id: 3,
           title: 'Supply',
           info: [
             {
@@ -75,10 +76,10 @@ export default {
 	  },
   },
   mounted () {
-
+    console.log(this.$route.query);
   },
   methods: {
-
+    
   }
 }
 

@@ -2,11 +2,17 @@
 export default {
   name: 'resource-tabs',
   components: {},
-  props: [],
+  props: {
+    id: Number,
+    title: String,
+    fileType: String,
+    filePath: String,
+    categoriesList: Array
+  },
   data () {
     return {
-      tabs: [],
-      iconColor: 'green'
+      iconColor: 'green',
+      tabs: []
     }
   },
   computed: {

@@ -1,6 +1,12 @@
 .resource-tabs {
     height: 87vh;
    
+    li {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
     #left-col {
         height: 87vh;
     }
