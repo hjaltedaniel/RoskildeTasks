@@ -20,6 +20,7 @@ import {
 	faLongArrowAltLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import TextareaAutosize from 'vue-textarea-autosize'
 
 library.add(
 	faTimes,
@@ -39,6 +40,7 @@ library.add(
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;
+Vue.use(TextareaAutosize);
 
 new Vue({
 	router,

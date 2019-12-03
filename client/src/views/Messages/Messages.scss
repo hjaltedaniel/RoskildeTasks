@@ -84,31 +84,31 @@ $content-height-mobile: 100vh;
         }
 
         .content {
-            height: 70vh;
+            flex: 1;
             overflow-y: scroll;
         }
 
         .editor {
-            position: absolute;
-            bottom: 0;
+            display: flex;
+            margin-top: 20px;
             margin-bottom: 20px;
 
             &__textfield {
                 border: none;
-                height: 50px;
-                width: 100%;
+                flex: 1;
                 background-color: $color-grey-gallery;
                 border-radius: 30px;
                 color: $color-grey-dove;
                 padding-left: 20px;
+                padding-right: 20px;
             }
 
             &__button {
+                width: 30px;
                 font-size: 30px;
+                margin-left: 10px;
                 color: $color-orange-chilean-fire;
                 -webkit-appearance: none;
-                position: absolute;
-                right: 30px;
             }
         }
     }

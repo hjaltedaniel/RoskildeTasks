@@ -21,25 +21,30 @@
                 </div>
             </div>
             <div class="col messages__view" v-if="windowWidth > 768">
-                <div class="row">
+                <div class="d-flex flex-column h-100">
                     <div class="header d-flex align-items-center p-2">
                         <div class="header__message-icon" v-bind:style="{ backgroundColor: '#' + activeCategory.Color.Value }">
                             <span>{{activeCategory.ShortName}}</span>
                         </div>
                         <h2 class="mb-0 p-2 header__headline">{{activeCategory.Name}}</h2>
                     </div>
-                    <div class="col-12 content">
+                    <div class="content">
                         <MessageView :messages="sortMessages(activeCategory.Messages)" :noMessage="activeCategory.StandardMessage"></MessageView>
                     </div>
-                    <div class="col-12 editor">
-                        <input class="editor__textfield" v-model="messageContent" placeholder="Aa">
+                    <div class="editor">
+                        <textarea-autosize placeholder="Aa"
+                                           ref="myTextarea"
+                                           v-model="messageContent"
+                                           :min-height="50"
+                                           :max-height="350" 
+                                           class="editor__textfield"/>
                         <span class="editor__button" type="submit" v-on:click="submitMessage"><font-awesome-icon icon="paper-plane" /></span>
                         <span v-show="errorMessage != ''">{{ errorMessage }}</span>
                     </div>
                 </div>
             </div>
             <div class="col messages__view" v-if="mobileOverlayActive">
-                <div class="row">
+                <div class="d-flex flex-column h-100">
                     <div class="header d-flex align-items-center p-2">
                         <span class="header__back" v-on:click="mobileOverlayActive = false, activeCategory = undefined"><font-awesome-icon icon="chevron-left"/></span>
                         <div class="header__message-icon" v-bind:style="{ backgroundColor: '#' + activeCategory.Color.Value }">
@@ -47,11 +52,16 @@
                         </div>
                         <h2 class="mb-0 p-2 header__headline">{{activeCategory.Name}}</h2>
                     </div>
-                    <div class="col-12 content">
+                    <div class="content">
                         <MessageView :messages="sortMessages(activeCategory.Messages)" :noMessage="activeCategory.StandardMessage"></MessageView>
                     </div>
-                    <div class="col-12 editor">
-                        <input class="editor__textfield" v-model="messageContent" placeholder="Aa">
+                    <div class="editor">
+                        <textarea-autosize placeholder="Aa"
+                                           ref="myTextarea"
+                                           v-model="messageContent"
+                                           :min-height="50"
+                                           :max-height="350"
+                                           class="editor__textfield" />
                         <span class="editor__button" type="submit" v-on:click="submitMessage"><font-awesome-icon icon="paper-plane" /></span>
                         <span v-show="errorMessage != ''">{{ errorMessage }}</span>
                     </div>
