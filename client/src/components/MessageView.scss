@@ -37,8 +37,26 @@
                 order: 2;
             }
         }
+
         &:last-child {
             margin-bottom: 20px;
+        }
+    }
+
+    &__breaker {
+        position: relative;
+        .breaker-content {
+            z-index: 2;
+            font-size: 25px;
+            background-color: $color-white;
+            padding: 0px 20px;
+        }
+
+        .breaker-line {
+            position: absolute;
+            border-bottom: 1px solid $color-black;
+            height: 25px;
+            width: 100%;
         }
     }
 }
