@@ -26,6 +26,9 @@
     <Content Include="README.md" />
     <Content Include="babel.config.js" />
     <Content Include="src\assets\rf19_people_wallpaper.png" />
+    <Content Include="src\components\Loader.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\MessageView.scss">
       <SubType>Code</SubType>
     </Content>
