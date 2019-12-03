@@ -1,17 +1,15 @@
 <section class="resource-file-list">
-<p>Category: {{ $route.params.resourcelist }} </p>
 <ul class="list-group">
-  <li class="list-group-item">
+  <li class="list-group-item rounded-0 border-left-0" v-for="file in ressourcesList" :key="file.Id" >
       <div class="d-flex justify-content-between">
-        <div class="col-md-5 d-flex align-items-center">
-            <p class="align-self-center my-0"> file name </p>
+        <div class="col-md-6 d-flex align-items-center">
+            <p class="align-self-center my-0"> {{ file.Name }} </p>
         </div>
-        <div class="col-md-2 d-flex align-items-center">
-            <p class="align-self-center my-0"> file type </p>
+        <div class="col-md-2 d-flex align-items-center justify-content-end">
+            <p class="align-self-center my-0"> {{ file.Filetype }} </p>
         </div>
         <div class="col-md-4 d-flex justify-content-end">
-            <p class="align-self-center my-0"> file path </p>
-            <button class="btn btn-warning resources__button border-0">Download</button>
+            <a :href="'http://roskildetasks.azurewebsites.net' + file.Url" :download="file.Name" role="button" class="btn align-self-center resource-file-list--button border-0">Download</a>
         </div>
       </div>
     </li>

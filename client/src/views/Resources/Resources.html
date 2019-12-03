@@ -2,46 +2,18 @@
   <div class="container-fluid">
       <div class="row">
         <!-- RESSOURCES START-->
-        <div id="left-col" class="col-md-5  border-right border-secondary px-0">
+        <div id="left-col" class="col-sm-12 col-md-5  border-right border-secondary px-0">
           <h1 class="text-uppercase border-bottom border-secondary mb-0 p-2">Resources</h1>
-          <ResourceTabs :categoriesList="categories" />
+          <ResourceTabs :categoriesList="categoriesList" />
         </div>
         <!-- RESSOURCES END-->
 
         <!-- FILES START-->
-        <div class="col-md-7 px-0">
+        <div class="col-sm-12 col-md-7 px-0">
           <h1 class="border-secondary border-bottom p-2 mb-0"><span class="invisible">Files</span></h1>
           <router-view ></router-view>
         </div>
         <!-- FILES START-->
       </div>
     </div>
-
-
-    <!-- Render categories dynamically-->
-<!--     <Tabs >
-      <ResourcesList v-for="(category, index) in categories" :key="index" :name="category.title">
-        <ul class="list-group">
-          <li class="list-group-item" v-for="(file, index) in category.info"  :key="index">
-            <div class="d-flex justify-content-between">
-              <div class="col-md-1 d-flex align-items-center">
-                  <span class="align-self-center my-0 resources-list__icon" :class="{ 'invisible': isRead }"></span>
-              </div>
-              <div class="col-md-5 d-flex align-items-center">
-                  <p class="align-self-center my-0"> {{ file.name }} </p>
-              </div>
-              <div class="col-md-2 d-flex align-items-center">
-                  <p class="align-self-center my-0"> {{ file.type }} </p>
-              </div>
-              <div class="col-md-4 d-flex justify-content-end">
-                 <p class="align-self-center my-0"> {{ file.filePath }} </p>
-                  <button class="btn btn-warning resources__button border-0">Download</button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </ResourcesList>
-    </Tabs> -->
-
-<!--   </div> -->
 </section>

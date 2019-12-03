@@ -2,21 +2,24 @@
 export default {
   name: 'resource-file-list',
   components: {},
-  props: {
-    title: String,
-    type: String,
-    filePath: String
-  },
+  props: [],
   data () {
     return {
-
+      ressourcesList: []
     }
   },
   computed: {
-
+    categoryId() {
+      return Number.parseInt(this.$route.params.resourcelist);
+    }
+  },
+  watch: {
+    categoryId: function() {
+      this.ressourcesList = this.$store.getters.filterRessourcesByCategory(this.categoryId);
+    }
   },
   mounted () {
-    console.log(this.$route.params.resourcelist);
+    this.ressourcesList = this.$store.getters.filterRessourcesByCategory(this.categoryId);
   },
   methods: {
 
