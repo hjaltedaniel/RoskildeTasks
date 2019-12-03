@@ -13,11 +13,14 @@ import {
 	faEdit,
 	faEye,
 	faEyeSlash,
+	faPaperPlane,
+	faChevronLeft,
 	faPlus,
 	faCopy,
 	faLongArrowAltLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import TextareaAutosize from 'vue-textarea-autosize'
 
 library.add(
 	faTimes,
@@ -29,12 +32,15 @@ library.add(
 	faEyeSlash,
 	faPlus,
 	faCopy,
+	faPaperPlane,
+	faChevronLeft,
 	faLongArrowAltLeft
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;
+Vue.use(TextareaAutosize);
 
 new Vue({
 	router,

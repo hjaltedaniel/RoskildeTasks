@@ -26,6 +26,12 @@
     <Content Include="README.md" />
     <Content Include="babel.config.js" />
     <Content Include="src\assets\rf19_people_wallpaper.png" />
+    <Content Include="src\components\MessageView.scss">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="src\components\MessageView.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\services\ApiService.js">
       <SubType>Code</SubType>
     </Content>
@@ -72,11 +78,6 @@
     <Content Include="src\components\TasksList\TasksList.scss" />
     <Content Include="src\components\TasksList\TasksList.html" />
     <Content Include="src\components\TasksList\TasksList.js" />
-    <Content Include="src\views\Home\index.vue" />
-    <Content Include="src\views\Home\Home.scss" />
-    <Content Include="src\views\Home\Home.html" />
-    <Content Include="src\views\Home\Home.js" />
-    <Content Include="src\views\Home\Home.spec.js" />
     <Content Include="src\views\Messages\index.vue" />
     <Content Include="src\views\Messages\Messages.scss" />
     <Content Include="src\views\Messages\Messages.html" />
@@ -114,7 +115,6 @@
     <Folder Include="src\router" />
     <Folder Include="src\services" />
     <Folder Include="src\views" />
-    <Folder Include="src\views\Home" />
     <Folder Include="src\views\Messages" />
     <Folder Include="src\views\Profile" />
     <Folder Include="src\views\Resources" />

@@ -1,0 +1,83 @@
+﻿/// <reference path="../global-styles/_variables" />
+
+.message-view {
+    .single-message {
+        margin-top: 30px;
+        justify-content: flex-end;
+
+        &__content {
+            display: inline-block;
+            padding: 15px;
+            margin: 0 15px;
+            max-width: 55%;
+            color: $color-white;
+            background-color: $color-orange-chilean-fire;
+            border-radius: 10px;
+
+            .content {
+                padding: 10px;
+                font-size: 20px;
+            }
+        }
+
+        &__time {
+            color: $color-black;
+        }
+
+        &.adminMessage {
+            justify-content: flex-start;
+
+            .single-message__content {
+                background-color: $color-grey-gallery;
+                color: $color-black;
+                order: 1;
+            }
+
+            .single-message__time {
+                order: 2;
+            }
+        }
+
+        &:last-child {
+            margin-bottom: 20px;
+        }
+    }
+
+    &__breaker {
+        position: relative;
+        .breaker-content {
+            z-index: 2;
+            font-size: 25px;
+            background-color: $color-white;
+            padding: 0px 20px;
+        }
+
+        .breaker-line {
+            position: absolute;
+            border-bottom: 1px solid $color-black;
+            height: 25px;
+            width: 100%;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .message-view {
+        .single-message {
+            margin-top: 20px;
+            justify-content: flex-end;
+
+            &__content {
+                max-width: 90%;
+
+                .content {
+                    font-size: 15px;
+                }
+            }
+
+            &__time {
+                font-size: 10px;
+            }
+        }
+    }
+}

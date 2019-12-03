@@ -1,3 +1,152 @@
+/// <reference path="../../global-styles/_variables" />
+
+$content-height: 87vh;
+$content-height-mobile: 100vh;
+
 .messages {
-	
+    height: $content-height;
+    &__tabs {
+        height: $content-height;
+        border-right: 1px solid $color-black;
+
+        .header {
+            width: 100%;
+            height: 75px;
+            border-bottom: 1px solid $color-black;
+
+            &__headline {
+                font-family: $font-bold;
+                color: $color-black;
+                text-transform: uppercase;
+            }
+        }
+
+        .categories-list {
+            &__item {
+                height: 100px;
+                border-bottom: 1px solid $color-black;
+
+                .category-icon {
+                    height: 50px;
+                    width: 50px;
+                    margin: 20px;
+                    text-align: center;
+                    color: $color-white;
+                    border-radius: 100%;
+
+                    span {
+                        line-height: 50px;
+                    }
+                }
+
+                .category-content {
+                    &__name {
+                        font-family: $font-default;
+                        font-size: 20px;
+                    }
+                    &__message-snippet {
+                        color: $color-grey-dove;
+                    }
+                }
+
+                &.active {
+                    background-color: $color-grey-gallery;
+                }
+            }
+        }
+    }
+
+    &__view {
+        height: $content-height;
+        position: relative;
+
+        .header {
+            width: 100%;
+            height: 75px;
+            border-bottom: 1px solid $color-black;
+
+            &__headline {
+                font-family: $font-default;
+                color: $color-black;
+            }
+
+            &__message-icon {
+                color: $color-white;
+                width: 50px;
+                height: 50px;
+                border-radius: 100%;
+                text-align: center;
+
+                span {
+                    line-height: 50px;
+                }
+            }
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: scroll;
+        }
+
+        .editor {
+            display: flex;
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+            &__textfield {
+                border: none;
+                flex: 1;
+                background-color: $color-grey-gallery;
+                border-radius: 30px;
+                color: $color-grey-dove;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            &__button {
+                width: 30px;
+                font-size: 30px;
+                margin-left: 10px;
+                color: $color-orange-chilean-fire;
+                -webkit-appearance: none;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .messages {
+        height: $content-height-mobile;
+
+        &__tabs {
+            height: $content-height-mobile;
+            border-right: none;
+
+            .header {
+                height: 65px;
+            }
+        }
+
+        &__view {
+            height: $content-height-mobile;
+
+            .header {
+                height: 65px;
+
+                &__back {
+                    color: $color-black;
+                    font-size: 30px;
+                    margin-right: 15px;
+                }
+
+                &__headline {
+                    font-size: 20px;
+                }
+            }
+
+            .content {
+                height: 78vh;
+            }
+        }
+    }
 }
