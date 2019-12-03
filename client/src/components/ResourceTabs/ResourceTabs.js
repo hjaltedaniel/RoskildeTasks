@@ -11,7 +11,8 @@ export default {
   },
   data () {
     return {
-      iconColor: 'green'
+      iconColor: 'green',
+      tabs: []
     }
   },
   computed: {
