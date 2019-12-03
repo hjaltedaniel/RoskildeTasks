@@ -1,11 +1,13 @@
 import MessageService from "../../services/MessageService"
 import MessageView from "@/components/MessageView"
+import Loader from "@/components/Loader"
 import _ from "lodash";
 
 export default {
 	name: 'messages',
 	components: {
-		MessageView
+		MessageView,
+		Loader
 	},
 	props: [],
 	data () {
