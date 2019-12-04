@@ -10,7 +10,7 @@ export default {
 		Loader
 	},
 	props: [],
-	data () {
+	data() {
 		return {
 			loaded: false,
 			mobileOverlayActive: false,
@@ -18,7 +18,7 @@ export default {
 			messageContent: "",
 			errorMessage: "",
 			categories: [],
-			windowWidth: 0
+			isMobile: false
 		}
 	},
 	computed: {
@@ -43,21 +43,28 @@ export default {
 			}
 		},
 		activeCategory: function () {
-			this.$nextTick(() => {
-				let elem = this.$el.querySelector("[data-content]");
-				elem.scrollTop = elem.scrollHeight;
-			})
+			if (this.activeCategory != undefined) {
+				this.$nextTick(() => {
+					let elem = this.$el.querySelector("[data-content]");
+					elem.scrollTop = elem.scrollHeight;
+				})
+			}
 		}
 	},
 	methods: {
 		setActive(category) {
-			if (this.windowWidth < 768) {
+			if (this.isMobile) {
 				this.mobileOverlayActive = true;
 			}
 			this.activeCategory = category;
 		},
 		handleResize() {
-			this.windowWidth = window.innerWidth;
+			if (window.innerWidth < 768) {
+				this.isMobile = true;
+			} else if (window.innerWidth > 768) {
+				this.isMobile = false;
+				this.activeCategory = this.categories[0];
+			}
 		},
 		populateMessages() {
 			let categories = this.categoriesList;
@@ -83,15 +90,14 @@ export default {
 				let sortedArray = _.sortBy(returnArr, function (dateObj) {
 					if (dateObj.Messages[0] == undefined) {
 						return dateObj.Id;
-					}
-					else {
+					} else {
 						return new Date(dateObj.Messages[0].Date);
 					}
 				});
 				let sortedCategories = _.reverse(sortedArray)
 				this.categories = sortedCategories;
 				this.loaded = true;
-				if (this.windowWidth > 768) {
+				if (!this.isMobile) {
 					this.activeCategory = sortedCategories[0];
 				}
 			}
@@ -99,24 +105,21 @@ export default {
 		getSender(bool) {
 			if (bool) {
 				return "Festival:"
-			}
-			else {
+			} else {
 				return "You:"
 			}
 		},
-		textTruncate (str, length, ending) {
+		textTruncate(str, length, ending) {
 			if (str.length > length) {
 				return str.substring(0, length - ending.length) + ending;
-			}
-			else {
+			} else {
 				return str;
 			}
 		},
 		isActive(category) {
 			if (this.activeCategory == category) {
 				return true;
-			}
-			else {
+			} else {
 				return false;
 			}
 		},
@@ -133,24 +136,20 @@ export default {
 				let minutes;
 				if (min <= 9) {
 					minutes = "0" + d.getMinutes();
-				}
-				else {
+				} else {
 					minutes = d.getMinutes();
 				}
 
 				let hours;
 				if (hr <= 9) {
 					hours = "0" + d.getHours();
-				}
-				else {
+				} else {
 					hours = d.getHours();
 				}
 				return hours + ":" + minutes;
-			}
-			else if (diffDays == 1 && returnDate(d) != returnDate(today))  {
+			} else if (diffDays == 1 && returnDate(d) != returnDate(today)) {
 				return "Yesterday";
-			}
-			else if (diffDays > 1 && diffDays < 7) {
+			} else if (diffDays > 1 && diffDays < 7) {
 				let weekday = new Array(7);
 				weekday[0] = "Sun";
 				weekday[1] = "Mon";
@@ -161,8 +160,7 @@ export default {
 				weekday[6] = "Sat";
 
 				return weekday[d.getDay()]
-			}
-			else if (diffDays <= 7 && diffDays < 365) {
+			} else if (diffDays <= 7 && diffDays < 365) {
 				let month = new Array();
 				month[0] = "jan";
 				month[1] = "feb";
@@ -178,29 +176,29 @@ export default {
 				month[11] = "dec";
 
 				return d.getDate() + ". " + month[d.getMonth()]
-			}
-			else {
+			} else {
 				return returnDate(d);
 			}
+
 			function returnDate(date) {
 				var dd = String(date.getDate()).padStart(2, '0');
 				var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
 				var yyyy = date.getFullYear();
 				return dd + '/' + mm + '/' + yyyy;
-			}			
+			}
 		},
 		async submitMessage() {
 			if (this.messageContent != "") {
 				this.errorMessage = "";
 				this.loaded = false;
-				await MessageService.setMessageForCategory(this.activeCategory.Id, this.messageContent);
+				await MessageService.setMessageForCategory(this.activeCategory.Id, this
+					.messageContent);
 				this.messageContent = "";
 				this.populateMessages();
-			}
-			else {
+			} else {
 				this.errorMessage = "No content set for message"
 			}
-			
+
 		},
 		sortMessages(arr) {
 			let sortedArray = _.sortBy(arr, function (dateObj) {
@@ -210,5 +208,3 @@ export default {
 		}
 	}
 }
-
-
