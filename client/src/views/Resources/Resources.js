@@ -8,12 +8,20 @@ export default {
 	props: [],
 	data() {
 		return {
-			categoriesList: []
+			categoriesList: [],
+			isMobile: false
 		}
 	},
 	computed: {
 		storeCategories() {
 			return this.$store.state.categoriesList;
+		},
+		isMobileOverlayActive() {
+			if (this.$route.params.resourcelist != undefined && this.isMobile) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	},
 	watch: {
@@ -23,6 +31,13 @@ export default {
 	},
 	mounted() {
 		this.setCategories();
+	},
+	created() {
+		window.addEventListener('resize', this.handleResize)
+		this.handleResize();
+	},
+	destroyed() {
+		window.removeEventListener('resize', this.handleResize)
 	},
 	methods: {
 		setCategories() {
@@ -35,14 +50,25 @@ export default {
 						catList.push(item);
 					}
 				})
-				if (this.$route.params.resourcelist == undefined) {
+				if (this.$route.params.resourcelist == undefined && this.isMobile == false) {
 					this.$router.push({
 						path: `/resources/${catList[0].Id}`
 					})
 				}
-
 				this.categoriesList = catList;
 			}
+		},
+		handleResize() {
+			if (window.innerWidth < 768) {
+				this.isMobile = true;
+			} else if (window.innerWidth > 768) {
+				this.isMobile = false;
+			}
+		},
+		closeOverlay() {
+			this.$router.push({
+				path: `/resources`
+			})
 		}
 	}
 }
