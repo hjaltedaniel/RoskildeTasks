@@ -18,7 +18,8 @@ export default new Vuex.Store({
 	},
 	getters: {
 		filterRessourcesByCategory: (state) => (category) => {
-			return state.ressourcesList.filter(ressource => ressource.Category.Id === category)
+			return state.ressourcesList.filter(ressource => ressource.Category.Id ===
+				category)
 		},
 		getTask: (state) => (id) => {
 			return state.tasksList.find(task => task.Id === id)
@@ -45,11 +46,13 @@ export default new Vuex.Store({
 	actions: {
 		setAuthorizationSession(context, token) {
 			context.commit("SET_TOKEN", token)
-			Cookies.set('Token', token)			
+			Cookies.set('Token', token)
 		},
 		setAuthorization24h(context, token) {
 			context.commit("SET_TOKEN", token)
-			Cookies.set('Token', token, { expires: 1 })
+			Cookies.set('Token', token, {
+				expires: 1
+			})
 		},
 		logout(context, message) {
 			context.commit("DELETE_TOKEN", message)

@@ -8,6 +8,7 @@ $content-height-mobile: 100vh;
 
     &__tabs {
         height: $content-height;
+        overflow-y: scroll;
         border-right: 1px solid $color-black;
 
         .header {
