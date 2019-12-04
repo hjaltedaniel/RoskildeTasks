@@ -4,12 +4,15 @@ import router from './router';
 import store from './store';
 import './global-styles/index.scss';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { 
+import {
+	library
+} from '@fortawesome/fontawesome-svg-core'
+import {
 	faTimes,
 	faCloudUploadAlt,
 	faSave,
 	faCheck,
+	faCircle,
 	faEdit,
 	faEye,
 	faEyeSlash,
@@ -19,7 +22,9 @@ import {
 	faCopy,
 	faLongArrowAltLeft
 } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {
+	FontAwesomeIcon
+} from '@fortawesome/vue-fontawesome'
 import TextareaAutosize from 'vue-textarea-autosize'
 
 library.add(
@@ -27,6 +32,7 @@ library.add(
 	faCloudUploadAlt,
 	faSave,
 	faCheck,
+	faCircle,
 	faEdit,
 	faEye,
 	faEyeSlash,
@@ -45,5 +51,5 @@ Vue.use(TextareaAutosize);
 new Vue({
 	router,
 	store,
-  render: h => h(App),
+	render: h => h(App),
 }).$mount('#app');

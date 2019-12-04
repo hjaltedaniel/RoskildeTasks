@@ -5,6 +5,7 @@ $content-height-mobile: 100vh;
 
 .messages {
     height: $content-height;
+
     &__tabs {
         height: $content-height;
         border-right: 1px solid $color-black;
@@ -27,15 +28,18 @@ $content-height-mobile: 100vh;
                 border-bottom: 1px solid $color-black;
 
                 .category-icon {
-                    height: 50px;
-                    width: 50px;
+                    font-size: 50px;
+                    position: relative;
                     margin: 20px;
                     text-align: center;
-                    color: $color-white;
-                    border-radius: 100%;
 
                     span {
-                        line-height: 50px;
+                        font-size: 20px;
+                        color: $color-white;
+                        position: absolute;
+                        line-height: 65px;
+                        right: 0;
+                        left: 0;
                     }
                 }
 
@@ -44,6 +48,7 @@ $content-height-mobile: 100vh;
                         font-family: $font-default;
                         font-size: 20px;
                     }
+
                     &__message-snippet {
                         color: $color-grey-dove;
                     }
@@ -90,8 +95,7 @@ $content-height-mobile: 100vh;
 
         .editor {
             display: flex;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            margin: 20px;
 
             &__textfield {
                 border: none;

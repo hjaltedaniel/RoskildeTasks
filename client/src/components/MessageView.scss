@@ -1,6 +1,8 @@
 ﻿/// <reference path="../global-styles/_variables" />
 
 .message-view {
+    margin: 10px;
+
     .single-message {
         margin-top: 30px;
         justify-content: flex-end;
@@ -15,7 +17,6 @@
             border-radius: 10px;
 
             .content {
-                padding: 10px;
                 font-size: 20px;
             }
         }
@@ -45,6 +46,8 @@
 
     &__breaker {
         position: relative;
+        margin-top: 20px;
+
         .breaker-content {
             z-index: 2;
             font-size: 25px;
@@ -55,8 +58,8 @@
         .breaker-line {
             position: absolute;
             border-bottom: 1px solid $color-black;
-            height: 25px;
-            width: 100%;
+            height: 20px;
+            width: 90%;
         }
     }
 }
