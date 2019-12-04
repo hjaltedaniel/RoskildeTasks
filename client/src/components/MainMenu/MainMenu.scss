@@ -57,7 +57,7 @@ $icon-height-mobile: 55px;
             }
         }
 
-        .router-link-exact-active {
+        .router-link-active {
             &::before {
                 height: $icon-height;
             }
@@ -121,3 +121,51 @@ $icon-height-mobile: 55px;
     }
 }
 
+@media only screen and (max-device-height: $viewport-small) and (orientation: landscape) {
+    .main-menu {
+        z-index: 1;
+        width: 60px;
+
+        .logo {
+            height: 65px;
+
+            &__content {
+                height: 65px;
+            }
+
+            img {
+                width: 45px;
+            }
+        }
+
+        .nav-item {
+            height: $icon-height-mobile;
+
+            &__content {
+                height: $icon-height-mobile;
+            }
+
+            a {
+                &::before {
+                    width: 3px;
+                }
+
+                &:hover {
+                    &::before {
+                        height: $icon-height-mobile;
+                    }
+                }
+            }
+
+            .router-link-exact-active {
+                &::before {
+                    height: $icon-height-mobile;
+                }
+            }
+
+            img {
+                width: 22px;
+            }
+        }
+    }
+}

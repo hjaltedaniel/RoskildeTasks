@@ -48,10 +48,12 @@
 						<div class="mb-1 border profile__border-color rounded col-md-6">
 							<p class="text-center m-0 p-0"> {{ user.accessGroup }} </p>
 						</div>
+						<button type="button" v-on:click="logout" class="btn btn-danger">Log out</button>
 					</div>
+
 				</li>
 			</ul>
+
 		</div>
 	</div>
-	<button v-on:click="logout">Log out</button>
 </section>
