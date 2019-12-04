@@ -41,6 +41,12 @@ export default {
 			if (this.categoriesList != undefined) {
 				this.populateMessages();
 			}
+		},
+		activeCategory: function () {
+			this.$nextTick(() => {
+				let elem = this.$el.querySelector("[data-content]");
+				elem.scrollTop = elem.scrollHeight;
+			})
 		}
 	},
 	methods: {
