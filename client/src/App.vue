@@ -1,33 +1,40 @@
 <template>
-  <div v-if="isLoggedIn">
-    <MainMenu />
-    <div class="main-content">
-      <div class="container-fluid col-md-12">
-        <div class="view-wrapper">
-          <router-view />
-        </div>
-      </div>
-    </div>
-  </div>
-  <div v-else>
-    <Login></Login>
-  </div>
+	<div v-if="isLoggedIn">
+		<MainMenu />
+		<div class="main-content">
+			<div class="container-fluid col-md-12">
+				<div class="view-wrapper">
+					<router-view />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div v-else>
+		<div class="d-flex h-100 justify-content-center align-items-center" v-if="isValidatingToken">
+			<Loader></Loader>
+		</div>
+		<Login v-else></Login>
+	</div>
+
 </template>
 
 <script>
 import MainMenu from "./components/MainMenu";
-import Login from "./views/Login";
+	import Login from "./views/Login";
+	import Loader from "./components/Loader";
 	import Cookies from "js-cookie";
 	import MembersService from "./services/MembersService"
 
 export default {
   components: {
     MainMenu,
-    Login
+		Login,
+	Loader
 		},
 	data() {
 		return {
-			isLoading: false
+			isLoading: false,
+			isValidatingToken: false
 		}
 	},
   computed: {
@@ -61,11 +68,12 @@ export default {
   },
 	methods: {
 		validateToken(token) {
-			this.isLoading = true;
+			this.isValidatingToken = true;
 			MembersService.validate(token)
 				.then(response => {
 					this.$store.dispatch("setAuthorizationState", Cookies.get("Token"));
 					this.$store.dispatch("setUser", response.data);
+					this.isValidatingToken = false;
 					return true;
 				})
 				.catch(error => {
