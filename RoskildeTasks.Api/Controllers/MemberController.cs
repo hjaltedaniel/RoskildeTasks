@@ -75,7 +75,9 @@ namespace RoskildeTasks.Api.Controllers
                 if (memberShipHelper.Login(currentUser.Username, password.OldPassword))
                 {
                     ms.SavePassword(currentUser, password.NewPassword);
-                    return Ok();
+                    var textbytes = Encoding.UTF8.GetBytes(currentUser.Username + ":" + password.NewPassword);
+                    var token = Convert.ToBase64String(textbytes);
+                    return Content(HttpStatusCode.OK, token);
                 }
                 else
                 {
@@ -116,7 +118,20 @@ namespace RoskildeTasks.Api.Controllers
                 currentUser.Email = email.NewEmail;
                 currentUser.Username = email.NewEmail;
                 ms.Save(currentUser);
-                return Ok();
+
+                var headerAuth = Request.Headers.Authorization.ToString().Replace("Basic ", "");
+                var authBytes = Convert.FromBase64String(headerAuth);
+                var decodedAuth = Encoding.UTF8.GetString(authBytes);
+
+                char[] spearator = { ':' };
+
+                var userPass = decodedAuth.Split(spearator);
+                string password = userPass[1];
+
+                var textbytes = Encoding.UTF8.GetBytes(email.NewEmail + ":" + password);
+                var token = Convert.ToBase64String(textbytes);
+
+                return Content(HttpStatusCode.OK, token);
 
             }
             else

@@ -17,20 +17,31 @@
 <script>
 import MainMenu from "./components/MainMenu";
 import Login from "./views/Login";
-import Cookies from "js-cookie";
+	import Cookies from "js-cookie";
+	import MembersService from "./services/MembersService"
 
 export default {
   components: {
     MainMenu,
     Login
-  },
+		},
+	data() {
+		return {
+			isLoading: false
+		}
+	},
   computed: {
     isLoggedIn() {
       if (this.$store.state.token != undefined) {
         return true;
-      } else if (Cookies.get("Token") != undefined) {
-        this.$store.dispatch("setAuthorizationSession", Cookies.get("Token"));
-        return true;
+	  } else if (Cookies.get("Token") != undefined) {
+		  if (this.validateToken(Cookies.get("Token"))) {
+			  return true;
+		  }
+		  else {
+			  return false
+		  }
+		  
       } else {
         return false;
       }
@@ -48,8 +59,22 @@ export default {
       }
     }
   },
-  methods: {}
-};
+	methods: {
+		validateToken(token) {
+			this.isLoading = true;
+			MembersService.validate(token)
+				.then(response => {
+					this.$store.dispatch("setAuthorizationState", Cookies.get("Token"));
+					this.$store.dispatch("setUser", response.data);
+					return true;
+				})
+				.catch(error => {
+					this.$store.dispatch("logout", "An error occured with your saved login. Please login again");
+					return false;
+				});
+			}
+		}
+	};
 </script>
 
 <style lang="scss" scoped>
