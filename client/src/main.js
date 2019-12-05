@@ -24,7 +24,8 @@ import {
 	faLongArrowAltLeft,
 	faTasks,
 	faComments,
-	faUser
+	faUser,
+	faSignOutAlt
 	
 } from '@fortawesome/free-solid-svg-icons'
 import {
