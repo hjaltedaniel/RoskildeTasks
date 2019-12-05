@@ -25,8 +25,7 @@ import {
 	faTasks,
 	faComments,
 	faUser
-	faLongArrowAltLeft,
-	faSignOutAlt
+	
 } from '@fortawesome/free-solid-svg-icons'
 import {
 	FontAwesomeIcon
@@ -46,7 +45,11 @@ library.add(
 	faCopy,
 	faPaperPlane,
 	faChevronLeft,
-	faLongArrowAltLeft
+	faLongArrowAltLeft,
+	faTasks,
+	faComments,
+	faUser,
+	faSignOutAlt
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
