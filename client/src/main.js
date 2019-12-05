@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate/dist/vee-validate.full.esm';
 import router from './router';
 import store from './store';
 import './global-styles/index.scss';
@@ -24,6 +25,8 @@ import {
 	faTasks,
 	faComments,
 	faUser
+	faLongArrowAltLeft,
+	faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons'
 import {
 	FontAwesomeIcon
@@ -43,16 +46,24 @@ library.add(
 	faCopy,
 	faPaperPlane,
 	faChevronLeft,
-	faLongArrowAltLeft,
-	faTasks,
-	faComments,
-	faUser
+	faLongArrowAltLeft
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;
 Vue.use(TextareaAutosize);
+Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('ValidationObserver', ValidationObserver);
+
+extend('password', {
+	params: ['target'],
+	validate(value, { target }) {
+		return value === target;
+	},
+	message: 'Password confirmation does not match'
+});
+
 
 new Vue({
 	router,

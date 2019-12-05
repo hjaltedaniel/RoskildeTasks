@@ -126,7 +126,8 @@ export default {
             this.$store.dispatch("setAuthorization24h", token);
           } else {
             this.$store.dispatch("setAuthorizationSession", token);
-          }
+			}
+			this.$store.dispatch("setUser", response.data);
           this.auth.remember = false;
         })
         .catch(error => {
