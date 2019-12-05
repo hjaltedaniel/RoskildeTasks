@@ -1,3 +1,19 @@
 .editor-row {
-
+  &__actions {
+    .icon {
+      margin: 0 5px;
+      cursor: pointer;
+      color: $color-black;
+      &--success {
+        &:hover {
+          color: $color-green-shamrock;
+        }
+      }
+      &--error {
+        &:hover {
+          color: $color-red-carnation;
+        }
+      }
+    }
+  }
 }
