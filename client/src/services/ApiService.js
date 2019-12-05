@@ -1,7 +1,7 @@
-﻿import axios from "axios"
+import axios from "axios"
 
 const apiClient = axios.create({
-	baseURL: `https://localhost:44383/umbraco/api`,
+	baseURL: `https://roskildetasks.azurewebsites.net/umbraco/api`,
 	withCredentials: false,
 	headers: {
 		Accept: "*/*",
