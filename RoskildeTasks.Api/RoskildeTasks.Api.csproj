@@ -228,6 +228,8 @@
     </Compile>
     <Compile Include="Models\ColorItem.cs" />
     <Compile Include="Models\DTO\AnswerItem.cs" />
+    <Compile Include="Models\DTO\Email.cs" />
+    <Compile Include="Models\DTO\Password.cs" />
     <Compile Include="Models\DTO\TaskMessageItem.cs" />
     <Compile Include="Models\DTO\CategoryMessageItem.cs" />
     <Compile Include="Models\DTO\MessageItem.cs" />

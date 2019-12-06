@@ -4,85 +4,129 @@
 		<div class="main-content">
 			<div class="container-fluid col-md-12">
 				<div class="view-wrapper">
-					<router-view/>
+					<router-view />
 				</div>
 			</div>
 		</div>
 	</div>
 	<div v-else>
-		<Login></Login>
+		<div class="d-flex h-100 justify-content-center align-items-center" v-if="isValidatingToken">
+			<Loader></Loader>
+		</div>
+		<Login v-else></Login>
 	</div>
+
 </template>
 
 <script>
-	import MainMenu from "./components/MainMenu";
+import MainMenu from "./components/MainMenu";
 	import Login from "./views/Login";
-	import Cookies from 'js-cookie';
+	import Loader from "./components/Loader";
+	import Cookies from "js-cookie";
+	import MembersService from "./services/MembersService"
 
 export default {
-	components: {
-		MainMenu,
-		Login
-	},
-	computed: {
-		isLoggedIn() {
-			if (this.$store.state.token != undefined) {
-				return true
-			}
-			else if (Cookies.get('Token') != undefined) {
-				this.$store.dispatch("setAuthorizationSession", Cookies.get('Token'));
-				return true;
-			}
-			else {
-				return false
-			}
+  components: {
+    MainMenu,
+		Login,
+	Loader
 		},
-		token() {
-			return this.$store.state.token;
+	data() {
+		return {
+			isLoading: false,
+			isValidatingToken: false
 		}
 	},
-	 watch: {
-	 	token: function () {
-	 		if (this.token != undefined) {
-	 			this.$store.dispatch("getTaskList");
-	 			this.$store.dispatch("getCategoryList");
-	 			this.$store.dispatch("getRessourceList");
-	 		}
-	 	}
-	 },
+  computed: {
+    isLoggedIn() {
+      if (this.$store.state.token != undefined) {
+        return true;
+	  } else if (Cookies.get("Token") != undefined) {
+		  if (this.validateToken(Cookies.get("Token"))) {
+			  return true;
+		  }
+		  else {
+			  return false
+		  }
+		  
+      } else {
+        return false;
+      }
+    },
+    token() {
+      return this.$store.state.token;
+    }
+  },
+  watch: {
+    token: function() {
+      if (this.token != undefined) {
+        this.$store.dispatch("getTaskList");
+        this.$store.dispatch("getCategoryList");
+        this.$store.dispatch("getRessourceList");
+      }
+    }
+  },
 	methods: {
-	}
-};
+		validateToken(token) {
+			this.isValidatingToken = true;
+			MembersService.validate(token)
+				.then(response => {
+					this.$store.dispatch("setAuthorizationState", Cookies.get("Token"));
+					this.$store.dispatch("setUser", response.data);
+					this.isValidatingToken = false;
+					return true;
+				})
+				.catch(error => {
+					this.$store.dispatch("logout", "An error occured with your saved login. Please login again");
+					return false;
+				});
+			}
+		}
+	};
 </script>
 
 <style lang="scss" scoped>
-	.main-content {
-        padding-left: 120px;
-        .container-fluid {
-            padding: 3%;
-            .view-wrapper {
-				height: 87vh;
-				overflow-y: auto;
-                border-radius: 5px;
-                background-color: $color-white;
-                box-shadow: 0 0 7px #00000061;
-            }
-        }
+.main-content {
+  padding-left: 120px;
+  .container-fluid {
+    padding: 3%;
+    .view-wrapper {
+      height: 87vh;
+      overflow-y: auto;
+      border-radius: 5px;
+      background-color: $color-white;
+      box-shadow: 0 0 7px #00000061;
     }
-	@media screen and (max-width: $viewport-small) {
-			.main-content {
-        padding-left: 60px;
-		z-index: 0;
-        .container-fluid {
-            padding: 0;
-            .view-wrapper {
-				height: 100vh;
-				overflow-y: auto;
-                border-radius: 5px;
-                background-color: $color-white;
-                box-shadow: 0;
-            }
-        }
+  }
+}
+@media screen and (max-width: $viewport-small) {
+  .main-content {
+    padding-left: 60px;
+    z-index: 0;
+    .container-fluid {
+      padding: 0;
+      .view-wrapper {
+        height: 100vh;
+        overflow-y: auto;
+        border-radius: 0;
+        box-shadow: 0;
+      }
     }
-	}
+  }
+}
+@media only screen and (max-device-height: $viewport-small) and (orientation: landscape) {
+  .main-content {
+    padding-left: 60px;
+    z-index: 0;
+    .container-fluid {
+      padding: 0;
+      .view-wrapper {
+        height: 100vh;
+        overflow-y: auto;
+        border-radius: 0;
+        box-shadow: 0;
+      }
+    }
+  }
+}
 </style>
