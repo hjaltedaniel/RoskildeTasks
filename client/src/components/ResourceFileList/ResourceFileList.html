@@ -1,18 +1,23 @@
 <section class="resource-file-list">
-<ul class="list-group">
-  <li class="list-group-item rounded-0 border-left-0" v-for="file in ressourcesList" :key="file.Id" >
+  <ul class="list-group" v-if="isLoading == false">
+    <li class="list-group-item rounded-0 border-left-0" v-for="file in ressourcesList" :key="file.Id">
       <div class="d-flex justify-content-between">
         <div class="col-md-6 d-flex align-items-center">
-            <p class="align-self-center my-0"> {{ file.Name }} </p>
+          <p class="align-self-center my-0"> {{ file.Name }} </p>
         </div>
         <div class="col-md-2 d-flex align-items-center justify-content-end">
-            <p class="align-self-center my-0"> {{ file.Filetype }} </p>
+          <p class="align-self-center my-0"> {{ file.Filetype }} </p>
         </div>
         <div class="col-md-4 d-flex justify-content-end">
-            <a :href="'http://roskildetasks.azurewebsites.net' + file.Url" :download="file.Name" role="button" class="btn align-self-center resource-file-list--button border-0">Download</a>
+          <a :href="'http://roskildetasks.azurewebsites.net' + file.Url" :download="file.Name" role="button"
+            class="btn align-self-center resource-file-list--button border-0">Download</a>
         </div>
       </div>
     </li>
   </ul>
+  <div v-else class="container-fluid h-100">
+    <div class="h-100 d-flex justify-content-center align-items-center">
+      <Loader />
+    </div>
+  </div>
 </section>
-
