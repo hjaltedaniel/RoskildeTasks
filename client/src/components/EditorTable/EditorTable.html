@@ -3,23 +3,36 @@
 		<table class="table table-hover">
 			<thead class="thead-light header-fixed">
 				<tr>
-					<th scope="col" v-for="(column, index) in columns" :key="index">{{ column }}</th>
+					<th scope="col" v-for="(column, index) in columns" :key="index">{{ column.displayName }}</th>
 					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
 				<EditorRow 
-					v-for="(row, index) in rows"
+					v-for="(row, index) in rows" 
 					:key="index"
 					:row="row"
-					:onRowEdit="onRowEdit"
+					:onRowEdit="newRow => onRowEdit(index, newRow)"
 					:onRowDelete="onRowDelete"
 				></EditorRow>
+				<!-- <tr>
+					<td v-for="(column, index) in columns" :key="index">
+						<input :placeholder="column.displayName" :type="column.type"/>
+					</td>
+					<td>
+						<div @click="addRow">
+							<font-awesome-icon icon="check" />
+						</div>
+						<div @click="discardNewRow">
+							<font-awesome-icon icon="times" />
+						</div>
+					</td>
+				</tr> -->
 			</tbody>
 		</table>
 	</div>
 	<div class="add-row d-flex justify-content-center">
-		<div class="d-flex justify-content-center align-items-center">
+		<div class="d-flex justify-content-center align-items-center" @click="addRow">
 			<font-awesome-icon icon="plus" />
 		</div>
 	</div>

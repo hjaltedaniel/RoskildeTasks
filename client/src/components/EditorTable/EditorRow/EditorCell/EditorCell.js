@@ -9,6 +9,14 @@ export default {
 		isEditable: {
 			type: Boolean,
 			required: true
+		},
+		onInputChange: {
+			type: Function,
+			default: () => {}
+		},
+		columnName: {
+			type: String,
+			required: true
 		}
 	}
 }

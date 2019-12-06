@@ -5,14 +5,9 @@ export default {
 	components: {
 		EditorCell
 	},
-	data() {
-		return {
-			isEditable: false
-		}
-	},
 	props: {
 		row: {
-			type: Array,
+			type: Object,
 			required: true
 		},
 		onRowEdit: {
@@ -22,25 +17,37 @@ export default {
 		onRowDelete: {
 			type: Function,
 			required: true
+		},
+		initialIsEditable: {
+			type: Boolean,
+			default: false
+		}
+	},
+	data() {
+		return {
+			isEditable: this.initialIsEditable,
+			tempRow: {}
 		}
 	},
 	methods: {
 		enableEditing() {
 			this.isEditable = true;
+			this.tempRow = {...this.row}
 		},
 		deleteRow() {
-			// ...
 			this.onRowDelete()
 		},
 		commitEdit() {
+			this.onRowEdit(this.tempRow);
 			this.isEditable = false;
-			this.onRowEdit();
+			this.tempRow = {}
 		},
 		discardEdit() {
 			this.isEditable = false;
-			this.onRowDelete();
+			this.tempRow = {}
+		},
+		onInputChange(key, value) {
+			this.tempRow[key] = value;
 		}
 	}
 }
-
-

@@ -1,5 +1,12 @@
 <tr>
-	<EditorCell v-for="(cell, cellIndex) in row" :key="cellIndex" :cell="cell" :isEditable="isEditable"></EditorCell>
+	<EditorCell 
+		v-for="(val, key) in isEditable ? tempRow : row" 
+		:key="key" 
+		:cell="val"
+		:columnName="key"
+		:isEditable="isEditable"
+		:onInputChange="onInputChange"
+	></EditorCell>
 	<td>
 		<template v-if="isEditable">
 			<div @click="commitEdit">
@@ -17,6 +24,5 @@
 				<font-awesome-icon icon="times" />
 			</div>
 		</template>
-		
 	</td>
 </tr>

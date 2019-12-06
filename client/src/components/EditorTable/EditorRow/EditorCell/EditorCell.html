@@ -1,7 +1,6 @@
-
 <td>
 	<template v-if="isEditable">
-		<input :value="cell">
+		<input :value="cell" @change="(e) => onInputChange(columnName, e.target.value)">
 	</template>
 	<template v-else>
 		{{ cell }}
