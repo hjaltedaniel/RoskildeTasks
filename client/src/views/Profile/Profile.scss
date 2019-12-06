@@ -1,17 +1,39 @@
+/// <reference path="../../global-styles/_variables" />
+
 .profile {
     h1 {
         font-family: $font-bold;
         color: $color-black;
         text-transform: uppercase;
     }
+
     &__border-color {
         border-color: $color-orange-chilean-fire !important;
     }
+
     &__list-info {
         color: $color-black;
         font-family: $font-bold;
     }
+
     &--btn {
         padding: .1rem 3rem !important;
+    }
+
+    .editor-modal {
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba($color-black, .7);
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        &__content {
+            width: 30%;
+            border-radius: 10px;
+            background-color: $color-white;
+        }
     }
 }

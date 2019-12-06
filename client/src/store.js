@@ -10,6 +10,13 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
+		user: {
+			name: "",
+			company: "",
+			email: "",
+			status: "",
+			accessGroups: []
+		},
 		token: undefined,
 		logoutMessage: "",
 		tasksList: [],
@@ -29,9 +36,16 @@ export default new Vuex.Store({
 		SET_TOKEN(state, payload) {
 			state.token = payload
 		},
+		SET_USER(state, payload) {
+			state.user = payload
+		},
+		SET_NEW_MAIL(state, payload) {
+			state.user.Email = payload
+		},
 		DELETE_TOKEN(state, payload) {
 			state.token = undefined;
 			state.logoutMessage = payload;
+			Cookies.remove('Token')
 		},
 		SET_TASKS_LIST(state, payload) {
 			state.tasksList = payload;
@@ -48,11 +62,20 @@ export default new Vuex.Store({
 			context.commit("SET_TOKEN", token)
 			Cookies.set('Token', token)
 		},
+		setAuthorizationState(context, token) {
+			context.commit("SET_TOKEN", token)
+		},
 		setAuthorization24h(context, token) {
 			context.commit("SET_TOKEN", token)
 			Cookies.set('Token', token, {
 				expires: 1
 			})
+		},
+		setUser(context, user) {
+			context.commit("SET_USER", user);
+		},
+		setNewEmail(context, email) {
+			context.commit("SET_NEW_MAIL", email);
 		},
 		logout(context, message) {
 			context.commit("DELETE_TOKEN", message)
