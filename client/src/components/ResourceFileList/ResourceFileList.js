@@ -1,26 +1,44 @@
+import Loader from "@/components/Loader"
+
 export default {
 	name: 'resource-file-list',
-	components: {},
+	components: {
+		Loader
+	},
 	props: [],
 	data() {
 		return {
-			ressourcesList: []
+			ressourcesList: [],
+			isLoading: true
 		}
 	},
 	computed: {
 		categoryId() {
 			return Number.parseInt(this.$route.params.resourcelist);
+		},
+		storeRessources() {
+			return this.$store.state.ressourcesList;
 		}
 	},
 	watch: {
 		categoryId: function () {
 			this.ressourcesList = this.$store.getters.filterRessourcesByCategory(this
 				.categoryId);
+		},
+		storeRessources: function () {
+			if (this.storeRessources != undefined) {
+				this.ressourcesList = this.$store.getters.filterRessourcesByCategory(this
+					.categoryId);
+				this.isLoading = false;
+			}
 		}
 	},
 	mounted() {
-		this.ressourcesList = this.$store.getters.filterRessourcesByCategory(this
-			.categoryId)
+		if (this.storeRessources != undefined) {
+			this.ressourcesList = this.$store.getters.filterRessourcesByCategory(this
+				.categoryId)
+			this.isLoading = false;
+		}
 	},
 	methods: {}
 }
