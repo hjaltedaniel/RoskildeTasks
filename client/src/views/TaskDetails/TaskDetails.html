@@ -17,8 +17,12 @@
 			</div>
 		</div>
 		<div class="col-md-6">
-			<!-- <UploadArea></UploadArea> -->
-			<EditorTable></EditorTable>
+			<template v-if="task.editor.type === 'file'">
+				<UploadArea></UploadArea>
+			</template>
+			<template v-else-if="task.editor.type === 'list'">
+				<EditorTable :columns="task.editor.columns"></EditorTable>
+			</template>
 		</div>
 	</div>
 </div>
