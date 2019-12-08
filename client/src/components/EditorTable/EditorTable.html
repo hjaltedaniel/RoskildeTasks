@@ -1,39 +1,53 @@
-<div class="editor-table-wrapper">
+<div class="editor-table-wrapper d-flex flex-column">	
 	<div class="editor-table">
-		<table class="table table-hover">
+		<div v-if="rows.length === 0" class="editor-table__placeholder d-flex justify-content-center align-items-center">
+			<h3>Try adding some rows</h3>
+		</div>
+		<table class="table">
 			<thead class="thead-light header-fixed">
-				<tr>
-					<th scope="col" v-for="(column, index) in columns" :key="index">{{ column.displayName }}</th>
+				<tr class="text-center">
+					<th 
+						scope="col" 
+						v-for="(column, index) in columns" 
+						:key="index"
+					>
+						{{ column.displayName }}
+					</th>
 					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<EditorRow 
-					v-for="(row, index) in rows" 
-					:key="index"
-					:row="row"
-					:onRowEdit="newRow => onRowEdit(index, newRow)"
-					:onRowDelete="onRowDelete"
-				></EditorRow>
-				<!-- <tr>
-					<td v-for="(column, index) in columns" :key="index">
-						<input :placeholder="column.displayName" :type="column.type"/>
+				<tr v-for="(row, rowIndex) in rows" class="editor-row">
+					<td v-for="(cell, column) in row" class="editor-row__cell">
+						<input 
+							:value="cell" 
+							:type="columns[column].type" 
+							@change="(e) => inputChange(rowIndex, column, e.target.value)"
+							:placeholder="columns[column].displayName"
+							class="text-center"
+						/>
 					</td>
-					<td>
-						<div @click="addRow">
-							<font-awesome-icon icon="check" />
-						</div>
-						<div @click="discardNewRow">
+					<td class="editor-row__actions editor-row__cell">
+						<div class="icon icon--error" @click="() => deleteRow(rowIndex)">
 							<font-awesome-icon icon="times" />
 						</div>
 					</td>
-				</tr> -->
+				</tr>
 			</tbody>
 		</table>
-	</div>
-	<div class="add-row d-flex justify-content-center">
-		<div class="d-flex justify-content-center align-items-center" @click="addRow">
+	</div>	
+	<div class="table-controls d-flex justify-content-between">
+		<button type="button" class="btn btn-info d-flex justify-content-center align-items-center" @click="addRow">
+			<h4>ADD ROW</h4>
 			<font-awesome-icon icon="plus" />
-		</div>
+		</button>
+		<button type="button" class="btn btn-danger d-flex justify-content-center align-items-center" @click="clearRows">
+			<h4>CLEAR</h4>
+			<font-awesome-icon icon="times" />
+		</button>
+		<button type="button" class="btn btn-success d-flex justify-content-center align-items-center" @click="saveRows">
+			<h4>SAVE</h4>
+			<font-awesome-icon icon="save"/>
+		</button>
 	</div>
 </div>

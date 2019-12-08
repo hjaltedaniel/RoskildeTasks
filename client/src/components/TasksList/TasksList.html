@@ -9,8 +9,8 @@
 					? 'task__deadline--expired' 
 					: null">{{ getTimeToDeadline(task.deadline) }}</p>
 			</div>
-			<div class="task__type" :style="{ backgroundColor: task.type.color }">
-				<p>{{ task.type.name }}</p>
+			<div class="task__type" :style="{ backgroundColor: task.category.color }">
+				<p>{{ task.category.name }}</p>
 			</div>
 		</router-link>
 	</ul>

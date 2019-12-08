@@ -1,85 +1,42 @@
-import EditorRow from './EditorRow'
-
 export default {
 	name: 'editor-table',
-	components: {
-		EditorRow
+	props: {
+		columns: {
+			required: true,
+			type: Object
+		},
+		data: {
+			default: () => [],
+			type: Array
+		}
 	},
 	data() {
 		return {
-			columns: {
-				machine: {
-					displayName: "Machine",
-					type: "text"
-				},
-				usage: {
-					displayName: "Usage",
-					type: "text"
-				},
-				force: {
-					displayName: "Force (in Volt)",
-					type: "number"
-				},
-				power: {
-					displayName: "Power (in Watt)",
-					type: "number"
-				}
-			},
-			rows: [
-				{
-					machine: "Deep fryer",
-					usage: "Deep Frying...",
-					force: 230,
-					power: 1800,
-				},
-				{
-					machine: "Stove",
-					usage: "Stoving",
-					force: 230,
-					power: 1800,
-				},
-				{
-					machine: "Deep fryer",
-					usage: "Deep Frying...",
-					force: 230,
-					power: 1800,
-				},
-				{
-					machine: "Deep fryer",
-					usage: "Deep Frying...",
-					force: 230,
-					power: 1800,
-				},
-				{
-					machine: "Deep fryer",
-					usage: "Deep Frying...",
-					force: 230,
-					power: 1800,
-				},
-				{
-					machine: "Deep fryer",
-					usage: "Deep Frying...",
-					force: 230,
-					power: 1800,
-				}
-			],
+			rows: [...this.data],
 		}
 	},
 	methods: {
-		onRowEdit(rowIndex, newRow) {
-			console.log(newRow);
+		addRow() {
+			this.rows.push({
+				machine: "",
+				usage: "",
+				force: "",
+				power: "",
+			})
+		},
+		deleteRow(rowIndex) {
 			let newRows = [...this.rows];
-			newRows[rowIndex] = newRow;
+			newRows.splice(rowIndex, 1);
 			this.rows = newRows;
 		},
-		onRowDelete() {
-			console.log("Delete");
+		inputChange(rowIndex, column, value) {
+			this.rows[rowIndex][column] = value;
 		},
-		addRow() {
-			console.log("add row");
+		saveRows() {
+			console.log("save");
 		},
-		discardNewRow() {
-			console.log("discard new row");
+		clearRows() {
+			this.rows = [];
 		}
 	}
 }
