@@ -181,7 +181,7 @@ namespace RoskildeTasks.Api.Controllers
                             nameProp.Value = row.Name;
                             properties.Add(nameProp);
 
-                            if (row.ValueType == "String")
+                            if (row.ValueType == "text")
                             {
                                 var stringProp = new ArchetypePropertyModel();
                                 stringProp.Alias = "string";
@@ -198,7 +198,7 @@ namespace RoskildeTasks.Api.Controllers
                                 fileProp.Value = null;
                                 properties.Add(fileProp);
                             }
-                            else if (row.ValueType == "Int32")
+                            else if (row.ValueType == "number")
                             {
                                 var stringProp = new ArchetypePropertyModel();
                                 stringProp.Alias = "string";
@@ -213,6 +213,23 @@ namespace RoskildeTasks.Api.Controllers
                                 var fileProp = new ArchetypePropertyModel();
                                 fileProp.Alias = "file";
                                 fileProp.Value = null;
+                                properties.Add(fileProp);
+                            }
+                            else if (row.ValueType == "file")
+                            {
+                                var stringProp = new ArchetypePropertyModel();
+                                stringProp.Alias = "string";
+                                stringProp.Value = null;
+                                properties.Add(stringProp);
+
+                                var intProp = new ArchetypePropertyModel();
+                                intProp.Alias = "int32";
+                                intProp.Value = null;
+                                properties.Add(intProp);
+
+                                var fileProp = new ArchetypePropertyModel();
+                                fileProp.Alias = "file";
+                                fileProp.Value = row.Content;
                                 properties.Add(fileProp);
                             }
 
@@ -337,6 +354,23 @@ namespace RoskildeTasks.Api.Controllers
                                 var fileProp = new ArchetypePropertyModel();
                                 fileProp.Alias = "file";
                                 fileProp.Value = null;
+                                properties.Add(fileProp);
+                            }
+                            else if (row.ValueType == "file")
+                            {
+                                var stringProp = new ArchetypePropertyModel();
+                                stringProp.Alias = "string";
+                                stringProp.Value = null;
+                                properties.Add(stringProp);
+
+                                var intProp = new ArchetypePropertyModel();
+                                intProp.Alias = "int32";
+                                intProp.Value = null;
+                                properties.Add(intProp);
+
+                                var fileProp = new ArchetypePropertyModel();
+                                fileProp.Alias = "file";
+                                fileProp.Value = row.Content;
                                 properties.Add(fileProp);
                             }
 
@@ -543,6 +577,76 @@ namespace RoskildeTasks.Api.Controllers
             else
             {
                 return BadRequest();
+            }
+        }
+        [RoleAuthorize]
+        [HttpGet]
+        public IHttpActionResult GetAllAnswersForTask(int taskId)
+        {
+            IContentService cs = Services.ContentService;
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            var user = ms.GetByUsername(currentUser);
+
+            var allAnswers = cs.GetContentOfContentType(Configurations.AnswerDocType);
+            if(allAnswers != null)
+            {
+                List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
+                foreach (var answer in allAnswers)
+                {
+                    var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
+                    if (answerTaskId == taskId)
+                    {
+                        var answerRows = answer.Children();
+                        foreach (var row in answerRows)
+                        {
+                            AnswerRootItem answersForTask = new AnswerRootItem();
+                            answersForTask.TaskId = answerTaskId;
+                            answersForTask.AnswerId = row.Id;
+                            answersForTask.isPublished = row.Published;
+                            List<AnswerItem> answersList = new List<AnswerItem>();
+                            var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
+
+                            foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
+                            {
+                                AnswerItem singleAnswer = new AnswerItem();
+                                singleAnswer.Name = property.GetValue("name");
+                                if (!string.IsNullOrWhiteSpace(property.GetValue("string")))
+                                {
+                                    singleAnswer.Content = property.GetValue("string");
+                                }
+                                else if (!string.IsNullOrWhiteSpace(property.GetValue("int32")))
+                                {
+                                    singleAnswer.Content = property.GetValue("int32");
+                                }
+                                else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
+                                {
+                                    singleAnswer.Content = Umbraco.TypedMedia(property.GetValue("file")).Url;
+                                }
+                                answersList.Add(singleAnswer);
+                            }
+                            answersForTask.Rows = answersList;
+                            answerRootList.Add(answersForTask);
+                        }
+                    }
+                }
+                if(answerRootList.Any())
+                {
+                    return Ok(answerRootList);
+                }
+                else if(cs.GetById(taskId) != null && cs.GetById(taskId).ContentType.Id == Configurations.TaskDocType)
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                
+            }
+            else
+            {
+                return StatusCode(HttpStatusCode.NoContent);
             }
         }
     }
