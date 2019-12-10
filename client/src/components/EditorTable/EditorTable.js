@@ -1,66 +1,42 @@
-import EditorRow from './EditorRow'
-
 export default {
 	name: 'editor-table',
-	components: {
-		EditorRow
-	},
-	props: [],
-	data() {
-		return {
-			columns: [
-				"Machine",
-				"Usage",
-				"Force (in Volt)",
-				"Power (in Watt)",
-			],
-			rows: [
-				[
-					"Deep fryer",
-					"Deep Frying...",
-					230,
-					1800,
-				], [
-					"Deep fryer",
-					"Deep Frying...",
-					230,
-					1800,
-				], [
-					"Deep fryer",
-					"Deep Frying...",
-					230,
-					1800,
-				], [
-					"Deep fryer",
-					"Deep Frying...",
-					230,
-					1800,
-				], [
-					"Deep fryer",
-					"Deep Frying...",
-					230,
-					1800,
-				], [
-					"Deep fryer",
-					"Deep Frying...",
-					230,
-					1800,
-				]
-			]
+	props: {
+		columns: {
+			required: true,
+			type: Object
+		},
+		data: {
+			default: () => [],
+			type: Array
 		}
 	},
-	computed: {
-
-	},
-	mounted() {
-
+	data() {
+		return {
+			rows: [...this.data],
+		}
 	},
 	methods: {
-		onRowEdit() {
-			console.log('edit')
+		addRow() {
+			this.rows.push({
+				machine: "",
+				usage: "",
+				force: "",
+				power: "",
+			})
 		},
-		onRowDelete() {
-			console.log('Delete')
+		deleteRow(rowIndex) {
+			let newRows = [...this.rows];
+			newRows.splice(rowIndex, 1);
+			this.rows = newRows;
+		},
+		inputChange(rowIndex, column, value) {
+			this.rows[rowIndex][column] = value;
+		},
+		saveRows() {
+			console.log("save");
+		},
+		clearRows() {
+			this.rows = [];
 		}
 	}
 }

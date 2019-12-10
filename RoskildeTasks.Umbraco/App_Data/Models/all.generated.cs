@@ -8,7 +8,7 @@ using  Umbraco.Web;
 using  Umbraco.ModelsBuilder;
 using  Umbraco.ModelsBuilder.Umbraco;
 [assembly: PureLiveAssembly]
-[assembly:ModelsBuilderAssembly(PureLive = true, SourceHash = "80fe592adaa36404")]
+[assembly:ModelsBuilderAssembly(PureLive = true, SourceHash = "288ccce9b4beca41")]
 [assembly:System.Reflection.AssemblyVersion("0.0.0.1")]
 
 
@@ -477,6 +477,15 @@ namespace Umbraco.Web.PublishedContentModels
 		public Archetype.Models.ArchetypeModel EditorProperties
 		{
 			get { return this.GetPropertyValue<Archetype.Models.ArchetypeModel>("editorProperties"); }
+		}
+
+		///<summary>
+		/// Editor type: Please choose if the editor should be a single file, or a list.
+		///</summary>
+		[ImplementPropertyType("editorType")]
+		public int EditorType
+		{
+			get { return this.GetPropertyValue<int>("editorType"); }
 		}
 	}
 

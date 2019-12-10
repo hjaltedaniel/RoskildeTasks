@@ -28,7 +28,7 @@ namespace RoskildeTasks.Api.Controllers
 
             try
             {
-                 Answer = JsonConvert.DeserializeObject<Models.DTO.AnswerRoot>(Json);
+                Answer = JsonConvert.DeserializeObject<Models.DTO.AnswerRoot>(Json);
             }
             catch
             {
@@ -44,27 +44,27 @@ namespace RoskildeTasks.Api.Controllers
 
             var task = cs.GetById(Answer.TaskId);
 
-            if(task != null && task.ContentTypeId == Configurations.TaskDocType)
+            if (task != null && task.ContentTypeId == Configurations.TaskDocType)
             {
                 TaskItem currentTask = new TaskItem();
-                currentTask.Id = task.Id;
-                currentTask.Name = task.Name;
-                currentTask.Description = task.GetValue("description").ToString();
-                currentTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
+                currentTask.id = task.Id;
+                currentTask.name = task.Name;
+                currentTask.description = task.GetValue("description").ToString();
+                currentTask.deadline = DateTime.Parse(task.GetValue("deadline").ToString());
 
                 var editorUri = task.GetValue("editor");
                 var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
-                currentTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
+                List<EditorItem> taskEditor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
 
-                var listComparison = Answer.Rows.Where(row =>currentTask.Editor.Any(editor =>editor.Name == row.Name && editor.ValueType == row.ValueType));
+                var listComparison = Answer.Rows.Where(row => taskEditor.Any(editor => editor.Name == row.Name && editor.ValueType == row.ValueType));
                 bool isCorrectFormated = false;
 
-                if(listComparison.Count() == currentTask.Editor.Count)
+                if (listComparison.Count() == taskEditor.Count)
                 {
                     isCorrectFormated = true;
                 }
 
-                if(isCorrectFormated)
+                if (isCorrectFormated)
                 {
                     var taskUdi = task.GetUdi().ToString();
 
@@ -94,7 +94,7 @@ namespace RoskildeTasks.Api.Controllers
                                 nameProp.Value = row.Name;
                                 properties.Add(nameProp);
 
-                                if (row.ValueType == "String")
+                                if (row.ValueType == "text")
                                 {
                                     var stringProp = new ArchetypePropertyModel();
                                     stringProp.Alias = "string";
@@ -111,7 +111,7 @@ namespace RoskildeTasks.Api.Controllers
                                     fileProp.Value = null;
                                     properties.Add(fileProp);
                                 }
-                                else if (row.ValueType == "Int32")
+                                else if (row.ValueType == "number")
                                 {
                                     var stringProp = new ArchetypePropertyModel();
                                     stringProp.Alias = "string";
@@ -128,7 +128,7 @@ namespace RoskildeTasks.Api.Controllers
                                     fileProp.Value = null;
                                     properties.Add(fileProp);
                                 }
-                                else if (row.ValueType == "File")
+                                else if (row.ValueType == "file")
                                 {
                                     var stringProp = new ArchetypePropertyModel();
                                     stringProp.Alias = "string";
@@ -181,7 +181,7 @@ namespace RoskildeTasks.Api.Controllers
                             nameProp.Value = row.Name;
                             properties.Add(nameProp);
 
-                            if (row.ValueType == "String")
+                            if (row.ValueType == "text")
                             {
                                 var stringProp = new ArchetypePropertyModel();
                                 stringProp.Alias = "string";
@@ -198,7 +198,7 @@ namespace RoskildeTasks.Api.Controllers
                                 fileProp.Value = null;
                                 properties.Add(fileProp);
                             }
-                            else if (row.ValueType == "Int32")
+                            else if (row.ValueType == "number")
                             {
                                 var stringProp = new ArchetypePropertyModel();
                                 stringProp.Alias = "string";
@@ -213,6 +213,23 @@ namespace RoskildeTasks.Api.Controllers
                                 var fileProp = new ArchetypePropertyModel();
                                 fileProp.Alias = "file";
                                 fileProp.Value = null;
+                                properties.Add(fileProp);
+                            }
+                            else if (row.ValueType == "file")
+                            {
+                                var stringProp = new ArchetypePropertyModel();
+                                stringProp.Alias = "string";
+                                stringProp.Value = null;
+                                properties.Add(stringProp);
+
+                                var intProp = new ArchetypePropertyModel();
+                                intProp.Alias = "int32";
+                                intProp.Value = null;
+                                properties.Add(intProp);
+
+                                var fileProp = new ArchetypePropertyModel();
+                                fileProp.Alias = "file";
+                                fileProp.Value = row.Content;
                                 properties.Add(fileProp);
                             }
 
@@ -270,24 +287,24 @@ namespace RoskildeTasks.Api.Controllers
                 var task = cs.GetById(Umbraco.TypedContent(taskUdi).Id);
 
                 TaskItem currentTask = new TaskItem();
-                currentTask.Id = task.Id;
+                currentTask.id = task.Id;
 
                 var editorUri = task.GetValue("editor");
                 var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
-                currentTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
+                List<EditorItem> taskEditor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
 
-                if(Answer.TaskId == currentTask.Id)
+                if (Answer.TaskId == currentTask.id)
                 {
 
-                    var listComparison = Answer.Rows.Where(row => currentTask.Editor.Any(editor => editor.Name == row.Name && editor.ValueType == row.ValueType));
+                    var listComparison = Answer.Rows.Where(row => taskEditor.Any(editor => editor.Name == row.Name && editor.ValueType == row.ValueType));
                     bool isCorrectFormated = false;
 
-                    if (listComparison.Count() == currentTask.Editor.Count)
+                    if (listComparison.Count() == taskEditor.Count)
                     {
                         isCorrectFormated = true;
                     }
 
-                    if(isCorrectFormated)
+                    if (isCorrectFormated)
                     {
                         var archetype = new ArchetypeModel();
                         var fieldsets = new List<ArchetypeFieldsetModel>();
@@ -305,7 +322,7 @@ namespace RoskildeTasks.Api.Controllers
                             nameProp.Value = row.Name;
                             properties.Add(nameProp);
 
-                            if (row.ValueType == "String")
+                            if (row.ValueType == "text")
                             {
                                 var stringProp = new ArchetypePropertyModel();
                                 stringProp.Alias = "string";
@@ -322,7 +339,7 @@ namespace RoskildeTasks.Api.Controllers
                                 fileProp.Value = null;
                                 properties.Add(fileProp);
                             }
-                            else if (row.ValueType == "Int32")
+                            else if (row.ValueType == "number")
                             {
                                 var stringProp = new ArchetypePropertyModel();
                                 stringProp.Alias = "string";
@@ -337,6 +354,23 @@ namespace RoskildeTasks.Api.Controllers
                                 var fileProp = new ArchetypePropertyModel();
                                 fileProp.Alias = "file";
                                 fileProp.Value = null;
+                                properties.Add(fileProp);
+                            }
+                            else if (row.ValueType == "file")
+                            {
+                                var stringProp = new ArchetypePropertyModel();
+                                stringProp.Alias = "string";
+                                stringProp.Value = null;
+                                properties.Add(stringProp);
+
+                                var intProp = new ArchetypePropertyModel();
+                                intProp.Alias = "int32";
+                                intProp.Value = null;
+                                properties.Add(intProp);
+
+                                var fileProp = new ArchetypePropertyModel();
+                                fileProp.Alias = "file";
+                                fileProp.Value = row.Content;
                                 properties.Add(fileProp);
                             }
 
@@ -367,7 +401,7 @@ namespace RoskildeTasks.Api.Controllers
                 return BadRequest();
             }
 
-            
+
         }
 
         [RoleAuthorize]
@@ -411,7 +445,7 @@ namespace RoskildeTasks.Api.Controllers
             }
 
 
-            if(answerId.Any())
+            if (answerId.Any())
             {
                 return Ok();
             }
@@ -431,7 +465,7 @@ namespace RoskildeTasks.Api.Controllers
         {
             HttpPostedFile upload = HttpContext.Current.Request.Files["file"];
 
-            if(upload != null)
+            if (upload != null)
             {
                 List<string> allowedFileTypes = new List<string>() { "pdf", "ai", "docx", "svg", "jpg", "png", "xlsx" };
                 Stream inputStream = upload.InputStream;
@@ -440,7 +474,7 @@ namespace RoskildeTasks.Api.Controllers
 
                 var filetype = Path.GetExtension(upload.FileName).Replace(".", "");
 
-                if(allowedFileTypes.Contains(filetype))
+                if (allowedFileTypes.Contains(filetype))
                 {
                     var name = Path.GetFileName(upload.FileName);
 
@@ -479,7 +513,7 @@ namespace RoskildeTasks.Api.Controllers
             var parentAnswer = singleNewAnswer.Parent();
             var parentAnswerUser = parentAnswer.GetValue("user").ToString();
 
-            if(parentAnswerUser == userUdi)
+            if (parentAnswerUser == userUdi)
             {
                 if (singleNewAnswer != null && singleNewAnswer.ContentTypeId == Configurations.SingleAnswerDocType)
                 {
@@ -495,10 +529,6 @@ namespace RoskildeTasks.Api.Controllers
             {
                 return Unauthorized();
             }
-
-
-
-
         }
 
         [RoleAuthorize]
@@ -514,7 +544,7 @@ namespace RoskildeTasks.Api.Controllers
 
             var task = cs.GetById(taskId);
 
-            if(task != null && task.ContentTypeId == Configurations.TaskDocType)
+            if (task != null && task.ContentTypeId == Configurations.TaskDocType)
             {
                 List<int> answerId = new List<int>();
                 var allAnswers = cs.GetById(Configurations.AnswerNode).Children();
@@ -534,7 +564,7 @@ namespace RoskildeTasks.Api.Controllers
                         cs.Delete(answer);
                     }
                 }
-                if(answerId.Any())
+                if (answerId.Any())
                 {
                     return Ok();
                 }
@@ -542,11 +572,81 @@ namespace RoskildeTasks.Api.Controllers
                 {
                     return StatusCode(HttpStatusCode.NoContent);
                 }
-                
+
             }
             else
             {
                 return BadRequest();
+            }
+        }
+        [RoleAuthorize]
+        [HttpGet]
+        public IHttpActionResult GetAllAnswersForTask(int taskId)
+        {
+            IContentService cs = Services.ContentService;
+            var currentUser = Members.CurrentUserName;
+            IMemberService ms = Services.MemberService;
+            var user = ms.GetByUsername(currentUser);
+
+            var allAnswers = cs.GetContentOfContentType(Configurations.AnswerDocType);
+            if(allAnswers != null)
+            {
+                List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
+                foreach (var answer in allAnswers)
+                {
+                    var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
+                    if (answerTaskId == taskId)
+                    {
+                        var answerRows = answer.Children();
+                        foreach (var row in answerRows)
+                        {
+                            AnswerRootItem answersForTask = new AnswerRootItem();
+                            answersForTask.TaskId = answerTaskId;
+                            answersForTask.AnswerId = row.Id;
+                            answersForTask.isPublished = row.Published;
+                            List<AnswerItem> answersList = new List<AnswerItem>();
+                            var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
+
+                            foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
+                            {
+                                AnswerItem singleAnswer = new AnswerItem();
+                                singleAnswer.Name = property.GetValue("name");
+                                if (!string.IsNullOrWhiteSpace(property.GetValue("string")))
+                                {
+                                    singleAnswer.Content = property.GetValue("string");
+                                }
+                                else if (!string.IsNullOrWhiteSpace(property.GetValue("int32")))
+                                {
+                                    singleAnswer.Content = property.GetValue("int32");
+                                }
+                                else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
+                                {
+                                    singleAnswer.Content = Umbraco.TypedMedia(property.GetValue("file")).Url;
+                                }
+                                answersList.Add(singleAnswer);
+                            }
+                            answersForTask.Rows = answersList;
+                            answerRootList.Add(answersForTask);
+                        }
+                    }
+                }
+                if(answerRootList.Any())
+                {
+                    return Ok(answerRootList);
+                }
+                else if(cs.GetById(taskId) != null && cs.GetById(taskId).ContentType.Id == Configurations.TaskDocType)
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                
+            }
+            else
+            {
+                return StatusCode(HttpStatusCode.NoContent);
             }
         }
     }
