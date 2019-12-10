@@ -18,6 +18,7 @@ namespace Umbraco
         {
             var corsAttr = new EnableCorsAttribute("http://localhost:8080", "*", "*");
             config.EnableCors(corsAttr);
+            config.MapHttpAttributeRoutes();
         }
     }
 }
