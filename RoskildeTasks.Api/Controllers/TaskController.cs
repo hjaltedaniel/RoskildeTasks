@@ -17,8 +17,10 @@ using Newtonsoft.Json.Linq;
 
 namespace RoskildeTasks.Api.Controllers
 {
+    [RoutePrefix("umbraco/api/tasks")]
     public class TaskController : UmbracoApiController
     {
+        [Route]
         [RoleAuthorize]
         [HttpGet]
         public IHttpActionResult GetAllTasks()
@@ -92,7 +94,44 @@ namespace RoskildeTasks.Api.Controllers
                         category.Add("color", "#" + color.Value);
                         usersTask.category = category;
 
-                        userTasks.Add(usersTask);
+                        List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
+                        foreach (var answer in cs.GetContentOfContentType(Configurations.AnswerDocType))
+                        {
+                            var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
+                            if (answerTaskId == usersTask.id)
+                            {
+                                foreach (var row in answer.Children())
+                                {
+                                    AnswerRootItem answersForTask = new AnswerRootItem();
+                                    answersForTask.isPublished = row.Published;
+                                    answerRootList.Add(answersForTask);
+                                }
+                            }
+                        }
+
+                        bool isDone = false;
+
+                        if (answerRootList == null)
+                        {
+                            isDone = false;
+                        }
+                        else
+                        {
+                            if (answerRootList.All(item => item.isPublished))
+                            {
+                                isDone = true;
+                            }
+                            else
+                            {
+                                isDone = false;
+                            }
+                        }
+
+                        if (usersTask.deadline > DateTime.Now && isDone == false)
+                        {
+                            userTasks.Add(usersTask);
+                        }
+                        
                     }
 
                 }
@@ -112,6 +151,7 @@ namespace RoskildeTasks.Api.Controllers
             }
 
         }
+        [Route("{id}")]
         [RoleAuthorize]
         [HttpGet]
         public IHttpActionResult GetTask(int id)

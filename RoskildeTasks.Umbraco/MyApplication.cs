@@ -18,6 +18,7 @@ namespace Umbraco
         {
             var corsAttr = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(corsAttr);
+            config.MapHttpAttributeRoutes();
         }
     }
 }
