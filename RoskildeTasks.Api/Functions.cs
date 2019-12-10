@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Archetype.Models;
 using System.IO;
 using System.Web;
+using Newtonsoft.Json.Linq;
 
 namespace RoskildeTasks.Api
 {
@@ -56,19 +57,40 @@ namespace RoskildeTasks.Api
             return returnList;
 
         }
+        public static JObject ConvertEditorToJsonObject(string json)
+        {
+            JObject columns = new JObject();
+
+            var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(json);
+
+            foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
+            {
+                var name = property.GetValue("fieldName");
+                var displayName = property.GetValue("displayName");
+                var thisType = property.GetValue("datatype");
+
+                JObject editor = new JObject();
+                editor.Add("displayName", displayName);
+                editor.Add("type", GetTypeFromPrevalue(thisType));
+
+                columns.Add(name, editor);
+            }
+            return columns;
+
+        }
         public static string GetTypeFromPrevalue (string prevalue)
         {
             if(prevalue == "54")
             {
-                return Type.GetType("System.IO.File").Name;
+                return "file";
             }
             else if (prevalue == "52")
             {
-                return Type.GetType("System.String").Name;
+                return "text";
             }
             else if (prevalue == "53")
             {
-                return Type.GetType("System.Int32").Name;
+                return "number";
             }
             else
             {
