@@ -8,7 +8,7 @@ using  Umbraco.Web;
 using  Umbraco.ModelsBuilder;
 using  Umbraco.ModelsBuilder.Umbraco;
 [assembly: PureLiveAssembly]
-[assembly:ModelsBuilderAssembly(PureLive = true, SourceHash = "288ccce9b4beca41")]
+[assembly:ModelsBuilderAssembly(PureLive = true, SourceHash = "9c955b8af9afd6b1")]
 [assembly:System.Reflection.AssemblyVersion("0.0.0.1")]
 
 
@@ -131,9 +131,9 @@ namespace Umbraco.Web.PublishedContentModels
 		/// Description: Use this field to provide a description of the task
 		///</summary>
 		[ImplementPropertyType("description")]
-		public string Description
+		public IHtmlString Description
 		{
-			get { return this.GetPropertyValue<string>("description"); }
+			get { return this.GetPropertyValue<IHtmlString>("description"); }
 		}
 
 		///<summary>
