@@ -13,6 +13,7 @@ using RoskildeTasks.Api.Models;
 using System.Net;
 using Newtonsoft.Json;
 using Archetype.Models;
+using Newtonsoft.Json.Linq;
 
 namespace RoskildeTasks.Api.Controllers
 {
@@ -48,87 +49,48 @@ namespace RoskildeTasks.Api.Controllers
                     if (Functions.IsMemberInGroups(taskGroups, currentUser))
                     {
                         TaskItem usersTask = new TaskItem();
-                        usersTask.Id = task.Id;
-                        usersTask.Name = task.Name;
-                        usersTask.Description = task.GetValue("description").ToString();
-                        usersTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
-
+                        usersTask.id = task.Id;
+                        usersTask.name = task.Name;
+                        usersTask.deadline = DateTime.Parse(task.GetValue("deadline").ToString());
+                        usersTask.description = task.GetValue("description").ToString();
+                        
                         var editorUri = task.GetValue("editor");
                         var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
-                        usersTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
+                        JObject columns = Functions.ConvertEditorToJsonObject(thisEditor.GetValue("editorProperties").ToString());
 
-                        var allAnswers = cs.GetContentOfContentType(Configurations.AnswerDocType);
-                        foreach (var answer in allAnswers)
+                        string editorType;
+
+                        if(thisEditor.GetValue("editorType").ToString() == "104")
                         {
-                            var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
-                            if (answerTaskId == task.Id)
-                            {
-                                List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
-                                var answerRows = answer.Children();
-                                foreach (var row in answerRows)
-                                {
-                                    AnswerRootItem answersForTask = new AnswerRootItem();
-                                    answersForTask.TaskId = answerTaskId;
-                                    answersForTask.AnswerId = row.Id;
-                                    answersForTask.isPublished = row.Published;
-                                    List<AnswerItem> answersList = new List<AnswerItem>();
-                                    var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
-
-                                    foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
-                                    {
-                                        AnswerItem singleAnswer = new AnswerItem();
-                                        singleAnswer.Name = property.GetValue("name");
-                                        if (!string.IsNullOrWhiteSpace(property.GetValue("string")))
-                                        {
-                                            singleAnswer.Content = property.GetValue("string");
-                                        }
-                                        else if (!string.IsNullOrWhiteSpace(property.GetValue("int32")))
-                                        {
-                                            singleAnswer.Content = property.GetValue("int32");
-                                        }
-                                        else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
-                                        {
-                                            singleAnswer.Content = Umbraco.TypedMedia(property.GetValue("file")).Url;
-                                        }
-                                        answersList.Add(singleAnswer);
-                                    }
-                                    answersForTask.Rows = answersList;
-                                    answerRootList.Add(answersForTask);
-                                }
-
-                                usersTask.Answers = answerRootList;
-                            }
+                            editorType = "file";
                         }
-
-                        var categoryUri = task.GetValue("category");
-                        var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
-                        CategoryItem category = new CategoryItem();
-                        category.Id = thisCategory.Id;
-                        category.Name = thisCategory.Name;
-                        category.ShortName = thisCategory.GetValue("shortName").ToString();
-                        category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
-                        category.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
-                        var colorString = thisCategory.GetValue("categoryColor").ToString();
-                        ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
-                        category.Color = color;
-
-                        usersTask.Category = category;
-
-                        if (usersTask.Answers == null)
+                        else if(thisEditor.GetValue("editorType").ToString() == "105")
                         {
-                            usersTask.isDone = false;
+                            editorType = "list";
                         }
                         else
                         {
-                            if (usersTask.Answers.All(item => item.isPublished))
-                            {
-                                usersTask.isDone = true;
-                            }
-                            else
-                            {
-                                usersTask.isDone = false;
-                            }
+                            editorType = null;
                         }
+
+                        JObject editor = new JObject();
+                        editor.Add("type", editorType);
+                        if(editorType == "list")
+                        {
+                            editor.Add("columns", columns);
+                        }
+
+                        usersTask.editor = editor;
+
+                        var categoryUri = task.GetValue("category");
+                        var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
+                        JObject category = new JObject();
+                        category.Add("id", thisCategory.Id);
+                        category.Add("name", thisCategory.Name);
+                        var colorString = thisCategory.GetValue("categoryColor").ToString();
+                        ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                        category.Add("color", "#" + color.Value);
+                        usersTask.category = category;
 
                         userTasks.Add(usersTask);
                     }
@@ -150,130 +112,84 @@ namespace RoskildeTasks.Api.Controllers
             }
 
         }
-
         [RoleAuthorize]
         [HttpGet]
-        public IHttpActionResult GetTask(int taskId)
+        public IHttpActionResult GetTask(int id)
         {
             var currentUser = Members.CurrentUserName;
-            IMemberService ms = Services.MemberService;
             IContentService cs = Services.ContentService;
 
-            var everyTask = cs.GetContentOfContentType(Configurations.TaskDocType);
+            var current = cs.GetById(id);
 
-            var task = cs.GetById(taskId);
-
-            if(task != null)
+            if(current != null)
             {
-                TaskItem currentTask = new TaskItem();
-
-                var taskMembers = task.GetValue("members");
-
-                string taskGroups;
-                try
+                if (current.ContentType.Id == Configurations.TaskDocType)
                 {
-                    taskGroups = taskMembers.ToString();
-                }
-                catch
-                {
-                    return Unauthorized();
-                }
+                    var taskMembers = current.GetValue("members").ToString();
 
-                if (Functions.IsMemberInGroups(taskGroups, currentUser))
-                {
-                    currentTask.Id = task.Id;
-                    currentTask.Name = task.Name;
-                    currentTask.Description = task.GetValue("description").ToString();
-                    currentTask.Deadline = DateTime.Parse(task.GetValue("deadline").ToString());
-
-                    var editorUri = task.GetValue("editor");
-                    var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
-                    currentTask.Editor = Functions.ConvertToEditorItem(thisEditor.GetValue("editorProperties").ToString());
-
-                    var allAnswers = cs.GetContentOfContentType(Configurations.AnswerDocType);
-                    foreach (var answer in allAnswers)
+                    if (Functions.IsMemberInGroups(taskMembers, currentUser))
                     {
-                        var answerTaskId = Umbraco.TypedContent(answer.GetValue("task")).Id;
-                        if (answerTaskId == task.Id)
+                        TaskItem usersTask = new TaskItem();
+                        usersTask.id = current.Id;
+                        usersTask.name = current.Name;
+                        usersTask.deadline = current.GetValue<DateTime>("deadline");
+                        usersTask.description = current.GetValue("description").ToString();
+
+                        var editorUri = current.GetValue("editor");
+                        var thisEditor = cs.GetById(Umbraco.TypedContent(editorUri).Id);
+                        JObject columns = Functions.ConvertEditorToJsonObject(thisEditor.GetValue("editorProperties").ToString());
+
+                        string editorType;
+
+                        if (thisEditor.GetValue("editorType").ToString() == "104")
                         {
-                            List<AnswerRootItem> answerRootList = new List<AnswerRootItem>();
-                            var answerRows = answer.Children();
-                            foreach (var row in answerRows)
-                            {
-                                AnswerRootItem answersForTask = new AnswerRootItem();
-                                answersForTask.TaskId = answerTaskId;
-                                answersForTask.AnswerId = row.Id;
-                                answersForTask.isPublished = row.Published;
-                                List<AnswerItem> answersList = new List<AnswerItem>();
-                                var translationObject = JsonConvert.DeserializeObject<ArchetypeModel>(row.GetValue<string>("content"));
-
-                                foreach (var property in translationObject.Fieldsets.Where(x => x != null && x.Properties.Any()))
-                                {
-                                    AnswerItem singleAnswer = new AnswerItem();
-                                    singleAnswer.Name = property.GetValue("name");
-                                    if (!string.IsNullOrWhiteSpace(property.GetValue("string")))
-                                    {
-                                        singleAnswer.Content = property.GetValue("string");
-                                    }
-                                    else if (!string.IsNullOrWhiteSpace(property.GetValue("int32")))
-                                    {
-                                        singleAnswer.Content = property.GetValue("int32");
-                                    }
-                                    else if (!string.IsNullOrWhiteSpace(property.GetValue("file")))
-                                    {
-                                        singleAnswer.Content = Umbraco.TypedMedia(property.GetValue("file")).Url;
-                                    }
-                                    answersList.Add(singleAnswer);
-                                }
-                                answersForTask.Rows = answersList;
-                                answerRootList.Add(answersForTask);
-                            }
-
-                            currentTask.Answers = answerRootList;
+                            editorType = "file";
                         }
-                    }
-
-                    var categoryUri = task.GetValue("category");
-                    var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
-                    CategoryItem category = new CategoryItem();
-                    category.Id = thisCategory.Id;
-                    category.Name = thisCategory.Name;
-                    category.ShortName = thisCategory.GetValue("shortName").ToString();
-                    category.StandardMessage = thisCategory.GetValue("standardMessage").ToString();
-                    category.isOnlyMessages = thisCategory.GetValue<bool>("isOnlyMessages");
-                    var colorString = thisCategory.GetValue("categoryColor").ToString();
-                    ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
-                    category.Color = color;
-
-                    currentTask.Category = category;
-                    if (currentTask.Answers == null)
-                    {
-                        currentTask.isDone = false;
-                    }
-                    else
-                    {
-                        if (currentTask.Answers.All(item => item.isPublished))
+                        else if (thisEditor.GetValue("editorType").ToString() == "105")
                         {
-                            currentTask.isDone = true;
+                            editorType = "list";
                         }
                         else
                         {
-                            currentTask.isDone = false;
+                            editorType = null;
                         }
+
+                        JObject editor = new JObject();
+                        editor.Add("type", editorType);
+                        if (editorType == "list")
+                        {
+                            editor.Add("columns", columns);
+                        }
+
+                        usersTask.editor = editor;
+
+                        var categoryUri = current.GetValue("category");
+                        var thisCategory = cs.GetById(Umbraco.TypedContent(categoryUri).Id);
+                        JObject category = new JObject();
+                        category.Add("id", thisCategory.Id);
+                        category.Add("name", thisCategory.Name);
+                        var colorString = thisCategory.GetValue("categoryColor").ToString();
+                        ColorItem color = JsonConvert.DeserializeObject<ColorItem>(colorString);
+                        category.Add("color", "#" + color.Value);
+                        usersTask.category = category;
+
+                        return Ok(usersTask);
                     }
-                    return Ok(currentTask);
+                    else
+                    {
+                        return StatusCode(HttpStatusCode.Unauthorized);
+                    }
+
                 }
                 else
                 {
-                    return Unauthorized();
+                    return StatusCode(HttpStatusCode.BadRequest);
                 }
             }
             else
             {
-                return StatusCode(HttpStatusCode.NotFound);
+                return StatusCode(HttpStatusCode.NoContent);
             }
-
-
         }
     }
 }
