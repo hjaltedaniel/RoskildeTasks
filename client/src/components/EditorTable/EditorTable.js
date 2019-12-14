@@ -13,9 +13,13 @@ export default {
 	data() {
 		return {
 			rows: [...this.data],
+			showModal: false,
 		}
 	},
 	methods: {
+		toggleModal() {
+			this.showModal = !this.showModal
+		},
 		addRow() {
 			this.rows.push({
 				machine: "",
@@ -33,10 +37,14 @@ export default {
 			this.rows[rowIndex][column] = value;
 		},
 		saveRows() {
-			console.log("save");
+			this.$store.dispatch("showModal", () => {
+				alert("Saving");
+			});
 		},
 		clearRows() {
-			this.rows = [];
+			this.$store.dispatch("showModal", () => {
+				this.rows = [];
+			});
 		}
 	}
 }

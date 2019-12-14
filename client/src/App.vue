@@ -1,54 +1,54 @@
 <template>
-	<div v-if="isLoggedIn">
-		<MainMenu />
-		<div class="main-content">
-			<div class="container-fluid col-md-12">
-				<div class="view-wrapper">
-					<router-view />
-				</div>
-			</div>
-		</div>
-	</div>
-	<div v-else>
-		<div class="d-flex h-100 justify-content-center align-items-center" v-if="isValidatingToken">
-			<Loader></Loader>
-		</div>
-		<Login v-else></Login>
-	</div>
-
+  <div v-if="isLoggedIn">
+	<Modal/>
+    <MainMenu />
+    <div class="main-content">
+      <div class="container-fluid col-md-12">
+        <div class="view-wrapper">
+          <router-view />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    <div class="d-flex h-100 justify-content-center align-items-center" v-if="isValidatingToken">
+      <Loader></Loader>
+    </div>
+    <Login v-else></Login>
+  </div>
 </template>
 
 <script>
 import MainMenu from "./components/MainMenu";
-	import Login from "./views/Login";
-	import Loader from "./components/Loader";
-	import Cookies from "js-cookie";
-	import MembersService from "./services/MembersService"
+import Login from "./views/Login";
+import Loader from "./components/Loader";
+import Cookies from "js-cookie";
+import MembersService from "./services/MembersService";
+import Modal from './components/Modal';
 
 export default {
   components: {
     MainMenu,
-		Login,
-	Loader
-		},
-	data() {
-		return {
-			isLoading: false,
-			isValidatingToken: false
-		}
-	},
+    Login,
+	Loader,
+	Modal
+  },
+  data() {
+    return {
+      isLoading: false,
+      isValidatingToken: false
+    };
+  },
   computed: {
     isLoggedIn() {
       if (this.$store.state.token != undefined) {
         return true;
-	  } else if (Cookies.get("Token") != undefined) {
-		  if (this.validateToken(Cookies.get("Token"))) {
-			  return true;
-		  }
-		  else {
-			  return false
-		  }
-		  
+      } else if (Cookies.get("Token") != undefined) {
+        if (this.validateToken(Cookies.get("Token"))) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
@@ -66,23 +66,26 @@ export default {
       }
     }
   },
-	methods: {
-		validateToken(token) {
-			this.isValidatingToken = true;
-			MembersService.validate(token)
-				.then(response => {
-					this.$store.dispatch("setAuthorizationState", Cookies.get("Token"));
-					this.$store.dispatch("setUser", response.data);
-					this.isValidatingToken = false;
-					return true;
-				})
-				.catch(error => {
-					this.$store.dispatch("logout", "An error occured with your saved login. Please login again");
-					return false;
-				});
-			}
-		}
-	};
+  methods: {
+    validateToken(token) {
+      this.isValidatingToken = true;
+      MembersService.validate(token)
+        .then(response => {
+          this.$store.dispatch("setAuthorizationState", Cookies.get("Token"));
+          this.$store.dispatch("setUser", response.data);
+          this.isValidatingToken = false;
+          return true;
+        })
+        .catch(error => {
+          this.$store.dispatch(
+            "logout",
+            "An error occured with your saved login. Please login again"
+          );
+          return false;
+        });
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
