@@ -26,11 +26,9 @@ import {
 	faComments,
 	faUser,
 	faSignOutAlt
-	
+
 } from '@fortawesome/free-solid-svg-icons'
-import {
-	FontAwesomeIcon
-} from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import TextareaAutosize from 'vue-textarea-autosize'
 
 library.add(
@@ -67,7 +65,6 @@ extend('password', {
 	},
 	message: 'Password confirmation does not match'
 });
-
 
 new Vue({
 	router,

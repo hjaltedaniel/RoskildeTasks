@@ -11,17 +11,22 @@
 			<div class="content__description">
 				<div class="headline">
 					<h1>{{ task.name }}</h1>
-					<h5>DEADLINE {{ task.deadline.toLocaleString().toUpperCase() }}</h5>
+					<h5>DEADLINE {{ new Date(task.deadline).toLocaleString().toUpperCase() }}</h5>
 				</div>
 				<div v-html="task.description"></div>
 			</div>
 		</div>
 		<div class="col-md-6">
 			<template v-if="task.editor.type === 'file'">
-				<UploadArea></UploadArea>
+				<UploadArea 
+					:onSubmit="submitFile"
+				></UploadArea>
 			</template>
 			<template v-else-if="task.editor.type === 'list'">
-				<EditorTable :columns="task.editor.columns"></EditorTable>
+				<EditorTable 
+					:columns="task.editor.columns"
+					:onSave="submitRows"
+				></EditorTable>
 			</template>
 		</div>
 	</div>

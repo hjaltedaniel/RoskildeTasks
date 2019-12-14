@@ -1,7 +1,6 @@
 ﻿import Vue from "vue";
 import Vuex from "vuex";
 import Cookies from 'js-cookie';
-import ApiService from "./services/ApiService";
 import TasksService from "./services/TasksService";
 import CategoriesService from "./services/CategoriesService";
 import RessourcesService from "./services/RessourcesService";
@@ -10,42 +9,37 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		user: {
-			name: "",
-			company: "",
-			email: "",
-			status: "",
-			accessGroups: []
-		},
-		token: undefined,
+		user: null,
 		logoutMessage: "",
 		tasksList: [],
 		categoriesList: [],
-		ressourcesList: []
+		ressourcesList: [],
+		showModal: false,
+		modalOnCancel: () => { },
+		modalOnContinue: () => { }
 	},
 	getters: {
 		filterRessourcesByCategory: (state) => (category) => {
-			return state.ressourcesList.filter(ressource => ressource.Category.Id ===
-				category)
+			return state.ressourcesList.filter(ressource => ressource.Category.Id === category)
 		},
 		getTask: (state) => (id) => {
 			return state.tasksList.find(task => task.Id === id)
 		}
 	},
 	mutations: {
-		SET_TOKEN(state, payload) {
-			state.token = payload
-		},
 		SET_USER(state, payload) {
 			state.user = payload
 		},
 		SET_NEW_MAIL(state, payload) {
 			state.user.Email = payload
 		},
-		DELETE_TOKEN(state, payload) {
-			state.token = undefined;
+		LOGOUT(state, payload) {
 			state.logoutMessage = payload;
-			Cookies.remove('Token')
+			state.user = null;
+			state.tasksList = []
+			state.ressourcesList = []
+			state.categoriesList = []
+			Cookies.remove('Token');
 		},
 		SET_TASKS_LIST(state, payload) {
 			state.tasksList = payload;
@@ -55,18 +49,26 @@ export default new Vuex.Store({
 		},
 		SET_RESSOURCES_LIST(state, payload) {
 			state.ressourcesList = payload;
+		},
+		SHOW_MODAL(state, payload) {
+			state.showModal = true;
+			state.modalOnContinue = payload;
+		},
+		CLOSE_MODAL(state) {
+			state.showModal = false;
 		}
 	},
 	actions: {
+		showModal(context, callback) {
+			context.commit("SHOW_MODAL", callback);
+		},
+		closeModal(context) {
+			context.commit("CLOSE_MODAL");
+		},
 		setAuthorizationSession(context, token) {
-			context.commit("SET_TOKEN", token)
 			Cookies.set('Token', token)
 		},
-		setAuthorizationState(context, token) {
-			context.commit("SET_TOKEN", token)
-		},
 		setAuthorization24h(context, token) {
-			context.commit("SET_TOKEN", token)
 			Cookies.set('Token', token, {
 				expires: 1
 			})
@@ -78,46 +80,33 @@ export default new Vuex.Store({
 			context.commit("SET_NEW_MAIL", email);
 		},
 		logout(context, message) {
-			context.commit("DELETE_TOKEN", message)
-			Cookies.remove('Token')
+			context.commit("LOGOUT", message)
 		},
 		getTaskList(context) {
-			let auth = "Basic " + this.state.token;
-			ApiService.defaults.headers.common['Authorization'] = auth;
-			//loading...
-			context.commit("SET_TASKS_LIST");
 			TasksService.getAllTasks()
 				.then((response) => {
 					context.commit("SET_TASKS_LIST", response.data);
 				})
 				.catch((error) => {
-					context.commit("SET_TASKS_LIST", error);
+					context.commit("SET_TASKS_LIST", []);
 				});
 		},
 		getCategoryList(context) {
-			let auth = "Basic " + this.state.token;
-			ApiService.defaults.headers.common['Authorization'] = auth;
-			//loading...
-			context.commit("SET_CATEGORIES_LIST");
 			CategoriesService.getAllCategories()
 				.then((response) => {
 					context.commit("SET_CATEGORIES_LIST", response.data);
 				})
 				.catch((error) => {
-					context.commit("SET_CATEGORIES_LIST", error);
+					context.commit("SET_CATEGORIES_LIST", []);
 				});
 		},
 		getRessourceList(context) {
-			let auth = "Basic " + this.state.token;
-			ApiService.defaults.headers.common['Authorization'] = auth;
-			//loading...
-			context.commit("SET_RESSOURCES_LIST");
 			RessourcesService.getAllRessources()
 				.then((response) => {
 					context.commit("SET_RESSOURCES_LIST", response.data);
 				})
 				.catch((error) => {
-					context.commit("SET_RESSOURCES_LIST", error);
+					context.commit("SET_RESSOURCES_LIST", []);
 				});
 		}
 	}
