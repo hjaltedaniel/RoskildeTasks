@@ -9,35 +9,26 @@ export default {
 	data() {
 		return {
 			categoriesList: [],
-			isMobile: false
 		}
 	},
 	computed: {
 		storeCategories() {
 			return this.$store.state.categoriesList;
 		},
-		isMobileOverlayActive() {
-			if (this.$route.params.resourcelist != undefined && this.isMobile) {
-				return true;
-			} else {
-				return false;
-			}
-		}
 	},
 	watch: {
-		storeCategories: function () {
+		storeCategories() {
 			this.setCategories();
 		}
 	},
 	mounted() {
+		if (this.$store.state.categoriesList.length === 0) {
+			this.$store.dispatch("getCategoryList");
+		}
+		if(this.$store.state.ressourcesList.length === 0) {
+			this.$store.dispatch("getRessourceList");
+		}
 		this.setCategories();
-	},
-	created() {
-		window.addEventListener('resize', this.handleResize)
-		this.handleResize();
-	},
-	destroyed() {
-		window.removeEventListener('resize', this.handleResize)
 	},
 	methods: {
 		setCategories() {
@@ -50,7 +41,7 @@ export default {
 						catList.push(item);
 					}
 				})
-				if (this.$route.params.resourcelist == undefined && this.isMobile == false) {
+				if (this.$route.params.resourcelist == undefined) {
 					this.$router.push({
 						path: `/resources/${catList[0].Id}`
 					})
@@ -58,17 +49,5 @@ export default {
 				this.categoriesList = catList;
 			}
 		},
-		handleResize() {
-			if (window.innerWidth < 768) {
-				this.isMobile = true;
-			} else if (window.innerWidth > 768) {
-				this.isMobile = false;
-			}
-		},
-		closeOverlay() {
-			this.$router.push({
-				path: `/resources`
-			})
-		}
 	}
 }

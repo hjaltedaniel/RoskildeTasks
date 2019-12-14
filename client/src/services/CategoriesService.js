@@ -1,8 +1,15 @@
-import ApiService from "../services/ApiService"
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import commonConfig from '../config/common-service.config';
 
 class CategoriesService {
+	constructor() {
+		this.httpClient = axios.create(commonConfig)
+	}
+
 	getAllCategories = () => {
-		return ApiService.get("category/getallcategories");
+		this.httpClient.defaults.headers.common['Authorization'] = "Basic " + Cookies.get("Token");
+		return this.httpClient.get("category/getallcategories");
 	}
 }
 

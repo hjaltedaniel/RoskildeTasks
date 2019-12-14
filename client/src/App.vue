@@ -1,88 +1,58 @@
 <template>
-	<div v-if="isLoggedIn">
-		<MainMenu />
-		<div class="main-content">
-			<div class="container-fluid col-md-12">
-				<div class="view-wrapper">
-					<router-view />
-				</div>
-			</div>
-		</div>
-	</div>
-	<div v-else>
-		<div class="d-flex h-100 justify-content-center align-items-center" v-if="isValidatingToken">
-			<Loader></Loader>
-		</div>
-		<Login v-else></Login>
-	</div>
-
+  <div v-if="$store.state.user">
+    <Modal />
+    <MainMenu />
+    <div class="main-content">
+      <div class="container-fluid col-md-12">
+        <div class="view-wrapper">
+          <router-view />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    <div class="d-flex h-100 justify-content-center align-items-center" v-if="isLoading">
+      <Loader></Loader>
+    </div>
+    <router-view v-else />
+  </div>
 </template>
 
 <script>
 import MainMenu from "./components/MainMenu";
-	import Login from "./views/Login";
-	import Loader from "./components/Loader";
-	import Cookies from "js-cookie";
-	import MembersService from "./services/MembersService"
+import Cookies from "js-cookie";
+import Loader from "./components/Loader";
+import MembersService from "./services/MembersService";
+import Modal from "./components/Modal";
 
 export default {
   components: {
     MainMenu,
-		Login,
-	Loader
-		},
-	data() {
-		return {
-			isLoading: false,
-			isValidatingToken: false
-		}
-	},
-  computed: {
-    isLoggedIn() {
-      if (this.$store.state.token != undefined) {
-        return true;
-	  } else if (Cookies.get("Token") != undefined) {
-		  if (this.validateToken(Cookies.get("Token"))) {
-			  return true;
-		  }
-		  else {
-			  return false
-		  }
-		  
-      } else {
-        return false;
-      }
-    },
-    token() {
-      return this.$store.state.token;
-    }
+    Loader,
+    Modal
   },
-  watch: {
-    token: function() {
-      if (this.token != undefined) {
-        this.$store.dispatch("getTaskList");
-        this.$store.dispatch("getCategoryList");
-        this.$store.dispatch("getRessourceList");
-      }
-    }
+  data() {
+    return {
+      isLoading: false
+    };
   },
-	methods: {
-		validateToken(token) {
-			this.isValidatingToken = true;
-			MembersService.validate(token)
-				.then(response => {
-					this.$store.dispatch("setAuthorizationState", Cookies.get("Token"));
-					this.$store.dispatch("setUser", response.data);
-					this.isValidatingToken = false;
-					return true;
-				})
-				.catch(error => {
-					this.$store.dispatch("logout", "An error occured with your saved login. Please login again");
-					return false;
-				});
-			}
-		}
-	};
+  mounted() {
+    if (Cookies.get("Token")) {
+      this.isLoading = true;
+      MembersService.validate()
+        .then(response => {
+          this.$store.dispatch("setUser", response.data);
+          this.$router.push({ path: "/" });
+        })
+        .catch(error => {
+          this.$store.dispatch("logout", error.message);
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -96,36 +66,6 @@ export default {
       border-radius: 5px;
       background-color: $color-white;
       box-shadow: 0 0 7px #00000061;
-    }
-  }
-}
-@media screen and (max-width: $viewport-small) {
-  .main-content {
-    padding-left: 60px;
-    z-index: 0;
-    .container-fluid {
-      padding: 0;
-      .view-wrapper {
-        height: 100vh;
-        overflow-y: auto;
-        border-radius: 0;
-        box-shadow: 0;
-      }
-    }
-  }
-}
-@media only screen and (max-device-height: $viewport-small) and (orientation: landscape) {
-  .main-content {
-    padding-left: 60px;
-    z-index: 0;
-    .container-fluid {
-      padding: 0;
-      .view-wrapper {
-        height: 100vh;
-        overflow-y: auto;
-        border-radius: 0;
-        box-shadow: 0;
-      }
     }
   }
 }

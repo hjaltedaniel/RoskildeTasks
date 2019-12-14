@@ -26,15 +26,11 @@ export default {
 			return this.$store.state.categoriesList;
 		}
 	},
-	created() {
-		window.addEventListener('resize', this.handleResize)
-		this.handleResize();
-	},
-	destroyed() {
-		window.removeEventListener('resize', this.handleResize)
-	},
 	mounted() {
 		this.populateMessages();
+		if (this.$store.state.categoriesList.length === 0) {
+			this.$store.dispatch("getCategoryList");
+		}
 	},
 	watch: {
 		categoriesList: function () {
@@ -198,7 +194,6 @@ export default {
 			} else {
 				this.errorMessage = "No content set for message"
 			}
-
 		},
 		sortMessages(arr) {
 			let sortedArray = _.sortBy(arr, function (dateObj) {
