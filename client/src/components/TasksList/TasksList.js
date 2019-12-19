@@ -7,10 +7,13 @@ export default {
 		},
 	},
 	mounted() {
-		this.$store.dispatch("getTaskList")
+		if (this.tasksList.length === 0) {
+			this.$store.dispatch("getTaskList");
+		}
 	},
 	methods: {
 		getTimeToDeadline(deadline) {
+			deadline = new Date(deadline)
 			const timeUntilDeadline = deadline - new Date();
 			const day = 86400000;
 			const hour = 3600000;

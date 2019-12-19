@@ -5,14 +5,13 @@ export default {
 			required: true,
 			type: Object
 		},
-		data: {
-			default: () => [],
-			type: Array
+		onSave: {
+			default: () => {}
 		}
 	},
 	data() {
 		return {
-			rows: [...this.data],
+			rows: []
 		}
 	},
 	methods: {
@@ -33,10 +32,14 @@ export default {
 			this.rows[rowIndex][column] = value;
 		},
 		saveRows() {
-			console.log("save");
+			this.$store.dispatch("showModal", () => {
+				this.onSave(this.rows);
+			});
 		},
 		clearRows() {
-			this.rows = [];
+			this.$store.dispatch("showModal", () => {
+				this.rows = [];
+			});
 		}
 	}
 }
