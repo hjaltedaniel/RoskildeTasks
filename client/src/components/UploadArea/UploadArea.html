@@ -1,10 +1,15 @@
 <div class="upload-area">
-	<form class="d-flex flex-column" ref="uploadForm" @submit.prevet="onSubmit">
+	<form 
+		class="d-flex flex-column" 
+		ref="uploadForm" 
+		@submit.prevet="uploadFile"
+		enctype="multipart/form-data"
+	>
 		<div class="upload-area form-group">
 			<label for="upload-area" class="d-flex justify-content-center align-items-center flex-column">
-				<template v-if="filesLength">
+				<template v-if="fileName != ''">
 					<h2 class="selected-files">
-						{{ `${filesLength} file${filesLength > 1 ? "s" : ''} selected` }}<br /><br /> </h2>
+						{{ fileName }}<br /><br /> </h2>
 				</template>
 				<template v-else>
 					<div class="d-flex justify-content-center align-items-center flex-column">
@@ -17,7 +22,7 @@
 					<h6>Browse Files</h6>
 				</div>
 			</label>
-			<input id="upload-area" type="file" multiple @change="onFileInputChange" />
+			<input id="upload-area" type="file" @change="onFileInputChange" ref="upload-control"/>
 		</div>
 		<div class="upload-controls d-flex justify-content-between">
 			<button class="btn btn-success d-flex align-items-center justify-content-center" type="submit">

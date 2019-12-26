@@ -17,12 +17,12 @@ export default {
 		submitRows(data) {
 			const answer = {
 				"TaskId": this.task.id,
-				"Rows": data
+				"Content": data
 			}
 			TasksService.submitRows(answer);
 		},
-		submitFile() {
-			alert("submitting file")
+		submitFile(data) {
+			TasksService.submitFile(this.task.id, data);
 		}
 	}
 }

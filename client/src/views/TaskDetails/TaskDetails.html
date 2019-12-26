@@ -18,7 +18,9 @@
 		</div>
 		<div class="col-md-6">
 			<template v-if="task.editor.type === 'file'">
-				<UploadArea></UploadArea>
+				<UploadArea 
+					:onSubmit="submitFile"
+				></UploadArea>
 			</template>
 			<template v-else-if="task.editor.type === 'list'">
 				<EditorTable 
