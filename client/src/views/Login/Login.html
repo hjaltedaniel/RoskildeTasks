@@ -1,0 +1,47 @@
+<section class="login">
+	<div class="login__logo">
+		<img src="../../assets/Icons/canopy.svg" alt="RF Tasks" class="header-logo__image d-none d-md-block" />
+	</div>
+	<div class="container h-100 d-flex align-items-center justify-content-center">
+		<div class="login__content">
+			<div class="row">
+				<div class="col-12">
+					<h1 class="login__headline">RF Tasks</h1>
+					<p class="login__misc-text">Please login using the credentials provided by Roskilde Festival</p>
+				</div>
+				<div class="form-group col-12">
+					<label for="username" class="login__label">Username</label>
+					<input class="form-control login__text" v-model="auth.username"
+						placeholder="Your username is usually your email" />
+				</div>
+				<div class="form-group col-12">
+					<label for="password" class="login__label">Password</label>
+					<input class="form-control login__text" v-model="auth.password" placeholder="Enter your password"
+						:type="passwordFieldType" />
+				</div>
+				<div class="login__footer col-12 d-flex align-items-center justify-content-between">
+					<button v-on:click="login" type="button" class="btn btn-success login__button mr-3 login__button">
+						<span v-if="loading" class="spinner-grow spinner-grow-sm mr-3" role="status"
+							aria-hidden="true"></span>Login
+					</button>
+					<div class="form-check form-check-inline mr-md-auto d-flex align-items-center login__remember">
+						<input class="form-check-input" type="checkbox" v-model="auth.remember" id="remember" />
+						<label class="form-check-label" for="remember">Remember me</label>
+					</div>
+					<span v-show="passwordFieldType == 'password'" class="login__visibility-toggle"
+						v-on:click="changePasswordVisibility">
+						<font-awesome-icon icon="eye" />Show password
+					</span>
+					<span v-show="passwordFieldType == 'text'" class="login__visibility-toggle"
+						v-on:click="changePasswordVisibility">
+						<font-awesome-icon icon="eye-slash" />Hide password
+					</span>
+				</div>
+				<div class="col-12 login__messages" v-show="errorMessage != '' || logoutMessage != ''">
+					<div class="alert alert-danger" v-show="errorMessage != ''" role="alert">{{errorMessage}}</div>
+					<div v-show="logoutMessage != ''" class="alert alert-info" role="alert">{{logoutMessage}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
