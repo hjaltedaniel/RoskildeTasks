@@ -111,7 +111,7 @@ namespace RoskildeTasks.Api.Controllers
 
                         bool isDone = false;
 
-                        if (answerRootList == null)
+                        if (answerRootList.Count == 0)
                         {
                             isDone = false;
                         }
